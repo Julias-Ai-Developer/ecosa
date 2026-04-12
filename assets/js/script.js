@@ -46,13 +46,42 @@ window.addEventListener('scroll', () => {
 // Hero Animation
 function initHeroSlider() {
     const slides = document.querySelectorAll('.hero-slide');
+    const nextBtn = document.getElementById('next-slide');
+    const prevBtn = document.getElementById('prev-slide');
+    
     if (slides.length > 0) {
         let currentSlide = 0;
-        setInterval(() => {
+        let slideInterval;
+
+        function showSlide(index) {
             slides[currentSlide].classList.remove('active');
-            currentSlide = (currentSlide + 1) % slides.length;
+            currentSlide = (index + slides.length) % slides.length;
             slides[currentSlide].classList.add('active');
-        }, 8000); // Change slide every 8 seconds
+        }
+
+        function startAutoSlide() {
+            clearInterval(slideInterval);
+            slideInterval = setInterval(() => {
+                showSlide(currentSlide + 1);
+            }, 8000);
+        }
+
+        if (nextBtn) {
+            nextBtn.addEventListener('click', () => {
+                showSlide(currentSlide + 1);
+                startAutoSlide();
+            });
+        }
+
+        if (prevBtn) {
+            prevBtn.addEventListener('click', () => {
+                showSlide(currentSlide - 1);
+                startAutoSlide();
+            });
+        }
+
+        // Start initial auto slide
+        startAutoSlide();
     }
 }
 

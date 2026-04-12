@@ -5,18 +5,6 @@ include 'includes/header.php';
 
 <style>
     /* Page specific styles */
-    .page-hero {
-        background-color: var(--dark-green);
-        color: var(--white);
-        padding: 100px 0;
-        text-align: center;
-    }
-
-    .page-hero h1 {
-        font-size: 3.5rem;
-        font-weight: 800;
-    }
-
     .events-grid {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
@@ -63,7 +51,7 @@ include 'includes/header.php';
 <section class="page-hero">
     <div class="container">
         <h1>Community & Events</h1>
-        <p style="font-size: 1.2rem; opacity: 0.9; margin-top: 20px;">Celebrating our milestones and shared memories.</p>
+        <p>Celebrating our milestones and shared memories.</p>
     </div>
 </section>
 

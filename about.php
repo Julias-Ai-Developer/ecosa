@@ -3,26 +3,11 @@ $pageTitle = 'About Us';
 include 'includes/header.php';
 ?>
 
-<style>
-    /* Page specific styles */
-    .page-hero {
-        background-color: var(--dark-green);
-        color: var(--white);
-        padding: 100px 0;
-        text-align: center;
-    }
-
-    .page-hero h1 {
-        font-size: 3.5rem;
-        font-weight: 800;
-    }
-</style>
-
 <!-- Page Hero -->
 <section class="page-hero">
     <div class="container">
         <h1>Our Story & Mission</h1>
-        <p style="font-size: 1.2rem; opacity: 0.9; margin-top: 20px;">Founded in 2002, ECOSA has been uniting alumni of Equatorial College School for over two decades.</p>
+        <p>Founded in 2002, ECOSA has been uniting alumni of Equatorial College School for over two decades.</p>
     </div>
 </section>
 

@@ -5,18 +5,6 @@ include 'includes/header.php';
 
 <style>
     /* Page specific styles */
-    .page-hero {
-        background-color: var(--dark-green);
-        color: var(--white);
-        padding: 100px 0;
-        text-align: center;
-    }
-
-    .page-hero h1 {
-        font-size: 3.5rem;
-        font-weight: 800;
-    }
-
     .contact-grid {
         display: grid;
         grid-template-columns: 1fr 1.5fr;
@@ -60,7 +48,7 @@ include 'includes/header.php';
 <section class="page-hero">
     <div class="container">
         <h1>Get In Touch</h1>
-        <p style="font-size: 1.2rem; opacity: 0.9; margin-top: 20px;">We're here to answer your questions and hear your suggestions.</p>
+        <p>We're here to answer your questions and hear your suggestions.</p>
     </div>
 </section>
 
