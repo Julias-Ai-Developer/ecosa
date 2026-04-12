@@ -143,10 +143,10 @@ include 'includes/header.php';
                     certificate and ID card.</p>
                 <div
                     style="background: var(--background); padding: 15px; border-radius: 6px; margin-bottom: 25px; text-align: left;">
-                    <p style="font-size: 0.85rem; color: #666;"><i class="fas fa-university"></i> <strong>Bank
+                    <p style="font-size: 0.85rem; color: var(--text-muted);"><i class="fas fa-university"></i> <strong>Bank
                             Details:</strong> Official ECOSA Accounts (Provided upon form submission)</p>
                 </div>
-                <button class="btn btn-blue" style="width: 100%;">Apply Now</button>
+                <button class="btn btn-secondary" style="width: 100%;">Apply Now</button>
             </div>
         </div>
     </div>
@@ -163,27 +163,27 @@ include 'includes/header.php';
 
         <div class="events-grid">
             <div class="event-card reveal">
-                <div style="color: var(--gold-accent); font-weight: 700; margin-bottom: 10px;">JULY 2026</div>
+                <div style="color: var(--secondary-yellow); font-weight: 700; margin-bottom: 10px;">JULY 2026</div>
                 <h3>Annual Grand Reunion</h3>
                 <p style="margin: 15px 0;">A night of nostalgia, networking, and celebration at the school main hall.
                 </p>
-                <a href="community.php#events" style="color: var(--gold-accent); font-weight: 600;">View Details <i
+                <a href="community.php#events" style="color: var(--secondary-yellow); font-weight: 600;">View Details <i
                         class="fas fa-arrow-right"></i></a>
             </div>
             <div class="event-card reveal">
-                <div style="color: var(--gold-accent); font-weight: 700; margin-bottom: 10px;">SEPTEMBER 2026</div>
+                <div style="color: var(--secondary-yellow); font-weight: 700; margin-bottom: 10px;">SEPTEMBER 2026</div>
                 <h3>Career Mentorship Day</h3>
                 <p style="margin: 15px 0;">Alumni returning to inspire and guide O & A Level students on career paths.
                 </p>
-                <a href="community.php#events" style="color: var(--gold-accent); font-weight: 600;">View Details <i
+                <a href="community.php#events" style="color: var(--secondary-yellow); font-weight: 600;">View Details <i
                         class="fas fa-arrow-right"></i></a>
             </div>
             <div class="event-card reveal">
-                <div style="color: var(--gold-accent); font-weight: 700; margin-bottom: 10px;">DECEMBER 2026</div>
+                <div style="color: var(--secondary-yellow); font-weight: 700; margin-bottom: 10px;">DECEMBER 2026</div>
                 <h3>Corporate Dinner</h3>
                 <p style="margin: 15px 0;">Strategic engagement with corporate partners and fundraising for school
                     projects.</p>
-                <a href="community.php#events" style="color: var(--gold-accent); font-weight: 600;">View Details <i
+                <a href="community.php#events" style="color: var(--secondary-yellow); font-weight: 600;">View Details <i
                         class="fas fa-arrow-right"></i></a>
             </div>
         </div>

@@ -10,7 +10,7 @@
                         </a>
                     </div>
                     <p style="opacity: 0.8; margin-bottom: 20px;">The official alumni association for Equatorial College School. Dedicated to excellence and lifelong connections.</p>
-                    <p style="font-weight: 700; color: var(--gold-accent);">"Together for a Bright Future"</p>
+                    <p style="font-weight: 700; color: var(--secondary-yellow);">"Together for a Bright Future"</p>
                 </div>
                 <div>
                     <h4 class="footer-h4">Quick Links</h4>
@@ -42,7 +42,7 @@
                 </div>
             </div>
             <div class="footer-bottom">
-                &copy; <?php echo date('Y'); ?> Equatorial College School Old Students Association (ECOSA). All Rights Reserved.
+                &copy; <?php echo date('Y'); ?> Equatorial College School Old Students Association (ECOSA). All Rights Reserved. | Developed by <a href="https://www.kamatrustai.com" target="_blank" rel="noopener noreferrer">Kamatrust AI</a>
             </div>
         </div>
     </footer>
