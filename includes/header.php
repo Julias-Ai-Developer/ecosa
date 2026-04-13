@@ -8,7 +8,7 @@
     <!-- Font -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Montserrat:wght@500;600;700;800&family=Playfair+Display:wght@700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Courgette&family=Great+Vibes&family=Merriweather:ital,opsz,wght@0,18..144,300..900;1,18..144,300..900&family=Syne:wght@400..800&display=swap" rel="stylesheet">
     <!-- Font Awesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Custom CSS -->
@@ -28,9 +28,14 @@
         <div class="container topbar-content">
             <div class="motto">"Together for a Bright Future"</div>
             <div class="topbar-stats">
-                <span><i class="fas fa-users"></i> 500+ Members</span>
-                <span><i class="fas fa-calendar-alt"></i> Founded 2002</span>
-                <span><i class="fas fa-certificate"></i> URSB Registered</span>
+                <a href="https://wa.me/256700000000" class="topbar-stat" target="_blank" rel="noopener noreferrer">
+                    <i class="fab fa-whatsapp"></i>
+                    <span>+256 700 000 000</span>
+                </a>
+                <span class="topbar-stat">
+                    <i class="fas fa-users"></i>
+                    <span>500+ Members</span>
+                </span>
             </div>
         </div>
     </div>

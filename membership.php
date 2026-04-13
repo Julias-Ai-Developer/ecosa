@@ -16,7 +16,7 @@ include 'includes/header.php';
     }
 
     .membership-benefits-list li::marker {
-        color: var(--primary-green);
+        color: var(--accent-green);
     }
 
     .membership-eligibility {
@@ -53,8 +53,8 @@ include 'includes/header.php';
         padding: 8px 16px;
         margin-bottom: 18px;
         border-radius: 999px;
-        background: rgba(255, 214, 0, 0.22);
-        color: var(--primary-green);
+        background: rgba(103, 188, 69, 0.14);
+        color: var(--accent-green-dark);
         font-size: 0.82rem;
         font-weight: 700;
         letter-spacing: 0.05em;
@@ -66,15 +66,15 @@ include 'includes/header.php';
         width: 8px;
         height: 8px;
         border-radius: 50%;
-        background: var(--accent-pink);
+        background: var(--accent-green);
     }
 
     .membership-fee {
         margin-bottom: 30px;
         padding: 14px 18px;
         border-radius: 12px;
-        background: rgba(255, 214, 0, 0.18);
-        color: var(--primary-green);
+        background: rgba(103, 188, 69, 0.12);
+        color: var(--accent-green-dark);
         font-weight: 700;
     }
 
@@ -107,8 +107,8 @@ include 'includes/header.php';
     input:focus,
     select:focus {
         outline: none;
-        border-color: var(--primary-green);
-        box-shadow: 0 0 0 3px rgba(46, 125, 50, 0.12);
+        border-color: var(--brand-blue);
+        box-shadow: 0 0 0 3px rgba(23, 58, 96, 0.12);
     }
 
     .membership-submit {
@@ -165,7 +165,7 @@ include 'includes/header.php';
             <h2 class="section-title text-center">Registration Form</h2>
             <div class="membership-form">
                 <span class="membership-kicker">Membership Registration</span>
-                <p class="membership-fee">Registration Fee: UGX 200,000</p>
+                <p class="membership-fee">Registration Fee: UGX 20,000</p>
                 <form>
                     <div class="form-grid">
                         <div class="form-group">

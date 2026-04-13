@@ -2,47 +2,34 @@
     <footer>
         <div class="container">
             <div class="footer-grid">
-                <div>
-                    <div class="footer-logo">
-                        <a href="index.php" class="logo-area">
-                            <img src="assets/images/logo.png" alt="ECOSA Logo" class="logo-img" style="max-height: 60px; width: auto; filter: none;">
-                            <div class="logo-text" style="color: white;">ECOSA</div>
-                        </a>
+                <div class="footer-item">
+                    <h4>Reach us by phone</h4>
+                    <p>+256 700 000 000</p>
+                    <p>Membership and alumni support desk</p>
+                </div>
+                <div class="footer-item">
+                    <h4>Email and location</h4>
+                    <p>info@ecosa.org</p>
+                    <p>Equatorial College School, Main Campus</p>
+                </div>
+                <div class="footer-item">
+                    <h4>About ECOSA</h4>
+                    <p>Connecting old students, strengthening lifelong bonds, and supporting our school community.</p>
+                </div>
+                <div class="footer-item">
+                    <h4>Follow us</h4>
+                    <div class="footer-social" aria-label="Social media platforms">
+                        <span class="footer-social-icon"><i class="fab fa-facebook-f"></i></span>
+                        <span class="footer-social-icon"><i class="fab fa-twitter"></i></span>
+                        <span class="footer-social-icon"><i class="fab fa-youtube"></i></span>
+                        <span class="footer-social-icon"><i class="fab fa-linkedin-in"></i></span>
                     </div>
-                    <p style="opacity: 0.8; margin-bottom: 20px;">The official alumni association for Equatorial College School. Dedicated to excellence and lifelong connections.</p>
-                    <p style="font-weight: 700; color: var(--secondary-yellow);">"Together for a Bright Future"</p>
-                </div>
-                <div>
-                    <h4 class="footer-h4">Quick Links</h4>
-                    <ul class="footer-links">
-                        <li><a href="index.php">Home</a></li>
-                        <li><a href="about.php">About Us</a></li>
-                        <li><a href="membership.php">Membership</a></li>
-                        <li><a href="community.php">Latest News</a></li>
-                    </ul>
-                </div>
-                <div>
-                    <h4 class="footer-h4">Community</h4>
-                    <ul class="footer-links">
-                        <li><a href="community.php#events">Events</a></li>
-                        <li><a href="community.php#gallery">Gallery</a></li>
-                        <li><a href="about.php#leadership">Leadership</a></li>
-                        <li><a href="contact.php">Contact</a></li>
-                    </ul>
-                </div>
-                <div>
-                    <h4 class="footer-h4">Stay Connected</h4>
-                    <p style="opacity: 0.8; margin-bottom: 20px;">Follow us on social media for real-time updates.</p>
-                    <div style="display: flex; gap: 15px; font-size: 1.5rem;">
-                        <a href="#"><i class="fab fa-facebook"></i></a>
-                        <a href="#"><i class="fab fa-twitter"></i></a>
-                        <a href="#"><i class="fab fa-linkedin"></i></a>
-                        <a href="#"><i class="fab fa-instagram"></i></a>
-                    </div>
+                    <p>Updates, events, and alumni stories.</p>
                 </div>
             </div>
             <div class="footer-bottom">
-                &copy; <?php echo date('Y'); ?> Equatorial College School Old Students Association (ECOSA). All Rights Reserved. | Developed by <a href="https://www.kamatrustai.com" target="_blank" rel="noopener noreferrer">Kamatrust AI</a>
+                <span>&copy; <?php echo date('Y'); ?> Equatorial College School Old Students Association (ECOSA).</span>
+                <span class="footer-tagline">Together for a Bright Future.</span>
             </div>
         </div>
     </footer>
@@ -51,6 +38,10 @@
     <a href="https://wa.me/256700000000" class="whatsapp-btn" target="_blank">
         <i class="fab fa-whatsapp"></i>
     </a>
+
+    <button type="button" class="back-to-top" id="back-to-top" aria-label="Back to top">
+        <i class="fas fa-chevron-up"></i>
+    </button>
 
     <!-- Custom Scripts -->
     <script src="assets/js/script.js"></script>

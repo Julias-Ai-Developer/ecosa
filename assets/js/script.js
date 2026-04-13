@@ -3,6 +3,7 @@
 // Mobile Toggle
 const mobileToggle = document.getElementById('mobile-toggle');
 const navbar = document.querySelector('.navbar');
+const backToTopButton = document.getElementById('back-to-top');
 
 if (mobileToggle) {
     mobileToggle.addEventListener('click', () => {
@@ -40,6 +41,10 @@ window.addEventListener('scroll', () => {
         } else {
             navbar.style.padding = '15px 0';
         }
+    }
+
+    if (backToTopButton) {
+        backToTopButton.classList.toggle('visible', window.scrollY > 320);
     }
 });
 
@@ -146,5 +151,16 @@ if (contactForm) {
         e.preventDefault();
         alert('Thank you for your inquiry. ECOSA will contact you soon!');
         this.reset();
+    });
+}
+
+if (backToTopButton) {
+    backToTopButton.classList.toggle('visible', window.scrollY > 320);
+
+    backToTopButton.addEventListener('click', () => {
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
     });
 }

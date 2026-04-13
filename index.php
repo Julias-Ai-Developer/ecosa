@@ -76,7 +76,7 @@ include 'includes/header.php';
             <div class="mv-content reveal">
                 <div class="mv-item">
                     <h4><i class="fas fa-quote-left"></i> Our Motto</h4>
-                    <p style="font-size: 1.5rem; font-weight: 700; color: var(--primary-green);">Together for a Bright
+                    <p class="site-tagline-accent" style="font-size: 1.5rem; color: var(--accent-green-dark);">Together for a Bright
                         Future</p>
                 </div>
                 <div class="mv-item">
@@ -138,7 +138,7 @@ include 'includes/header.php';
 
             <div class="membership-highlight reveal">
                 <h3>Membership Entry</h3>
-                <div class="price-tag">UGX 200,000<span>/One-time</span></div>
+                <div class="price-tag">UGX 20,000<span>/One-time</span></div>
                 <p style="margin-bottom: 25px;">Official registration fee for all alumni. Includes membership
                     certificate and ID card.</p>
                 <div
