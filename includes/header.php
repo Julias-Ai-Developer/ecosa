@@ -79,7 +79,7 @@
                 </ul>
 
                 <div class="nav-ctas">
-                    <a href="membership.php#registration" class="btn btn-primary">Become a Member</a>
+                    <a href="membership.php#registration" class="btn member-pill-btn">Become a Member</a>
                 </div>
             </div>
 

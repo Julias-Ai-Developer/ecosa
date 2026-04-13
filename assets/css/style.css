@@ -324,6 +324,30 @@ a.topbar-stat:hover {
     gap: 15px;
 }
 
+.member-pill-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 14px 24px;
+    border-radius: 0;
+    background: var(--accent-green);
+    color: var(--white);
+    border: none;
+    box-shadow: none;
+    font-size: 0.98rem;
+    font-weight: 700;
+    letter-spacing: 0;
+    line-height: 1;
+    white-space: nowrap;
+}
+
+.member-pill-btn:hover {
+    background: var(--accent-green-dark);
+    color: var(--white);
+    transform: translateY(-2px);
+    box-shadow: none;
+}
+
 /* Mobile Toggle */
 .mobile-toggle {
     display: none;
@@ -562,7 +586,7 @@ a.topbar-stat:hover {
 .page-hero {
     background: var(--brand-blue);
     color: var(--white);
-    padding: 54px 0 48px;
+    padding: 30px 0 26px;
     text-align: center;
 }
 
@@ -571,7 +595,7 @@ a.topbar-stat:hover {
 }
 
 .page-hero h1 {
-    font-size: clamp(2.7rem, 5vw, 4rem);
+    font-size: clamp(2.15rem, 4vw, 3rem);
     font-weight: 800;
     line-height: 1.05;
     letter-spacing: -0.03em;
@@ -586,13 +610,15 @@ a.topbar-stat:hover {
 }
 
 .footer-tagline {
+    font-family: var(--font-display);
+    font-weight: 600;
     font-size: 1.02rem;
 }
 
 .page-hero p {
     max-width: 760px;
-    margin: 14px auto 0;
-    font-size: 1rem;
+    margin: 8px auto 0;
+    font-size: 0.92rem;
     opacity: 0.82;
     line-height: 1.6;
 }
@@ -972,6 +998,7 @@ footer {
     background: var(--brand-blue);
     color: var(--white);
     padding: 30px 0 16px;
+    font-family: var(--font-display);
 }
 
 .footer-grid {
@@ -1125,11 +1152,11 @@ footer {
     }
 
     .page-hero {
-        padding: 42px 0 36px;
+        padding: 24px 0 22px;
     }
 
     .page-hero p {
-        font-size: 0.95rem;
+        font-size: 0.88rem;
     }
 
     .topbar-stats {
