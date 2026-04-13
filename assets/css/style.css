@@ -1022,6 +1022,13 @@ footer {
     line-height: 1.5;
 }
 
+.footer-item p i {
+    width: 18px;
+    margin-right: 10px;
+    color: var(--accent-green);
+    text-align: center;
+}
+
 .footer-social {
     display: flex;
     gap: 14px;
@@ -1039,6 +1046,13 @@ footer {
     background: rgba(255, 255, 255, 0.08);
     color: rgba(255, 255, 255, 0.86);
     font-size: 0.95rem;
+}
+
+.footer-social-icon svg {
+    width: 15px;
+    height: 15px;
+    fill: currentColor;
+    display: block;
 }
 
 .footer-bottom {
