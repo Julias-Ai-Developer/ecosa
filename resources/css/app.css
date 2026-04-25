@@ -234,6 +234,18 @@
         background-color: rgba(255, 255, 255, 0.92);
         @apply border border-white/60 backdrop-blur;
     }
+
+    .site-torn-edge {
+        position: absolute;
+        bottom: -1px;
+        left: 0;
+        right: 0;
+        height: 56px;
+        background-color: white;
+        clip-path: ellipse(54% 100% at 50% 100%);
+        pointer-events: none;
+        z-index: 5;
+    }
 }
 
 @layer utilities {

@@ -47,22 +47,17 @@ class Home extends Component
             ->get();
 
         return view('livewire.site.home', [
-            'organization' => EcosaSite::organization(),
-            'heroSlides' => EcosaSite::heroSlides(),
-            'showcaseCards' => EcosaSite::homeShowcaseCards(),
-            'benefits' => EcosaSite::membershipBenefits(),
+            'organization'     => EcosaSite::organization(),
+            'heroSlides'       => EcosaSite::heroSlides(),
+            'showcaseCards'    => EcosaSite::homeShowcaseCards(),
+            'benefits'         => EcosaSite::membershipBenefits(),
             'membershipTracks' => EcosaSite::membershipTracks(),
-            'leaders' => $leaders->isNotEmpty()
-                ? $leaders
-                : collect(EcosaSite::leadershipFallback()),
-            'updates' => $updates,
-            'fallbackUpdates' => EcosaSite::updatesFallback(),
-            'events' => $events->isNotEmpty()
-                ? $events
-                : collect(EcosaSite::communityFallback('event')),
-            'projects' => $projects->isNotEmpty()
-                ? $projects
-                : collect(EcosaSite::communityFallback('project')),
+            'sponsors'         => EcosaSite::sponsors(),
+            'leaders'          => $leaders->isNotEmpty() ? $leaders : collect(EcosaSite::leadershipFallback()),
+            'updates'          => $updates,
+            'fallbackUpdates'  => EcosaSite::updatesFallback(),
+            'events'           => $events->isNotEmpty() ? $events : collect(EcosaSite::communityFallback('event')),
+            'projects'         => $projects->isNotEmpty() ? $projects : collect(EcosaSite::communityFallback('project')),
         ]);
     }
 }

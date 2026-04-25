@@ -19,86 +19,103 @@
             </div>
 
             @if (count($projects) > 0)
-                {{-- Featured first project --}}
-                @php
-                    $first = $projects[0];
-                    $firstTitle   = data_get($first, 'title');
-                    $firstSummary = data_get($first, 'summary') ?: data_get($first, 'text');
-                    $firstBody    = data_get($first, 'body');
-                    $firstLoc     = data_get($first, 'location') ?: data_get($first, 'meta');
-                    $firstStatus  = data_get($first, 'status', 'active');
-                    $firstImage   = is_object($first) && method_exists($first, 'imageUrl') ? $first->imageUrl() : asset('assets/images/school/Equatorial-College-School5.jpeg');
-                @endphp
-                <article class="site-card mb-10 overflow-hidden lg:grid lg:grid-cols-2">
-                    <div class="relative h-72 lg:h-auto">
-                        <img src="{{ $firstImage }}" alt="{{ $firstTitle }}" class="h-full w-full object-cover">
-                        <div class="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent lg:bg-gradient-to-r"></div>
-                        <span class="absolute left-5 top-5 rounded-full bg-ecosa-green px-4 py-1.5 text-xs font-bold uppercase tracking-[0.2em] text-white shadow">
-                            {{ ucfirst($firstStatus) }}
-                        </span>
-                    </div>
-                    <div class="flex flex-col justify-center p-8 lg:p-10">
-                        <span class="site-chip">Featured Project</span>
-                        <h2 class="mt-5 font-display text-4xl font-semibold leading-tight text-ecosa-blue-deep sm:text-5xl">{{ $firstTitle }}</h2>
-                        <p class="mt-5 text-base leading-8 text-zinc-600">{{ $firstSummary }}</p>
-                        @if ($firstBody)
-                            <p class="mt-3 text-sm leading-7 text-zinc-500">{{ str($firstBody)->limit(200) }}</p>
-                        @endif
-                        @if (filled($firstLoc))
-                            <div class="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-ecosa-green-deep">
-                                <i class="fas fa-location-dot text-ecosa-green"></i>
-                                {{ $firstLoc }}
-                            </div>
-                        @endif
-                        <a href="{{ route('site.membership.register') }}" class="site-btn-primary mt-6 w-fit">
-                            Join &amp; Participate <i class="fas fa-arrow-right ml-1 text-xs"></i>
-                        </a>
-                    </div>
-                </article>
+                <div class="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+                    @foreach ($projects as $project)
+                        @php
+                            $title    = data_get($project, 'title');
+                            $summary  = data_get($project, 'summary') ?: data_get($project, 'text', '');
+                            $loc      = data_get($project, 'location') ?: data_get($project, 'meta', '');
+                            $status   = data_get($project, 'status', 'active');
+                            $image    = is_object($project) && method_exists($project, 'imageUrl')
+                                            ? $project->imageUrl()
+                                            : asset('assets/images/school/Equatorial-College-School5.jpeg');
+                            $schedule = is_object($project) && method_exists($project, 'scheduleLabel')
+                                            ? $project->scheduleLabel()
+                                            : null;
+                            $detailUrl = is_object($project) && isset($project->id)
+                                            ? route('site.community.projects.show', $project)
+                                            : null;
 
-                {{-- Remaining projects grid --}}
-                @if (count($projects) > 1)
-                    <div class="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
-                        @foreach ($projects as $i => $project)
-                            @if ($i === 0) @continue @endif
-                            @php
-                                $title   = data_get($project, 'title');
-                                $summary = data_get($project, 'summary') ?: data_get($project, 'text');
-                                $loc     = data_get($project, 'location') ?: data_get($project, 'meta');
-                                $status  = data_get($project, 'status', 'active');
-                                $image   = is_object($project) && method_exists($project, 'imageUrl') ? $project->imageUrl() : asset('assets/images/school/Equatorial-College-School5.jpeg');
-                            @endphp
-                            <article class="site-card group overflow-hidden">
-                                <div class="relative h-52 overflow-hidden">
-                                    <img src="{{ $image }}" alt="{{ $title }}" class="h-full w-full object-cover transition duration-500 group-hover:scale-105">
-                                    <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
-                                    <span class="absolute left-4 top-4 rounded-full px-3 py-1 text-xs font-bold uppercase tracking-[0.18em] {{ $status === 'active' ? 'bg-ecosa-green text-white' : ($status === 'completed' ? 'bg-ecosa-blue text-white' : 'bg-ecosa-gold text-ecosa-ink') }}">
-                                        {{ ucfirst($status) }}
+                            $statusClass = match ($status) {
+                                'active'    => 'bg-ecosa-green text-white',
+                                'completed' => 'bg-ecosa-blue text-white',
+                                default     => 'bg-ecosa-gold text-ecosa-ink',
+                            };
+                        @endphp
+
+                        <article class="flex flex-col overflow-hidden border border-zinc-100 bg-white shadow-sm">
+                            {{-- Image --}}
+                            <div class="group relative h-52 overflow-hidden">
+                                <img
+                                    src="{{ $image }}"
+                                    alt="{{ $title }}"
+                                    class="h-full w-full object-cover transition duration-500 group-hover:scale-105"
+                                >
+                                <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
+                                <span class="absolute left-4 top-4 rounded px-3 py-1 text-xs font-bold uppercase tracking-[0.18em] {{ $statusClass }}">
+                                    {{ ucfirst($status) }}
+                                </span>
+                            </div>
+
+                            {{-- Content --}}
+                            <div class="flex flex-1 flex-col p-6">
+                                {{-- Meta row --}}
+                                <div class="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-zinc-400">
+                                    <span class="flex items-center gap-1.5">
+                                        <i class="fas fa-user-circle"></i>
+                                        ECOSA Team
                                     </span>
-                                </div>
-                                <div class="p-6">
-                                    <span class="site-chip">Community Project</span>
-                                    <h3 class="mt-4 font-display text-3xl font-semibold leading-tight text-ecosa-blue-deep">{{ $title }}</h3>
-                                    <p class="mt-3 text-sm leading-7 text-zinc-600">{{ str($summary)->limit(160) }}</p>
+                                    @if ($schedule)
+                                        <span class="flex items-center gap-1.5">
+                                            <i class="fas fa-calendar-alt"></i>
+                                            {{ $schedule }}
+                                        </span>
+                                    @endif
                                     @if (filled($loc))
-                                        <div class="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-ecosa-green-deep">
-                                            <i class="fas fa-location-dot text-ecosa-green text-xs"></i>
+                                        <span class="flex items-center gap-1.5">
+                                            <i class="fas fa-location-dot"></i>
                                             {{ $loc }}
-                                        </div>
+                                        </span>
                                     @endif
                                 </div>
-                            </article>
-                        @endforeach
-                    </div>
-                @endif
+
+                                {{-- Title --}}
+                                <h3 class="mt-3 font-display text-xl font-bold leading-snug text-zinc-900">
+                                    @if ($detailUrl)
+                                        <a href="{{ $detailUrl }}" class="transition hover:text-ecosa-green-deep">{{ $title }}</a>
+                                    @else
+                                        {{ $title }}
+                                    @endif
+                                </h3>
+
+                                {{-- Excerpt --}}
+                                <p class="mt-2 flex-grow text-sm leading-7 text-zinc-600">
+                                    {{ str($summary)->limit(130) }}
+                                </p>
+
+                                {{-- Read More link --}}
+                                @if ($detailUrl)
+                                    <a
+                                        href="{{ $detailUrl }}"
+                                        class="mt-4 inline-flex items-center gap-1.5 text-sm font-bold text-ecosa-green transition hover:text-ecosa-green-deep"
+                                    >
+                                        Read More
+                                        <i class="fas fa-arrow-right text-xs"></i>
+                                    </a>
+                                @endif
+                            </div>
+                        </article>
+                    @endforeach
+                </div>
             @else
-                {{-- Empty state --}}
                 <div class="py-20 text-center">
                     <div class="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-ecosa-blue/8">
                         <i class="fas fa-briefcase text-3xl text-ecosa-blue/40"></i>
                     </div>
                     <h3 class="mt-6 font-display text-3xl font-semibold text-ecosa-blue-deep">Projects Coming Soon</h3>
-                    <p class="mx-auto mt-4 max-w-md text-sm leading-7 text-zinc-500">ECOSA community projects are being prepared. Check back soon or contact the team for details.</p>
+                    <p class="mx-auto mt-4 max-w-md text-sm leading-7 text-zinc-500">
+                        ECOSA community projects are being prepared. Check back soon or contact the team for details.
+                    </p>
                     <a href="{{ route('site.contact') }}" class="site-btn-primary mt-6 inline-flex">Contact the Team</a>
                 </div>
             @endif
@@ -115,7 +132,9 @@
             </p>
             <div class="mt-8 flex flex-wrap justify-center gap-4">
                 <a href="{{ route('site.membership.register') }}" class="site-btn-primary">Register as Member</a>
-                <a href="{{ route('site.community') }}" class="site-btn-ghost border-white/20 bg-transparent text-white hover:bg-white/10">View Community</a>
+                <a href="{{ route('site.community') }}" class="site-btn-ghost border-white/20 bg-transparent text-white hover:bg-white/10">
+                    View Community
+                </a>
             </div>
         </div>
     </div>

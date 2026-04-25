@@ -12,6 +12,7 @@ use App\Livewire\Site\About;
 use App\Livewire\Site\Community;
 use App\Livewire\Site\CommunityEvents;
 use App\Livewire\Site\CommunityInsurance;
+use App\Livewire\Site\CommunityProjectDetail;
 use App\Livewire\Site\CommunityProjects;
 use App\Livewire\Site\Contact;
 use App\Livewire\Site\Governance;
@@ -20,6 +21,7 @@ use App\Livewire\Site\Leadership;
 use App\Livewire\Site\Membership;
 use App\Livewire\Site\MembershipHub;
 use App\Livewire\Site\Updates;
+use App\Livewire\Site\UpdateDetail;
 use Illuminate\Support\Facades\Route;
 
 Route::livewire('/', Home::class)->name('home');
@@ -32,8 +34,10 @@ Route::livewire('membership/register', Membership::class)->name('site.membership
 Route::livewire('community', Community::class)->name('site.community');
 Route::livewire('community/events', CommunityEvents::class)->name('site.community.events');
 Route::livewire('community/projects', CommunityProjects::class)->name('site.community.projects');
+Route::livewire('community/projects/{program}', CommunityProjectDetail::class)->name('site.community.projects.show');
 Route::livewire('community/insurance-group', CommunityInsurance::class)->name('site.community.insurance');
 Route::livewire('latest-updates', Updates::class)->name('site.updates');
+Route::livewire('latest-updates/{update}', UpdateDetail::class)->name('site.updates.show');
 Route::livewire('contact-us', Contact::class)->name('site.contact');
 
 Route::middleware(['auth'])->group(function () {

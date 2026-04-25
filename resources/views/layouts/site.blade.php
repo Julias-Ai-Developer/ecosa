@@ -192,8 +192,8 @@
                     </nav>
 
                     <div class="flex items-center gap-3">
-                        <a href="{{ route('site.membership.register') }}" class="site-nav-cta-outline">Register</a>
-                        <a href="{{ route('login') }}" class="site-nav-cta-fill">Log in</a>
+                        <a href="{{ route('site.membership.register') }}" class="site-nav-cta-outline whitespace-nowrap">Register</a>
+                        <a href="{{ route('login') }}" class="whitespace-nowrap rounded-[10px] bg-ecosa-green px-4 py-2 text-sm font-bold text-white transition hover:bg-ecosa-green-deep">Log in</a>
                     </div>
                 </div>
             </div>

@@ -336,4 +336,14 @@ class EcosaSite
             'General Inquiry',
         ];
     }
+
+    public static function sponsors(): array
+    {
+        return [
+            ['name' => 'Equatorial College School', 'logo' => asset('assets/images/school/aerialview.jpeg'), 'url' => 'https://ecs.ac.ug'],
+            ['name' => 'Uganda Alumni Network', 'logo' => asset('assets/images/school/Equatorial-College-School5.jpeg'), 'url' => ''],
+            ['name' => 'Ibanda Municipality', 'logo' => asset('assets/images/school/aerialview.jpeg'), 'url' => ''],
+            ['name' => 'Alumni Partners', 'logo' => asset('assets/images/school/Equatorial-College-School5.jpeg'), 'url' => ''],
+        ];
+    }
 }
