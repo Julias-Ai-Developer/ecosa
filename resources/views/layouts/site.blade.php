@@ -228,77 +228,7 @@
             </div>
         </header>
 
-        {{-- Quick Register Drawer Trigger --}}
-        <button
-            type="button"
-            class="fixed right-0 top-[44vh] z-30 flex h-14 w-14 -translate-y-1/2 items-center justify-center rounded-l-2xl bg-ecosa-green text-white shadow-[0_18px_32px_rgba(23,146,75,0.35)] transition hover:bg-ecosa-green-deep"
-            @click="registerDrawer = true"
-            aria-label="Open quick registration panel"
-        >
-            <i class="fas fa-user-plus text-lg"></i>
-        </button>
 
-        {{-- Quick Register Drawer --}}
-        <div x-cloak x-show="registerDrawer" class="fixed inset-0 z-50">
-            <div class="absolute inset-0 bg-[#081b2c]/60 backdrop-blur-sm" @click="registerDrawer = false"></div>
-            <aside
-                x-transition:enter="transform transition duration-300 ease-out"
-                x-transition:enter-start="translate-x-full"
-                x-transition:enter-end="translate-x-0"
-                x-transition:leave="transform transition duration-250 ease-in"
-                x-transition:leave-start="translate-x-0"
-                x-transition:leave-end="translate-x-full"
-                class="absolute right-0 top-0 h-full w-full max-w-md overflow-y-auto bg-white shadow-[0_28px_60px_rgba(8,27,44,0.24)]"
-            >
-                <div class="sticky top-0 z-10 border-b border-ecosa-blue/8 bg-white/95 px-6 py-5 backdrop-blur sm:px-8">
-                    <div class="flex items-start justify-between gap-4">
-                        <div>
-                            <p class="text-xs font-bold uppercase tracking-[0.3em] text-zinc-400">Quick Registration</p>
-                            <h2 class="mt-3 font-display text-4xl font-semibold text-ecosa-green-deep">Available Membership Registration</h2>
-                            <p class="mt-2 text-sm leading-7 text-zinc-600">Start here, then continue on the full registration page for payment and final submission.</p>
-                        </div>
-                        <button type="button" class="inline-flex h-11 w-11 items-center justify-center rounded-full border border-ecosa-blue/10 text-ecosa-blue" @click="registerDrawer = false" aria-label="Close">
-                            <i class="fas fa-xmark"></i>
-                        </button>
-                    </div>
-                </div>
-
-                <div class="px-6 py-8 sm:px-8 sm:py-10">
-                    <form method="GET" action="{{ route('site.membership.register') }}" class="space-y-4">
-                        <div>
-                            <label for="quick_full_name" class="site-label">Full Name</label>
-                            <input id="quick_full_name" type="text" name="full_name" class="site-input" placeholder="Your full name">
-                        </div>
-                        <div>
-                            <label for="quick_phone" class="site-label">Phone Number</label>
-                            <input id="quick_phone" type="tel" name="phone" class="site-input" placeholder="+256...">
-                        </div>
-                        <div>
-                            <label for="quick_email" class="site-label">Email Address</label>
-                            <input id="quick_email" type="email" name="email" class="site-input" placeholder="you@example.com">
-                        </div>
-                        <div>
-                            <label for="quick_completion_year" class="site-label">Completion Year</label>
-                            <input id="quick_completion_year" type="number" name="completion_year" class="site-input" placeholder="2016">
-                        </div>
-                        <div>
-                            <label for="quick_occupation_type" class="site-label">Professional Category</label>
-                            <select id="quick_occupation_type" name="occupation_type" class="site-input">
-                                @foreach (\App\Support\EcosaSite::occupationTypes() as $value => $label)
-                                    <option value="{{ $value }}">{{ $label }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <button type="submit" class="site-btn-primary w-full">Continue Registration</button>
-                    </form>
-
-                    <div class="mt-6 rounded-[24px] bg-ecosa-blue/[0.04] p-5 text-sm leading-7 text-zinc-600">
-                        <p class="font-semibold text-ecosa-blue-deep">Registration fee: UGX 20,000.</p>
-                        <p class="mt-2">Complete payment on the full membership page using MTN Mobile Money or Airtel Money. Your membership ID is emailed automatically.</p>
-                    </div>
-                </div>
-            </aside>
-        </div>
 
         {{-- Page Content --}}
         {{ $slot }}
