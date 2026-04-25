@@ -7,7 +7,7 @@
             <h2 class="text-base font-bold text-zinc-900">News &amp; Updates</h2>
             <p class="mt-0.5 text-xs text-zinc-500">Manage announcements published to the public website</p>
         </div>
-        <button type="button" @click="showForm = true"
+        <button type="button" @click="$wire.newEntry().then(() => showForm = true)"
                 class="inline-flex items-center gap-2 rounded-lg bg-ecosa-green px-4 py-2 text-sm font-semibold text-white transition hover:bg-ecosa-green-deep">
             <i class="fas fa-plus text-xs"></i> Publish Update
         </button>
@@ -21,7 +21,7 @@
                     <i class="fas fa-newspaper text-2xl text-zinc-300"></i>
                 </div>
                 <p class="mt-3 text-sm text-zinc-500">No updates published yet.</p>
-                <button type="button" @click="showForm = true"
+                <button type="button" @click="$wire.newEntry().then(() => showForm = true)"
                         class="mt-3 text-sm font-semibold text-ecosa-green hover:underline">
                     Publish your first update
                 </button>
@@ -53,13 +53,21 @@
                             {{ $update->published_at ? $update->published_at->format('M j, Y') : '—' }}
                         </td>
                         <td class="px-6 py-4 text-right">
-                            <button type="button"
-                                    wire:click="deleteNews({{ $update->id }})"
-                                    wire:confirm="Delete '{{ addslashes($update->title) }}'? This cannot be undone."
-                                    class="ml-auto flex h-8 w-8 items-center justify-center rounded-lg border border-rose-100 bg-rose-50 text-rose-500 transition hover:bg-rose-100"
-                                    title="Delete">
-                                <i class="fas fa-trash-can text-xs"></i>
-                            </button>
+                            <div class="flex items-center justify-end gap-2">
+                                <button type="button"
+                                        @click="$wire.editNews({{ $update->id }}).then(() => showForm = true)"
+                                        class="flex h-8 w-8 items-center justify-center rounded-lg border border-zinc-200 text-zinc-500 transition hover:border-ecosa-green hover:text-ecosa-green"
+                                        title="Edit">
+                                    <i class="fas fa-pen text-xs"></i>
+                                </button>
+                                <button type="button"
+                                        wire:click="deleteNews({{ $update->id }})"
+                                        wire:confirm="Delete '{{ addslashes($update->title) }}'? This cannot be undone."
+                                        class="flex h-8 w-8 items-center justify-center rounded-lg border border-rose-100 bg-rose-50 text-rose-500 transition hover:bg-rose-100"
+                                        title="Delete">
+                                    <i class="fas fa-trash-can text-xs"></i>
+                                </button>
+                            </div>
                         </td>
                     </tr>
                     @endforeach
@@ -93,8 +101,12 @@
         {{-- Drawer Header --}}
         <div class="flex shrink-0 items-center justify-between border-b border-zinc-100 px-6 py-5">
             <div>
-                <h3 class="text-base font-bold text-zinc-900">Publish Update</h3>
-                <p class="mt-0.5 text-xs text-zinc-500">Add an announcement to the public website</p>
+                <h3 class="text-base font-bold text-zinc-900">
+                    {{ $editingId ? 'Edit Update' : 'Publish Update' }}
+                </h3>
+                <p class="mt-0.5 text-xs text-zinc-500">
+                    {{ $editingId ? 'Make changes and save' : 'Add an announcement to the public website' }}
+                </p>
             </div>
             <button type="button" @click="showForm = false"
                     class="flex h-8 w-8 items-center justify-center rounded-lg border border-zinc-200 text-zinc-400 transition hover:text-zinc-600">
@@ -107,7 +119,7 @@
             <div class="flex-1 overflow-y-auto px-6 py-5 space-y-4">
                 @if($newsSaved)
                     <div class="rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-medium text-emerald-700">
-                        Update published successfully.
+                        <i class="fas fa-check mr-1.5"></i> {{ $editingId ? 'Changes saved.' : 'Update published successfully.' }}
                     </div>
                 @endif
 
@@ -120,7 +132,10 @@
                         @error('newsCategory') <p class="mt-1 text-xs text-rose-500">{{ $message }}</p> @enderror
                     </div>
                     <div>
-                        <label class="mb-1.5 block text-xs font-semibold text-zinc-700">Feature Image</label>
+                        <label class="mb-1.5 block text-xs font-semibold text-zinc-700">
+                            Feature Image
+                            @if($editingId) <span class="font-normal text-zinc-400">(leave blank to keep existing)</span> @endif
+                        </label>
                         <input type="file" wire:model="newsImage" accept="image/*"
                                class="w-full rounded-lg border border-zinc-200 px-3 py-2 text-sm text-zinc-600 focus:border-ecosa-green focus:outline-none">
                         @error('newsImage') <p class="mt-1 text-xs text-rose-500">{{ $message }}</p> @enderror
@@ -162,8 +177,10 @@
                 <button type="submit"
                         class="rounded-lg bg-ecosa-green px-5 py-2 text-sm font-semibold text-white transition hover:bg-ecosa-green-deep"
                         wire:loading.attr="disabled" wire:target="saveNews,newsImage">
-                    <span wire:loading.remove wire:target="saveNews,newsImage">Publish Update</span>
-                    <span wire:loading wire:target="saveNews,newsImage">Publishing...</span>
+                    <span wire:loading.remove wire:target="saveNews,newsImage">
+                        {{ $editingId ? 'Save Changes' : 'Publish Update' }}
+                    </span>
+                    <span wire:loading wire:target="saveNews,newsImage">Saving...</span>
                 </button>
             </div>
         </form>

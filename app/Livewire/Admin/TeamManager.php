@@ -17,6 +17,8 @@ class TeamManager extends Component
 {
     use WithFileUploads;
 
+    public ?int $editingId = null;
+
     public string $leaderName = '';
 
     public string $leaderInitials = '';
@@ -37,41 +39,79 @@ class TeamManager extends Component
 
     public bool $leaderSaved = false;
 
+    public function newEntry(): void
+    {
+        $this->reset('leaderName', 'leaderInitials', 'leaderTitle', 'leaderPortfolio', 'leaderFocus', 'leaderPhoto');
+        $this->leaderIcon = 'fa-user-tie';
+        $this->leaderTone = 'blue';
+        $this->leaderSortOrder = 0;
+        $this->editingId = null;
+        $this->leaderSaved = false;
+        $this->resetValidation();
+    }
+
+    public function editLeader(int $id): void
+    {
+        $record = LeadershipMember::query()->findOrFail($id);
+        $this->editingId = $id;
+        $this->leaderName = $record->name ?? '';
+        $this->leaderInitials = $record->initials ?? '';
+        $this->leaderTitle = $record->title;
+        $this->leaderPortfolio = $record->portfolio;
+        $this->leaderFocus = $record->focus ?? '';
+        $this->leaderIcon = $record->icon ?? 'fa-user-tie';
+        $this->leaderTone = $record->tone ?? 'blue';
+        $this->leaderSortOrder = $record->sort_order;
+        $this->leaderPhoto = null;
+        $this->leaderSaved = false;
+        $this->resetValidation();
+    }
+
     public function saveLeader(): void
     {
         $validated = $this->validate([
-            'leaderName' => ['nullable', 'string', 'max:120'],
-            'leaderInitials' => ['required_without:leaderName', 'nullable', 'string', 'max:24'],
-            'leaderTitle' => ['required', 'string', 'max:120'],
+            'leaderName'      => ['nullable', 'string', 'max:120'],
+            'leaderInitials'  => ['required_without:leaderName', 'nullable', 'string', 'max:24'],
+            'leaderTitle'     => ['required', 'string', 'max:120'],
             'leaderPortfolio' => ['required', 'string', 'max:120'],
-            'leaderFocus' => ['required', 'string', 'max:500'],
-            'leaderIcon' => ['required', 'string', 'max:80'],
-            'leaderTone' => ['required', Rule::in(['blue', 'green', 'gold', 'rose'])],
+            'leaderFocus'     => ['required', 'string', 'max:500'],
+            'leaderIcon'      => ['required', 'string', 'max:80'],
+            'leaderTone'      => ['required', Rule::in(['blue', 'green', 'gold', 'rose'])],
             'leaderSortOrder' => ['required', 'integer', 'min:0', 'max:500'],
-            'leaderPhoto' => ['nullable', 'image', 'max:2048'],
+            'leaderPhoto'     => ['nullable', 'image', 'max:2048'],
         ]);
 
         $path = $this->leaderPhoto
             ? $this->leaderPhoto->store('leaders', 'uploads')
             : null;
 
-        LeadershipMember::query()->create([
-            'name' => $validated['leaderName'] ?: null,
-            'initials' => Str::upper($validated['leaderInitials'] ?: Str::substr($validated['leaderName'], 0, 2)),
-            'title' => $validated['leaderTitle'],
+        $data = [
+            'name'      => $validated['leaderName'] ?: null,
+            'initials'  => Str::upper($validated['leaderInitials'] ?: Str::substr($validated['leaderName'] ?? '', 0, 2)),
+            'title'     => $validated['leaderTitle'],
             'portfolio' => $validated['leaderPortfolio'],
-            'focus' => $validated['leaderFocus'],
-            'icon' => $validated['leaderIcon'],
-            'tone' => $validated['leaderTone'],
+            'focus'     => $validated['leaderFocus'],
+            'icon'      => $validated['leaderIcon'],
+            'tone'      => $validated['leaderTone'],
             'sort_order' => $validated['leaderSortOrder'],
-            'photo_path' => $path,
-            'is_published' => true,
-        ]);
+        ];
+
+        if ($this->editingId) {
+            if ($path) {
+                $data['photo_path'] = $path;
+            }
+            LeadershipMember::query()->whereKey($this->editingId)->update($data);
+        } else {
+            $data['photo_path'] = $path;
+            $data['is_published'] = true;
+            LeadershipMember::query()->create($data);
+        }
 
         $this->reset('leaderName', 'leaderInitials', 'leaderTitle', 'leaderPortfolio', 'leaderFocus', 'leaderPhoto');
         $this->leaderIcon = 'fa-user-tie';
         $this->leaderTone = 'blue';
         $this->leaderSortOrder = 0;
+        $this->editingId = null;
         $this->leaderSaved = true;
     }
 

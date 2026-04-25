@@ -7,7 +7,7 @@
             <h2 class="text-base font-bold text-zinc-900">Leadership &amp; Team</h2>
             <p class="mt-0.5 text-xs text-zinc-500">Profiles shown on the public leadership page</p>
         </div>
-        <button type="button" @click="showForm = true"
+        <button type="button" @click="$wire.newEntry().then(() => showForm = true)"
                 class="inline-flex items-center gap-2 rounded-lg bg-ecosa-green px-4 py-2 text-sm font-semibold text-white transition hover:bg-ecosa-green-deep">
             <i class="fas fa-plus text-xs"></i> Add Profile
         </button>
@@ -21,7 +21,7 @@
                     <i class="fas fa-users-gear text-2xl text-zinc-300"></i>
                 </div>
                 <p class="mt-3 text-sm text-zinc-500">No leadership profiles yet.</p>
-                <button type="button" @click="showForm = true"
+                <button type="button" @click="$wire.newEntry().then(() => showForm = true)"
                         class="mt-3 text-sm font-semibold text-ecosa-green hover:underline">
                     Add your first profile
                 </button>
@@ -61,13 +61,21 @@
                         </td>
                         <td class="px-6 py-4 text-xs text-zinc-400">{{ $leader->sort_order }}</td>
                         <td class="px-6 py-4 text-right">
-                            <button type="button"
-                                    wire:click="deleteLeader({{ $leader->id }})"
-                                    wire:confirm="Delete profile for '{{ addslashes($leader->title) }}'? This cannot be undone."
-                                    class="ml-auto flex h-8 w-8 items-center justify-center rounded-lg border border-rose-100 bg-rose-50 text-rose-500 transition hover:bg-rose-100"
-                                    title="Delete">
-                                <i class="fas fa-trash-can text-xs"></i>
-                            </button>
+                            <div class="flex items-center justify-end gap-2">
+                                <button type="button"
+                                        @click="$wire.editLeader({{ $leader->id }}).then(() => showForm = true)"
+                                        class="flex h-8 w-8 items-center justify-center rounded-lg border border-zinc-200 text-zinc-500 transition hover:border-ecosa-green hover:text-ecosa-green"
+                                        title="Edit">
+                                    <i class="fas fa-pen text-xs"></i>
+                                </button>
+                                <button type="button"
+                                        wire:click="deleteLeader({{ $leader->id }})"
+                                        wire:confirm="Delete profile for '{{ addslashes($leader->title) }}'? This cannot be undone."
+                                        class="flex h-8 w-8 items-center justify-center rounded-lg border border-rose-100 bg-rose-50 text-rose-500 transition hover:bg-rose-100"
+                                        title="Delete">
+                                    <i class="fas fa-trash-can text-xs"></i>
+                                </button>
+                            </div>
                         </td>
                     </tr>
                     @endforeach
@@ -100,8 +108,12 @@
 
         <div class="flex shrink-0 items-center justify-between border-b border-zinc-100 px-6 py-5">
             <div>
-                <h3 class="text-base font-bold text-zinc-900">Add Leadership Profile</h3>
-                <p class="mt-0.5 text-xs text-zinc-500">This profile will appear on the public leadership page</p>
+                <h3 class="text-base font-bold text-zinc-900">
+                    {{ $editingId ? 'Edit Leadership Profile' : 'Add Leadership Profile' }}
+                </h3>
+                <p class="mt-0.5 text-xs text-zinc-500">
+                    {{ $editingId ? 'Make changes and save' : 'This profile will appear on the public leadership page' }}
+                </p>
             </div>
             <button type="button" @click="showForm = false"
                     class="flex h-8 w-8 items-center justify-center rounded-lg border border-zinc-200 text-zinc-400 transition hover:text-zinc-600">
@@ -113,7 +125,7 @@
             <div class="flex-1 overflow-y-auto px-6 py-5 space-y-4">
                 @if($leaderSaved)
                     <div class="rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-medium text-emerald-700">
-                        Profile published successfully.
+                        <i class="fas fa-check mr-1.5"></i> {{ $editingId ? 'Changes saved.' : 'Profile published successfully.' }}
                     </div>
                 @endif
 
@@ -186,7 +198,10 @@
                         @error('leaderSortOrder') <p class="mt-1 text-xs text-rose-500">{{ $message }}</p> @enderror
                     </div>
                     <div>
-                        <label class="mb-1.5 block text-xs font-semibold text-zinc-700">Photo</label>
+                        <label class="mb-1.5 block text-xs font-semibold text-zinc-700">
+                            Photo
+                            @if($editingId) <span class="font-normal text-zinc-400">(leave blank to keep existing)</span> @endif
+                        </label>
                         <input type="file" wire:model="leaderPhoto" accept="image/*"
                                class="w-full rounded-lg border border-zinc-200 px-3 py-2 text-sm text-zinc-600 focus:border-ecosa-green focus:outline-none">
                         @error('leaderPhoto') <p class="mt-1 text-xs text-rose-500">{{ $message }}</p> @enderror
@@ -202,8 +217,10 @@
                 <button type="submit"
                         class="rounded-lg bg-ecosa-green px-5 py-2 text-sm font-semibold text-white transition hover:bg-ecosa-green-deep"
                         wire:loading.attr="disabled" wire:target="saveLeader,leaderPhoto">
-                    <span wire:loading.remove wire:target="saveLeader,leaderPhoto">Publish Profile</span>
-                    <span wire:loading wire:target="saveLeader,leaderPhoto">Publishing...</span>
+                    <span wire:loading.remove wire:target="saveLeader,leaderPhoto">
+                        {{ $editingId ? 'Save Changes' : 'Publish Profile' }}
+                    </span>
+                    <span wire:loading wire:target="saveLeader,leaderPhoto">Saving...</span>
                 </button>
             </div>
         </form>

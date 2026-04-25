@@ -1,5 +1,6 @@
-<div class="space-y-5" x-data="{ showMsg: false }"
+<div x-data="{ showMsg: false }"
      x-effect="if ($wire.messageSent) { setTimeout(() => { showMsg = false }, 1200) }">
+<div class="space-y-5">
 
     {{-- Stat Cards --}}
     <section class="grid gap-4 sm:grid-cols-3 xl:grid-cols-5">
@@ -421,4 +422,5 @@
             </button>
         </div>
     </form>
+</div>
 </div>
