@@ -6,6 +6,7 @@ use App\Livewire\Admin\DashboardIndex;
 use App\Livewire\Admin\MessagesIndex;
 use App\Livewire\Admin\MembersIndex;
 use App\Livewire\Admin\NewsManager;
+use App\Livewire\Admin\NotificationsManager;
 use App\Livewire\Admin\TeamManager;
 use App\Livewire\Dashboard;
 use App\Livewire\Site\About;
@@ -52,6 +53,7 @@ Route::middleware(['auth', 'verified', EnsureUserIsAdmin::class])->group(functio
     Route::livewire('admin/team', TeamManager::class)->name('admin.team');
     Route::livewire('admin/members', MembersIndex::class)->name('admin.members');
     Route::livewire('admin/messages', MessagesIndex::class)->name('admin.messages');
+    Route::livewire('admin/notifications', NotificationsManager::class)->name('admin.notifications');
 });
 
 require __DIR__.'/settings.php';

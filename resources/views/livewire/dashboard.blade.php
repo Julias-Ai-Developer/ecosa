@@ -230,6 +230,39 @@
             </div>
         </section>
 
+        {{-- Notifications --}}
+        @if($notifications->isNotEmpty())
+        <section class="admin-panel overflow-hidden">
+            <div class="border-b border-ecosa-blue/8 bg-ecosa-mist/60 px-6 py-4">
+                <div class="flex items-center justify-between gap-3">
+                    <div>
+                        <p class="text-xs font-bold uppercase tracking-[0.24em] text-zinc-400">Inbox</p>
+                        <h3 class="mt-0.5 font-display text-xl font-semibold text-ecosa-blue-deep">Notifications from ECOSA</h3>
+                    </div>
+                    <span class="flex h-7 min-w-[28px] items-center justify-center rounded-full bg-ecosa-green px-2 text-xs font-bold text-white">{{ $notifications->count() }}</span>
+                </div>
+            </div>
+            <div class="divide-y divide-zinc-50 px-6">
+                @foreach($notifications as $note)
+                <div class="py-4">
+                    <div class="flex items-start gap-3">
+                        <div class="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-ecosa-blue/8 text-ecosa-blue">
+                            <i class="fas fa-bell text-xs"></i>
+                        </div>
+                        <div class="min-w-0 flex-1">
+                            <div class="flex items-start justify-between gap-3">
+                                <p class="text-sm font-bold text-ecosa-blue-deep">{{ $note->title }}</p>
+                                <span class="shrink-0 text-xs text-zinc-400">{{ $note->created_at->diffForHumans() }}</span>
+                            </div>
+                            <p class="mt-1 text-sm leading-6 text-zinc-600">{{ $note->body }}</p>
+                        </div>
+                    </div>
+                </div>
+                @endforeach
+            </div>
+        </section>
+        @endif
+
     @else
 
         {{-- No Membership State --}}

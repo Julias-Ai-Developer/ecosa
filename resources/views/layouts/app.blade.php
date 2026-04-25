@@ -28,6 +28,7 @@
             'items' => [
                 ['label' => 'All Members',     'route' => 'admin.members',   'icon' => 'fa-id-card',            'badge' => $sidebarPendingCount ?: null, 'badgeColor' => 'bg-ecosa-gold/30 text-ecosa-gold'],
                 ['label' => 'Messages',        'route' => 'admin.messages',  'icon' => 'fa-envelope-open-text', 'badge' => $sidebarMessageCount ?: null, 'badgeColor' => 'bg-white/20 text-white'],
+                ['label' => 'Notifications',   'route' => 'admin.notifications', 'icon' => 'fa-bell',           'badge' => null],
             ],
         ],
         [

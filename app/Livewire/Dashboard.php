@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use App\Models\MemberNotification;
 use App\Models\MembershipProfile;
 use App\Support\EcosaSite;
 use Illuminate\Contracts\View\View;
@@ -66,11 +67,21 @@ class Dashboard extends Component
 
     public function render(): View
     {
+        $membership = $this->membershipProfile();
+
+        $notifications = $membership
+            ? MemberNotification::scopeForMember(
+                MemberNotification::query()->latest(),
+                $membership->id
+              )->get()
+            : collect();
+
         return view('livewire.dashboard', [
-            'membership' => $this->membershipProfile(),
-            'organization' => EcosaSite::organization(),
+            'membership'    => $membership,
+            'organization'  => EcosaSite::organization(),
             'paymentOptions' => EcosaSite::paymentOptions(),
-            'user' => Auth::user(),
+            'user'          => Auth::user(),
+            'notifications' => $notifications,
         ]);
     }
 

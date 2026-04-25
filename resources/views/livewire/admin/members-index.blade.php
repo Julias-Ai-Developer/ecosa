@@ -1,4 +1,5 @@
-<div class="space-y-5">
+<div class="space-y-5" x-data="{ showMsg: false }"
+     x-effect="if ($wire.messageSent) { setTimeout(() => { showMsg = false }, 1200) }">
 
     {{-- Stat Cards --}}
     <section class="grid gap-4 sm:grid-cols-3 xl:grid-cols-5">
@@ -186,6 +187,12 @@
                                             title="View details">
                                         <i class="fas fa-eye text-xs"></i>
                                     </button>
+                                    <button type="button"
+                                            @click="$wire.openMessageDrawer({{ $member->id }}); showMsg = true"
+                                            class="flex h-8 w-8 items-center justify-center rounded-lg border border-zinc-200 text-zinc-500 transition hover:border-violet-400 hover:text-violet-600"
+                                            title="Send notification">
+                                        <i class="fas fa-bell text-xs"></i>
+                                    </button>
                                     @if($member->payment_status === 'paid')
                                         <button type="button" wire:click="markPending({{ $member->id }})"
                                                 class="rounded-lg border border-zinc-200 px-3 py-1.5 text-xs font-semibold text-zinc-600 transition hover:bg-zinc-50"
@@ -341,4 +348,77 @@
         </div>
     </div>
     @endif
+</div>
+
+{{-- Message Drawer Overlay --}}
+<div x-show="showMsg" x-cloak
+     x-transition:enter="transition duration-200" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
+     x-transition:leave="transition duration-150" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0"
+     class="fixed inset-0 z-40 bg-black/40 backdrop-blur-sm"
+     @click="showMsg = false; $wire.closeMessageDrawer()"></div>
+
+{{-- Message Drawer --}}
+<div x-show="showMsg" x-cloak
+     x-transition:enter="transition duration-300 ease-out" x-transition:enter-start="translate-x-full" x-transition:enter-end="translate-x-0"
+     x-transition:leave="transition duration-200 ease-in" x-transition:leave-start="translate-x-0" x-transition:leave-end="translate-x-full"
+     class="fixed inset-y-0 right-0 z-50 flex w-full max-w-lg flex-col bg-white shadow-2xl"
+     @keydown.escape.window="showMsg = false; $wire.closeMessageDrawer()">
+
+    <div class="flex shrink-0 items-center justify-between border-b border-zinc-100 px-6 py-5">
+        <div>
+            <h3 class="text-base font-bold text-zinc-900">Send Notification</h3>
+            @if($messagingMember)
+                <p class="mt-0.5 text-xs text-zinc-500">To: <span class="font-semibold text-zinc-700">{{ $messagingMember->full_name }}</span></p>
+            @endif
+        </div>
+        <button type="button" @click="showMsg = false; $wire.closeMessageDrawer()"
+                class="flex h-8 w-8 items-center justify-center rounded-lg border border-zinc-200 text-zinc-400 transition hover:text-zinc-600">
+            <i class="fas fa-xmark text-sm"></i>
+        </button>
+    </div>
+
+    <form wire:submit.prevent="sendQuickMessage" class="flex flex-1 flex-col overflow-hidden">
+        <div class="flex-1 overflow-y-auto px-6 py-5 space-y-4">
+
+            @if($messageSent)
+                <div class="rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-medium text-emerald-700">
+                    <i class="fas fa-check mr-1.5"></i> Notification sent successfully.
+                </div>
+            @endif
+
+            <div>
+                <label class="mb-1.5 block text-xs font-semibold text-zinc-700">Title</label>
+                <input type="text" wire:model.blur="quickTitle"
+                       class="w-full rounded-lg border border-zinc-200 px-3 py-2 text-sm focus:border-ecosa-green focus:outline-none focus:ring-1 focus:ring-ecosa-green/30"
+                       placeholder="e.g. Important update from ECOSA">
+                @error('quickTitle') <p class="mt-1 text-xs text-rose-500">{{ $message }}</p> @enderror
+            </div>
+
+            <div>
+                <label class="mb-1.5 block text-xs font-semibold text-zinc-700">Message</label>
+                <textarea wire:model.blur="quickBody" rows="6"
+                          class="w-full rounded-lg border border-zinc-200 px-3 py-2 text-sm focus:border-ecosa-green focus:outline-none focus:ring-1 focus:ring-ecosa-green/30"
+                          placeholder="Write your message here..."></textarea>
+                @error('quickBody') <p class="mt-1 text-xs text-rose-500">{{ $message }}</p> @enderror
+            </div>
+
+            <div class="rounded-xl border border-amber-100 bg-amber-50 px-4 py-3 text-xs text-amber-700">
+                <i class="fas fa-triangle-exclamation mr-1.5"></i>
+                This member will see the notification the next time they log in to their portal.
+            </div>
+        </div>
+
+        <div class="shrink-0 flex justify-end gap-3 border-t border-zinc-100 px-6 py-4">
+            <button type="button" @click="showMsg = false; $wire.closeMessageDrawer()"
+                    class="rounded-lg border border-zinc-200 px-4 py-2 text-sm font-semibold text-zinc-600 transition hover:border-zinc-300">
+                Cancel
+            </button>
+            <button type="submit"
+                    class="inline-flex items-center gap-2 rounded-lg bg-violet-600 px-5 py-2 text-sm font-semibold text-white transition hover:bg-violet-700"
+                    wire:loading.attr="disabled" wire:target="sendQuickMessage">
+                <span wire:loading.remove wire:target="sendQuickMessage"><i class="fas fa-bell text-xs"></i> Send</span>
+                <span wire:loading wire:target="sendQuickMessage">Sending...</span>
+            </button>
+        </div>
+    </form>
 </div>

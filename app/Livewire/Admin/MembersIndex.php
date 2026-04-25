@@ -2,8 +2,10 @@
 
 namespace App\Livewire\Admin;
 
+use App\Models\MemberNotification;
 use App\Models\MembershipProfile;
 use Illuminate\Contracts\View\View;
+use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Title;
 use Livewire\Component;
@@ -24,6 +26,11 @@ class MembersIndex extends Component
     public string $sort = 'latest';
 
     public ?int $viewingMemberId = null;
+
+    public ?int $messagingMemberId = null;
+    public string $quickTitle = '';
+    public string $quickBody  = '';
+    public bool $messageSent  = false;
 
     public function updatedSearch(): void
     {
@@ -73,6 +80,39 @@ class MembersIndex extends Component
             ]);
     }
 
+    public function openMessageDrawer(int $membershipProfileId): void
+    {
+        $this->messagingMemberId = $membershipProfileId;
+        $this->quickTitle = '';
+        $this->quickBody  = '';
+        $this->messageSent = false;
+    }
+
+    public function closeMessageDrawer(): void
+    {
+        $this->messagingMemberId = null;
+    }
+
+    public function sendQuickMessage(): void
+    {
+        $this->validate([
+            'quickTitle' => ['required', 'string', 'min:3', 'max:200'],
+            'quickBody'  => ['required', 'string', 'min:5'],
+        ], [], ['quickTitle' => 'title', 'quickBody' => 'message']);
+
+        MemberNotification::create([
+            'title'             => trim($this->quickTitle),
+            'body'              => trim($this->quickBody),
+            'target_type'       => 'specific',
+            'member_profile_id' => $this->messagingMemberId,
+            'sent_by'           => Auth::id(),
+        ]);
+
+        $this->quickTitle = '';
+        $this->quickBody  = '';
+        $this->messageSent = true;
+    }
+
     public function markPending(int $membershipProfileId): void
     {
         MembershipProfile::query()
@@ -111,6 +151,9 @@ class MembersIndex extends Component
             'members' => $members,
             'viewingMember' => $this->viewingMemberId
                 ? MembershipProfile::query()->find($this->viewingMemberId)
+                : null,
+            'messagingMember' => $this->messagingMemberId
+                ? MembershipProfile::query()->find($this->messagingMemberId)
                 : null,
             'memberTotal' => MembershipProfile::query()->count(),
             'activeTotal' => MembershipProfile::query()->where('membership_status', 'active')->count(),
