@@ -312,125 +312,107 @@
         {{-- FOOTER                                    --}}
         {{-- ======================================== --}}
 
-        {{-- Values Strip --}}
-        <div class="bg-ecosa-green">
-            <div class="mx-auto max-w-7xl px-5 lg:px-8">
-                <div class="grid gap-0 divide-y divide-white/10 sm:grid-cols-2 sm:divide-x sm:divide-y-0 lg:grid-cols-4">
-                    @foreach ($footerValues as $val)
-                        <div class="flex items-center gap-4 px-6 py-6">
-                            <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-white/15 text-white">
-                                <i class="fas {{ $val['icon'] }} text-lg"></i>
-                            </div>
-                            <div>
-                                <p class="font-accent text-sm font-bold text-white">{{ $val['title'] }}</p>
-                                <p class="mt-1 text-xs leading-5 text-white/72">{{ $val['text'] }}</p>
-                            </div>
-                        </div>
-                    @endforeach
-                </div>
-            </div>
+        {{-- Footer SVG Wave --}}
+        <div class="relative w-full overflow-hidden leading-[0]">
+            <svg class="block h-[40px] w-[calc(100%+1.3px)] lg:h-[80px]" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
+                <path d="M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,32.43,512.34,53.67,583,72.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1113-14.29,1200,52.47V0Z" opacity=".25" fill="#17924b"></path>
+                <path d="M0,0V15.81C13,36.92,27.64,56.86,47.69,72.05,99.41,111.27,165,111,224.58,91.58c31.15-10.15,60.09-26.07,89.67-39.8,40.92-19,84.73-46,130.83-49.67,36.26-2.85,70.9,9.42,98.6,31.56,31.77,25.39,62.32,62,103.63,73,40.44,10.79,81.35-6.69,119.13-24.28s75.16-39,116.92-43.05c59.73-5.85,113.28,22.88,168.9,38.84,30.2,8.66,59,6.17,87.09-7.5,22.43-10.89,48-26.93,60.65-49.24V0Z" opacity=".5" fill="#17924b"></path>
+                <path d="M0,0V5.63C149.93,59,314.09,71.32,475.83,42.57c43-7.64,84.23-20.12,127.61-26.46,59-8.63,112.48,12.24,165.56,35.4C827.93,77.22,886,95.24,951.2,90c86.53-7,172.46-45.71,248.8-84.81V0Z" fill="#17924b"></path>
+            </svg>
         </div>
 
-        {{-- Main Footer --}}
-        <footer class="bg-[#081b2c] text-white">
+        <footer class="bg-[#17924b] text-white">
+            {{-- Values Strip --}}
+            <div class="border-b border-white/10">
+                <div class="mx-auto max-w-7xl px-5 lg:px-8">
+                    <div class="grid divide-y divide-white/10 sm:grid-cols-2 sm:divide-x sm:divide-y-0 lg:grid-cols-4">
+                        @foreach ($footerValues as $val)
+                            <div class="flex items-center gap-4 px-4 py-8 xl:px-6">
+                                <div class="flex h-10 w-10 shrink-0 items-center justify-center text-ecosa-gold">
+                                    <i class="fas {{ $val['icon'] }} text-2xl"></i>
+                                </div>
+                                <div>
+                                    <p class="font-accent text-[0.8rem] font-bold uppercase tracking-wider text-white">{{ $val['title'] }}</p>
+                                    <p class="mt-1 text-xs leading-5 text-white/80">{{ $val['text'] }}</p>
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
+            </div>
+
+            {{-- Main Footer Content --}}
             <div class="mx-auto max-w-7xl px-5 py-14 lg:px-8">
-                <div class="grid gap-10 lg:grid-cols-[1.4fr_0.9fr_0.9fr_1fr]">
+                <div class="grid gap-10 lg:grid-cols-[1.5fr_1fr_1fr_1.5fr]">
 
                     {{-- Brand Column --}}
                     <div>
                         <div class="flex items-center gap-3">
-                            <img src="{{ asset('assets/images/logo.png') }}" alt="ECOSA Logo" class="h-14 w-14 rounded-2xl bg-white object-contain p-2">
+                            <img src="{{ asset('assets/images/logo.png') }}" alt="ECOSA Logo" class="h-16 w-16 rounded-xl bg-white object-contain p-2 shadow-sm">
                             <div>
-                                <p class="font-display text-3xl font-semibold text-white">ECOSA</p>
-                                <p class="font-accent text-xs font-bold uppercase tracking-[0.2em] text-ecosa-green">Old Students Association</p>
+                                <p class="font-display text-4xl font-bold text-white">ECOSA</p>
                             </div>
                         </div>
-                        <p class="mt-5 max-w-xs text-sm leading-8 text-white/62">
+                        <p class="mt-6 text-sm leading-8 text-white/80">
                             Connecting Equatorial College School alumni through structured registration, community programs, welfare support, and school-impact initiatives.
                         </p>
-                        <div class="mt-6 flex flex-wrap items-center gap-3">
-                            <a href="mailto:{{ $organization['emails'][0] }}" class="inline-flex h-11 w-11 items-center justify-center rounded-full bg-white/8 text-white/80 transition hover:bg-ecosa-green hover:text-white" aria-label="Email">
-                                <i class="fas fa-envelope"></i>
-                            </a>
-                            <a href="tel:{{ $organization['phones'][0] }}" class="inline-flex h-11 w-11 items-center justify-center rounded-full bg-white/8 text-white/80 transition hover:bg-ecosa-green hover:text-white" aria-label="Phone">
-                                <i class="fas fa-phone"></i>
-                            </a>
-                            <a href="{{ $organization['map_directions_url'] }}" target="_blank" rel="noopener noreferrer" class="inline-flex h-11 w-11 items-center justify-center rounded-full bg-white/8 text-white/80 transition hover:bg-ecosa-green hover:text-white" aria-label="Location">
-                                <i class="fas fa-location-dot"></i>
-                            </a>
-                            <a href="https://wa.me/{{ preg_replace('/\D+/', '', $whatsAppContacts[0]['phone']) }}" target="_blank" rel="noopener noreferrer" class="inline-flex h-11 w-11 items-center justify-center rounded-full bg-white/8 text-white/80 transition hover:bg-[#25d366] hover:text-white" aria-label="WhatsApp">
-                                <i class="fab fa-whatsapp"></i>
-                            </a>
-                            <a href="{{ route('login') }}" class="inline-flex h-11 w-11 items-center justify-center rounded-full bg-white/8 text-white/80 transition hover:bg-ecosa-blue hover:text-white" aria-label="Member Portal">
-                                <i class="fas fa-user"></i>
-                            </a>
-                        </div>
                     </div>
 
-                    {{-- Quick Links Column --}}
+                    {{-- Navigation Columns --}}
                     <div>
-                        <h3 class="font-accent text-xs font-bold uppercase tracking-[0.22em] text-ecosa-gold">Quick Links</h3>
-                        <div class="mt-5 grid gap-3">
+                        <h3 class="font-accent text-xs font-bold uppercase tracking-[0.2em] text-white">Quick Links</h3>
+                        <div class="mt-6 grid gap-4">
                             @foreach ($footerQuickLinks as $link)
-                                <a href="{{ route($link['route']) }}" class="flex items-center gap-2 text-sm text-white/68 transition hover:text-white">
-                                    <i class="fas fa-angle-right text-xs text-ecosa-green"></i>
+                                <a href="{{ route($link['route']) }}" class="text-sm font-semibold text-white/80 transition hover:text-white">
                                     {{ $link['label'] }}
                                 </a>
                             @endforeach
                         </div>
                     </div>
 
-                    {{-- About / Resources Column --}}
                     <div>
-                        <h3 class="font-accent text-xs font-bold uppercase tracking-[0.22em] text-ecosa-gold">About & Resources</h3>
-                        <div class="mt-5 grid gap-3">
+                        <h3 class="font-accent text-xs font-bold uppercase tracking-[0.2em] text-white">About ECOSA</h3>
+                        <div class="mt-6 grid gap-4">
                             @foreach ($footerAbout as $link)
-                                <a href="{{ route($link['route']) }}" class="flex items-center gap-2 text-sm text-white/68 transition hover:text-white">
-                                    <i class="fas fa-angle-right text-xs text-ecosa-green"></i>
+                                <a href="{{ route($link['route']) }}" class="text-sm font-semibold text-white/80 transition hover:text-white">
                                     {{ $link['label'] }}
                                 </a>
                             @endforeach
                         </div>
                     </div>
 
-                    {{-- Contact Info Column --}}
+                    {{-- Contact Column --}}
                     <div>
-                        <h3 class="font-accent text-xs font-bold uppercase tracking-[0.22em] text-ecosa-gold">Contact Info</h3>
-                        <div class="mt-5 grid gap-4">
-                            <a href="mailto:{{ $organization['emails'][0] }}" class="inline-flex items-start gap-3 text-sm text-white/68 transition hover:text-white">
-                                <i class="fas fa-envelope mt-0.5 text-ecosa-green"></i>
+                        <h3 class="font-accent text-xs font-bold uppercase tracking-[0.2em] text-white">Contact Info</h3>
+                        <div class="mt-6 grid gap-5">
+                            <a href="mailto:{{ $organization['emails'][0] }}" class="flex items-start gap-3 text-sm text-white/80 transition hover:text-white">
+                                <i class="fas fa-envelope mt-1 text-ecosa-gold"></i>
                                 <span>{{ $organization['emails'][0] }}</span>
                             </a>
-                            <a href="mailto:{{ $organization['emails'][1] }}" class="inline-flex items-start gap-3 text-sm text-white/68 transition hover:text-white">
-                                <i class="fas fa-envelope mt-0.5 text-ecosa-green"></i>
-                                <span>{{ $organization['emails'][1] }}</span>
-                            </a>
-                            <a href="tel:{{ $organization['phones'][0] }}" class="inline-flex items-center gap-3 text-sm text-white/68 transition hover:text-white">
-                                <i class="fas fa-phone text-ecosa-green"></i>
+                            <a href="tel:{{ $organization['phones'][0] }}" class="flex items-center gap-3 text-sm text-white/80 transition hover:text-white">
+                                <i class="fas fa-phone text-ecosa-gold"></i>
                                 <span>{{ $organization['phones'][0] }}</span>
                             </a>
-                            <a href="tel:{{ $organization['phones'][1] }}" class="inline-flex items-center gap-3 text-sm text-white/68 transition hover:text-white">
-                                <i class="fas fa-phone text-ecosa-green"></i>
-                                <span>{{ $organization['phones'][1] }}</span>
-                            </a>
-                            <div class="inline-flex items-start gap-3 text-sm text-white/68">
-                                <i class="fas fa-location-dot mt-0.5 text-ecosa-green"></i>
+                            <div class="flex items-start gap-3 text-sm text-white/80">
+                                <i class="fas fa-location-dot mt-1 text-ecosa-gold"></i>
                                 <span>{{ $organization['location_short'] }}</span>
-                            </div>
-                            <div class="mt-2 rounded-2xl border border-white/8 bg-white/5 p-4">
-                                <p class="text-xs font-bold text-white/50 uppercase tracking-widest">Office Hours</p>
-                                @foreach ($organization['office_hours'] as $hour)
-                                    <p class="mt-1 text-xs text-white/62">{{ $hour }}</p>
-                                @endforeach
                             </div>
                         </div>
                     </div>
-                </div>
 
-                {{-- Footer Bottom Bar --}}
-                <div class="mt-12 flex flex-col items-center justify-between gap-4 border-t border-white/8 pt-6 sm:flex-row">
-                    <p class="text-sm text-white/48">&copy; {{ date('Y') }} {{ $organization['short_name'] }}. All rights reserved.</p>
-                    <p class="text-xs text-white/35">Equatorial College School Old Students Association &mdash; Ibanda, Uganda</p>
+                </div>
+            </div>
+
+            {{-- Footer Bottom Bar --}}
+            <div class="border-t border-white/10 border-dashed">
+                <div class="mx-auto flex max-w-7xl flex-col items-center justify-between gap-4 px-5 py-6 sm:flex-row lg:px-8">
+                    <p class="text-xs font-semibold text-white/80">&copy; {{ date('Y') }} {{ $organization['short_name'] }}. All rights reserved. Designed by: <span class="font-bold text-white">Nugsoft</span></p>
+                    <div class="flex items-center gap-4">
+                        <a href="#" class="text-white/80 transition hover:text-white"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="text-white/80 transition hover:text-white"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="text-white/80 transition hover:text-white"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="#" class="text-white/80 transition hover:text-white"><i class="fab fa-twitter"></i></a>
+                    </div>
                 </div>
             </div>
         </footer>

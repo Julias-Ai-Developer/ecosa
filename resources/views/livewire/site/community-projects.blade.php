@@ -43,16 +43,16 @@
                             };
                         @endphp
 
-                        <article class="flex flex-col overflow-hidden border border-zinc-100 bg-white shadow-sm">
+                        <article class="group flex flex-col overflow-hidden rounded-[20px] border border-zinc-100 bg-white shadow-sm">
                             {{-- Image --}}
-                            <div class="group relative h-52 overflow-hidden">
+                            <div class="relative h-52 overflow-hidden">
                                 <img
                                     src="{{ $image }}"
                                     alt="{{ $title }}"
                                     class="h-full w-full object-cover transition duration-500 group-hover:scale-105"
                                 >
                                 <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
-                                <span class="absolute left-4 top-4 rounded px-3 py-1 text-xs font-bold uppercase tracking-[0.18em] {{ $statusClass }}">
+                                <span class="absolute left-4 top-4 rounded px-3 py-1 text-[0.7rem] font-bold uppercase tracking-[0.18em] {{ $statusClass }}">
                                     {{ ucfirst($status) }}
                                 </span>
                             </div>
@@ -60,7 +60,7 @@
                             {{-- Content --}}
                             <div class="flex flex-1 flex-col p-6">
                                 {{-- Meta row --}}
-                                <div class="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-zinc-400">
+                                <div class="flex flex-wrap items-center gap-x-4 gap-y-2 text-xs text-zinc-400">
                                     <span class="flex items-center gap-1.5">
                                         <i class="fas fa-user-circle"></i>
                                         ECOSA Team

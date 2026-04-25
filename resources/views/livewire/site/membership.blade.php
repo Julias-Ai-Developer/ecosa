@@ -39,7 +39,7 @@
                             <div class="bg-ecosa-blue-deep px-6 py-4">
                                 <p class="font-accent text-xs font-bold uppercase tracking-[0.24em] text-white/60">Accepted Payment Methods</p>
                             </div>
-                            <div class="grid grid-cols-2 gap-0 divide-x divide-ecosa-blue/8">
+                            <div class="grid gap-0 divide-y divide-ecosa-blue/8 sm:grid-cols-2 sm:divide-x sm:divide-y-0">
                                 <div class="flex items-center gap-3 p-5">
                                     <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-[#FFC200]/15">
                                         <i class="fas fa-mobile-screen-button text-xl text-[#FFC200]"></i>
