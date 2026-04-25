@@ -1,0 +1,321 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap');
+
+@import 'tailwindcss';
+@import '../../vendor/livewire/flux/dist/flux.css';
+
+@source '../views';
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../vendor/livewire/flux-pro/stubs/**/*.blade.php';
+@source '../../vendor/livewire/flux/stubs/**/*.blade.php';
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+    --font-sans: 'Open Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+
+    --color-zinc-50: #fafafa;
+    --color-zinc-100: #f5f5f5;
+    --color-zinc-200: #e5e5e5;
+    --color-zinc-300: #d4d4d4;
+    --color-zinc-400: #a3a3a3;
+    --color-zinc-500: #737373;
+    --color-zinc-600: #525252;
+    --color-zinc-700: #404040;
+    --color-zinc-800: #262626;
+    --color-zinc-900: #171717;
+    --color-zinc-950: #0a0a0a;
+
+    --color-ecosa-navy: #081b2c;
+    --color-ecosa-blue: #173a60;
+    --color-ecosa-blue-deep: #102b47;
+    --color-ecosa-green: #17924b;
+    --color-ecosa-green-deep: #0f743c;
+    --color-ecosa-gold: #ffd600;
+    --color-ecosa-cream: #f7f4ed;
+    --color-ecosa-sand: #e9dfcf;
+    --color-ecosa-mist: #f3f7f8;
+    --color-ecosa-ink: #1d2a33;
+    --color-ecosa-burgundy: #8c2f39;
+
+    --color-accent: #173a60;
+    --color-accent-content: #173a60;
+    --color-accent-foreground: #ffffff;
+}
+
+@layer theme {
+    .dark {
+        --color-accent: #ffffff;
+        --color-accent-content: #ffffff;
+        --color-accent-foreground: #171717;
+    }
+}
+
+:root {
+    --font-display: 'Inter', ui-sans-serif, system-ui, sans-serif;
+    --font-accent: 'Inter', ui-sans-serif, system-ui, sans-serif;
+    --shadow-soft: 0 20px 60px rgba(8, 27, 44, 0.1);
+    --shadow-card: 0 18px 45px rgba(8, 27, 44, 0.08);
+    --site-border: rgba(23, 58, 96, 0.1);
+}
+
+@layer base {
+
+    *,
+    ::after,
+    ::before,
+    ::backdrop,
+    ::file-selector-button {
+        border-color: var(--color-gray-200, currentColor);
+    }
+
+    html {
+        scroll-behavior: smooth;
+    }
+
+    body {
+        @apply bg-white text-zinc-900 antialiased;
+    }
+
+    [x-cloak] {
+        display: none !important;
+    }
+
+    a {
+        @apply transition;
+    }
+}
+
+@layer components {
+    .font-display {
+        font-family: var(--font-display);
+    }
+
+    .font-accent {
+        font-family: var(--font-accent);
+    }
+
+    .site-section {
+        @apply py-16 sm:py-20 lg:py-24;
+    }
+
+    .site-shell {
+        background:
+            radial-gradient(circle at top left, rgba(255, 214, 0, 0.12), transparent 28%),
+            radial-gradient(circle at top right, rgba(23, 146, 75, 0.14), transparent 22%),
+            linear-gradient(180deg, rgba(247, 244, 237, 0.8), rgba(255, 255, 255, 1) 36%);
+    }
+
+    .site-card {
+        border: 1px solid var(--site-border);
+        border-radius: 28px;
+        box-shadow: var(--shadow-card);
+        @apply bg-white;
+    }
+
+    .site-chip {
+        font-size: 0.72rem;
+        letter-spacing: 0.28em;
+        font-family: var(--font-accent);
+        @apply inline-flex items-center gap-2 rounded-full border border-ecosa-blue/10 bg-ecosa-blue/5 px-4 py-2 font-bold uppercase text-ecosa-blue;
+    }
+
+    .site-title {
+        font-family: var(--font-display);
+        @apply text-4xl leading-none font-bold tracking-tight text-ecosa-blue-deep sm:text-5xl lg:text-6xl;
+    }
+
+    .site-heading {
+        font-family: var(--font-display);
+        @apply text-3xl leading-tight font-bold tracking-tight text-ecosa-blue-deep sm:text-4xl;
+    }
+
+    .site-subheading {
+        @apply max-w-3xl text-base leading-7 text-zinc-600 sm:text-lg;
+    }
+
+    .site-btn-primary {
+        box-shadow: 0 14px 30px rgba(23, 146, 75, 0.2);
+        font-family: var(--font-accent);
+        @apply inline-flex items-center justify-center gap-2 rounded-[10px] border border-transparent bg-ecosa-green px-6 py-3 text-sm font-bold text-white transition hover:-translate-y-0.5 hover:bg-ecosa-green-deep;
+    }
+
+    .site-btn-secondary {
+        font-family: var(--font-accent);
+        @apply inline-flex items-center justify-center gap-2 rounded-[10px] border border-ecosa-green/35 bg-white px-6 py-3 text-sm font-bold text-ecosa-green-deep transition hover:-translate-y-0.5 hover:border-ecosa-green hover:bg-ecosa-green hover:text-white;
+    }
+
+    .site-btn-ghost {
+        font-family: var(--font-accent);
+        @apply inline-flex items-center justify-center gap-2 rounded-[10px] border border-ecosa-blue/12 bg-white px-6 py-3 text-sm font-bold text-ecosa-blue transition hover:-translate-y-0.5 hover:border-ecosa-green/30 hover:bg-ecosa-green/[0.05] hover:text-ecosa-green-deep;
+    }
+
+    .site-nav-item {
+        position: relative;
+    }
+
+    .site-nav-link-group {
+        @apply inline-flex items-center gap-1;
+    }
+
+    .site-nav-link {
+        font-family: var(--font-accent);
+        position: relative;
+        @apply inline-flex items-center px-4 py-2 text-sm font-bold text-ecosa-blue-deep transition;
+    }
+
+    .site-nav-link::after {
+        content: '';
+        position: absolute;
+        left: 1rem;
+        right: 1rem;
+        bottom: 0.15rem;
+        height: 2px;
+        border-radius: 999px;
+        background: var(--color-ecosa-green);
+        opacity: 0;
+        transform: scaleX(0.45);
+        transform-origin: left center;
+        transition: transform 0.22s ease, opacity 0.22s ease;
+    }
+
+    .site-nav-toggle {
+        @apply inline-flex items-center px-2 py-2 text-xs text-ecosa-blue-deep transition;
+    }
+
+    .site-nav-item:hover .site-nav-link,
+    .site-nav-item:hover .site-nav-toggle,
+    .site-nav-item.is-active .site-nav-link,
+    .site-nav-item.is-active .site-nav-toggle {
+        color: var(--color-ecosa-green-deep);
+    }
+
+    .site-nav-item:hover .site-nav-link::after,
+    .site-nav-item.is-active .site-nav-link::after {
+        opacity: 1;
+        transform: scaleX(1);
+    }
+
+    .site-nav-cta-outline {
+        font-family: var(--font-accent);
+        @apply inline-flex items-center justify-center rounded-[10px] border border-ecosa-green/35 bg-white px-5 py-2.5 text-sm font-bold text-ecosa-green-deep transition hover:border-ecosa-green hover:bg-ecosa-green hover:text-white;
+    }
+
+    .site-nav-cta-fill {
+        font-family: var(--font-accent);
+        box-shadow: 0 14px 30px rgba(23, 146, 75, 0.18);
+        @apply inline-flex items-center justify-center rounded-[10px] border border-transparent bg-ecosa-green px-5 py-2.5 text-sm font-bold text-white transition hover:bg-ecosa-blue-deep hover:text-white;
+    }
+
+    .site-input {
+        @apply w-full rounded-2xl border border-ecosa-blue/10 bg-white px-4 py-3 text-sm text-zinc-900 outline-none transition placeholder:text-zinc-400 focus:border-ecosa-blue focus:ring-4 focus:ring-ecosa-blue/10;
+    }
+
+    .site-label {
+        font-family: var(--font-accent);
+        @apply mb-2 block text-sm font-semibold text-ecosa-blue-deep;
+    }
+
+    .site-error {
+        @apply mt-2 text-sm font-medium text-rose-600;
+    }
+
+    .site-success {
+        border-radius: 24px;
+        @apply border border-ecosa-green/20 bg-ecosa-green/10 px-5 py-4 text-sm font-semibold text-ecosa-green-deep;
+    }
+
+    .site-grid-2 {
+        @apply grid gap-6 lg:grid-cols-2;
+    }
+
+    .admin-panel {
+        border-radius: 28px;
+        box-shadow: var(--shadow-card);
+        background-color: rgba(255, 255, 255, 0.92);
+        @apply border border-white/60 backdrop-blur;
+    }
+}
+
+@layer utilities {
+    .ecosa-admin-surface {
+        background:
+            radial-gradient(circle at top right, rgba(255, 214, 0, 0.16), transparent 24%),
+            radial-gradient(circle at top left, rgba(23, 146, 75, 0.12), transparent 22%),
+            linear-gradient(180deg, rgba(243, 247, 248, 0.96), rgba(255, 255, 255, 0.98));
+    }
+
+    .text-balance {
+        text-wrap: balance;
+    }
+
+    .animate-fade-up {
+        animation: fade-up 0.7s ease both;
+    }
+
+    .animate-fade-in {
+        animation: fade-in 0.8s ease both;
+    }
+
+    .animate-float-slow {
+        animation: float-slow 10s ease-in-out infinite;
+    }
+}
+
+[data-flux-field]:not(ui-radio, ui-checkbox) {
+    @apply grid gap-2;
+}
+
+[data-flux-label] {
+    @apply !mb-0 !leading-tight;
+}
+
+input:focus[data-flux-control],
+textarea:focus[data-flux-control],
+select:focus[data-flux-control] {
+    @apply outline-hidden ring-2 ring-accent ring-offset-2 ring-offset-accent-foreground;
+}
+
+    .whatsapp-contact-card {
+        @apply flex items-center gap-4 rounded-[20px] border border-white/10 bg-white/8 p-4 transition hover:bg-white/14;
+    }
+
+    .footer-value-strip {
+        background: linear-gradient(135deg, #17924b 0%, #0f743c 100%);
+    }
+
+    .stat-card-icon {
+        @apply flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-white/20 text-xl;
+    }
+
+@keyframes fade-up {
+    from {
+        opacity: 0;
+        transform: translateY(28px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fade-in {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes float-slow {
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-12px);
+    }
+}
