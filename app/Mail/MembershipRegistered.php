@@ -14,13 +14,14 @@ class MembershipRegistered extends Mailable
     use Queueable, SerializesModels;
 
     public function __construct(
-        public MembershipProfile $membershipProfile
+        public readonly MembershipProfile $membershipProfile,
+        public readonly ?string $plainPassword = null,
     ) {}
 
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'ECOSA membership registration received - '.$this->membershipProfile->membership_number,
+            subject: 'Welcome to ECOSA — Your Membership Details & Portal Access',
         );
     }
 

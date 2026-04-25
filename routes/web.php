@@ -7,7 +7,10 @@ use App\Livewire\Admin\MessagesIndex;
 use App\Livewire\Admin\MembersIndex;
 use App\Livewire\Admin\NewsManager;
 use App\Livewire\Admin\NotificationsManager;
+use App\Livewire\Admin\RolesManager;
 use App\Livewire\Admin\TeamManager;
+use App\Livewire\Admin\UsersManager;
+use App\Livewire\Auth\ChangePassword;
 use App\Livewire\Dashboard;
 use App\Livewire\Site\About;
 use App\Livewire\Site\Community;
@@ -43,6 +46,7 @@ Route::livewire('contact-us', Contact::class)->name('site.contact');
 
 Route::middleware(['auth'])->group(function () {
     Route::livewire('dashboard', Dashboard::class)->name('dashboard');
+    Route::livewire('password/change', ChangePassword::class)->name('password.change');
 });
 
 Route::middleware(['auth', 'verified', EnsureUserIsAdmin::class])->group(function () {
@@ -54,6 +58,8 @@ Route::middleware(['auth', 'verified', EnsureUserIsAdmin::class])->group(functio
     Route::livewire('admin/members', MembersIndex::class)->name('admin.members');
     Route::livewire('admin/messages', MessagesIndex::class)->name('admin.messages');
     Route::livewire('admin/notifications', NotificationsManager::class)->name('admin.notifications');
+    Route::livewire('admin/roles', RolesManager::class)->name('admin.roles');
+    Route::livewire('admin/users', UsersManager::class)->name('admin.users');
 });
 
 require __DIR__.'/settings.php';

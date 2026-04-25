@@ -3,101 +3,124 @@
     <head>
         @include('partials.head')
     </head>
-    <body class="min-h-screen antialiased" style="background:#eef3f9;">
+    <body style="margin:0;padding:0;background:#fff;font-family:'Inter',ui-sans-serif,system-ui,sans-serif;">
 
-        <div class="flex min-h-screen">
+        <div style="display:flex;height:100vh;overflow:hidden;">
 
-            {{-- Left Panel — School Image --}}
-            <div class="relative hidden w-[55%] flex-col overflow-hidden lg:flex"
-                 style="background: linear-gradient(160deg,#0a2540 0%,#173a60 60%,#17924b 100%);">
+            {{-- ── Left: pure aerial photo + live clock ──────────────── --}}
+            <div style="position:relative;flex:0 0 60%;overflow:hidden;">
 
-                {{-- Background photo --}}
-                <img src="{{ asset('assets/images/school/Equatorial-College-School5.jpeg') }}"
+                <img src="{{ asset('assets/images/school/aerialview.jpeg') }}"
                      alt="Equatorial College"
-                     class="absolute inset-0 h-full w-full object-cover opacity-30 mix-blend-luminosity">
+                     style="width:100%;height:100%;object-fit:cover;display:block;">
 
-                {{-- Overlay gradient --}}
-                <div class="absolute inset-0"
-                     style="background: linear-gradient(160deg, rgba(10,37,64,0.82) 0%, rgba(23,58,96,0.68) 55%, rgba(23,146,75,0.55) 100%);"></div>
+                {{-- Bottom scrim so text & clock read cleanly --}}
+                <div style="position:absolute;inset-x:0;bottom:0;height:58%;
+                            background:linear-gradient(to top,rgba(4,14,28,0.88) 0%,rgba(4,14,28,0.50) 52%,transparent 100%);"></div>
 
-                {{-- Content --}}
-                <div class="relative z-10 flex h-full flex-col justify-between px-14 py-14">
-                    {{-- Logo --}}
-                    <a href="{{ route('home') }}" class="flex items-center gap-4">
-                        <img src="{{ asset('assets/images/logo.png') }}"
-                             alt="ECOSA Logo"
-                             class="h-14 w-14 rounded-2xl bg-white object-contain p-2 shadow-lg">
-                        <div>
-                            <p class="text-2xl font-bold tracking-tight text-white">ECOSA</p>
-                            <p class="text-xs font-semibold uppercase tracking-[0.22em] text-white/55">Member Portal</p>
-                        </div>
-                    </a>
+                {{-- Tagline + clock — centered bottom --}}
+                <div style="position:absolute;bottom:0;left:0;right:0;
+                            display:flex;flex-direction:column;align-items:center;
+                            padding-bottom:48px;gap:22px;">
 
-                    {{-- Main message --}}
-                    <div class="max-w-lg">
-                        <div class="mb-6 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-widest text-white/70">
-                            <span class="h-1.5 w-1.5 rounded-full bg-emerald-400"></span>
-                            Equatorial College Old Students Association
-                        </div>
-                        <h1 class="text-5xl font-bold leading-tight text-white">
+                    {{-- Tagline --}}
+                    <div style="text-align:center;padding:0 40px;">
+                        <p style="font-family:'Inter',sans-serif;font-size:2rem;font-weight:800;
+                                  color:#fff;line-height:1.2;margin:0;">
                             Your alumni home,<br>
                             <span style="color:#67bc45;">always open.</span>
-                        </h1>
-                        <p class="mt-5 text-lg leading-8 text-white/70">
-                            Access your membership record, track your payment status, and stay connected with the ECOSA community — all in one place.
                         </p>
                     </div>
 
-                    {{-- Stats row --}}
-                    <div class="grid grid-cols-3 gap-4">
-                        <div class="rounded-2xl border border-white/10 bg-white/8 p-5 backdrop-blur-sm">
-                            <p class="text-xs font-bold uppercase tracking-widest text-white/45">Members</p>
-                            <p class="mt-2 text-3xl font-bold text-white">500+</p>
+                    {{-- Clock pill --}}
+                    <div style="background:rgba(20,20,20,0.78);border-radius:12px;
+                                padding:16px 32px;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+                                text-align:center;">
+                        <div style="display:flex;align-items:baseline;justify-content:center;gap:10px;">
+                            <span id="ecosa-clock"
+                                  style="font-family:'Inter',sans-serif;font-size:2.4rem;font-weight:700;
+                                         color:#fff;letter-spacing:3px;line-height:1;
+                                         font-variant-numeric:tabular-nums;"></span>
+                            <span id="ecosa-ampm"
+                                  style="font-family:'Inter',sans-serif;font-size:1.1rem;font-weight:500;
+                                         color:rgba(255,255,255,0.50);"></span>
                         </div>
-                        <div class="rounded-2xl border border-white/10 bg-white/8 p-5 backdrop-blur-sm">
-                            <p class="text-xs font-bold uppercase tracking-widest text-white/45">Since</p>
-                            <p class="mt-2 text-3xl font-bold text-white">1985</p>
-                        </div>
-                        <div class="rounded-2xl border border-white/10 bg-white/8 p-5 backdrop-blur-sm">
-                            <p class="text-xs font-bold uppercase tracking-widest text-white/45">Verified</p>
-                            <p class="mt-2 text-3xl font-bold text-white">Secure</p>
-                        </div>
+                        <div id="ecosa-date"
+                             style="margin-top:5px;font-family:'Inter',sans-serif;font-size:11.5px;
+                                    font-weight:500;letter-spacing:0.15em;
+                                    color:rgba(255,255,255,0.60);text-align:center;"></div>
                     </div>
+
                 </div>
             </div>
 
-            {{-- Right Panel — Form --}}
-            <div class="flex flex-1 flex-col items-center justify-center px-6 py-12 sm:px-10 lg:px-14"
-                 style="background:#eef3f9;">
+            {{-- ── Right: plain white panel, slot content centred ────── --}}
+            <div style="flex:1;display:flex;flex-direction:column;
+                        padding:48px 56px;background:#fff;overflow-y:auto;">
 
-                {{-- Mobile logo --}}
-                <a href="{{ route('home') }}" class="mb-8 flex items-center gap-3 lg:hidden">
-                    <img src="{{ asset('assets/images/logo.png') }}"
-                         alt="ECOSA Logo"
-                         class="h-12 w-12 rounded-2xl bg-white object-contain p-2 shadow-sm">
-                    <div>
-                        <p class="text-2xl font-bold text-[#173a60]">ECOSA</p>
-                        <p class="text-xs font-semibold uppercase tracking-[0.22em] text-zinc-500">Portal Access</p>
-                    </div>
-                </a>
+                {{-- Centered form area --}}
+                <div style="flex:1;display:flex;flex-direction:column;justify-content:center;">
 
-                <div class="w-full max-w-sm">
-                    {{-- Card --}}
-                    <div class="overflow-hidden rounded-2xl bg-white shadow-xl ring-1 ring-black/5">
-                        {{-- Blue top bar --}}
-                        <div style="height:4px; background: linear-gradient(90deg,#173a60,#17924b,#ffd600);"></div>
-                        <div class="px-8 py-9">
-                            {{ $slot }}
-                        </div>
+                    {{-- Logo at top of form area --}}
+                    <div style="margin-bottom:32px;">
+                        <a href="{{ route('home') }}"
+                           style="display:inline-flex;align-items:center;gap:12px;text-decoration:none;">
+                            <img src="{{ asset('assets/images/logo.png') }}"
+                                 alt="ECOSA"
+                                 style="height:64px;width:64px;object-fit:contain;">
+                            <div>
+                                <p style="font-size:22px;font-weight:800;color:#173a60;margin:0;line-height:1;">ECOSA</p>
+                                <p style="font-size:11px;font-weight:500;color:#94a3b8;margin:3px 0 0;">Together for the Bright Future</p>
+                            </div>
+                        </a>
                     </div>
 
-                    <p class="mt-6 text-center text-xs text-zinc-400">
-                        &copy; {{ date('Y') }} Equatorial College Old Students Association
+                    {{-- Slot — the specific auth page content goes here --}}
+                    <div style="max-width:380px;width:100%;">
+                        {{ $slot }}
+                    </div>
+
+                </div>
+
+                {{-- Footer --}}
+                <div style="text-align:center;padding-top:24px;">
+                    <p style="font-size:11.5px;color:#c0c9d4;margin:0;line-height:1.6;">
+                        &copy; {{ date('Y') }} ECOSA &nbsp;·&nbsp;
+                        Developed by
+                        <a href="https://www.kamatrustai.com"
+                           target="_blank" rel="noopener"
+                           style="color:#94a3b8;text-decoration:none;font-weight:600;"
+                           onmouseover="this.style.color='#173a60'"
+                           onmouseout="this.style.color='#94a3b8'">Kamatrust AI</a>
                     </p>
                 </div>
+
             </div>
 
         </div>
+
+        {{-- Live clock --}}
+        <script>
+            function ecosaUpdateClock() {
+                const now  = new Date();
+                let h      = now.getHours();
+                const m    = String(now.getMinutes()).padStart(2,'0');
+                const s    = String(now.getSeconds()).padStart(2,'0');
+                const ampm = h >= 12 ? 'PM' : 'AM';
+                h = h % 12 || 12;
+                document.getElementById('ecosa-clock').textContent =
+                    String(h).padStart(2,'0') + ':' + m + ':' + s;
+                document.getElementById('ecosa-ampm').textContent = ampm;
+                const days   = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+                const months = ['January','February','March','April','May','June',
+                                'July','August','September','October','November','December'];
+                const d = now;
+                document.getElementById('ecosa-date').textContent =
+                    days[d.getDay()] + ', ' + d.getDate() + ' ' + months[d.getMonth()] + ' ' + d.getFullYear();
+            }
+            ecosaUpdateClock();
+            setInterval(ecosaUpdateClock, 1000);
+        </script>
 
         @persist('toast')
             <flux:toast.group>

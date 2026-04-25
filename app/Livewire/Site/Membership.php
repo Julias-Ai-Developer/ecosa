@@ -108,49 +108,57 @@ class Membership extends Component
         ]);
 
         $email = Str::lower($this->email);
-        $user = User::query()->firstOrCreate(
-            ['email' => $email],
-            [
-                'name' => $this->fullName,
-                'password' => Str::random(40),
-            ],
-        );
 
-        if ($user->name !== $this->fullName) {
-            $user->forceFill(['name' => $this->fullName])->save();
+        // Generate a temp password only for brand-new accounts
+        $plainPassword = null;
+        $existingUser = User::query()->where('email', $email)->first();
+
+        if (! $existingUser) {
+            $plainPassword = Str::random(10);
+            $user = User::create([
+                'name'                 => $this->fullName,
+                'email'                => $email,
+                'password'             => $plainPassword,
+                'must_change_password' => true,
+            ]);
+        } else {
+            $user = $existingUser;
+            if ($user->name !== $this->fullName) {
+                $user->forceFill(['name' => $this->fullName])->save();
+            }
         }
 
         $existingProfile = MembershipProfile::query()->where('email', $email)->first();
 
         $profile = $existingProfile ?? new MembershipProfile([
-            'email' => $email,
+            'email'             => $email,
             'membership_number' => MembershipProfile::nextMembershipNumber(),
         ]);
 
         $profile->fill([
-            'user_id' => $user->id,
-            'full_name' => $this->fullName,
-            'email' => $email,
-            'phone' => $this->phone,
-            'current_address' => $this->currentAddress,
-            'completion_year' => (int) $this->completionYear,
-            'occupation_type' => $this->occupationType,
+            'user_id'          => $user->id,
+            'full_name'        => $this->fullName,
+            'email'            => $email,
+            'phone'            => $this->phone,
+            'current_address'  => $this->currentAddress,
+            'completion_year'  => (int) $this->completionYear,
+            'occupation_type'  => $this->occupationType,
             'occupation_title' => $this->occupationTitle,
-            'business_name' => filled($this->businessName) ? $this->businessName : null,
-            'business_nature' => filled($this->businessNature) ? $this->businessNature : null,
-            'marital_status' => $this->maritalStatus,
+            'business_name'    => filled($this->businessName) ? $this->businessName : null,
+            'business_nature'  => filled($this->businessNature) ? $this->businessNature : null,
+            'marital_status'   => $this->maritalStatus,
             'membership_status' => $profile->membership_status ?? 'pending',
-            'payment_status' => 'pending_verification',
+            'payment_status'   => 'pending_verification',
             'registration_fee' => MembershipProfile::REGISTRATION_FEE,
-            'amount_paid' => MembershipProfile::REGISTRATION_FEE,
-            'payment_method' => $this->paymentMethod,
-            'payment_phone' => filled($this->paymentPhone) ? $this->paymentPhone : null,
+            'amount_paid'      => MembershipProfile::REGISTRATION_FEE,
+            'payment_method'   => $this->paymentMethod,
+            'payment_phone'    => filled($this->paymentPhone) ? $this->paymentPhone : null,
             'payment_reference' => filled($this->paymentReference) ? $this->paymentReference : $this->paymentPhone,
-            'paid_at' => now(),
+            'paid_at'          => now(),
         ]);
         $profile->save();
 
-        Mail::to($profile->email)->send(new MembershipRegistered($profile));
+        Mail::to($profile->email)->send(new MembershipRegistered($profile, $plainPassword));
 
         $this->submitted = true;
         $this->showPaymentModal = false;

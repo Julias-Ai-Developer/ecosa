@@ -30,23 +30,38 @@ class FortifyServiceProvider extends ServiceProvider
         Fortify::resetUserPasswordsUsing(ResetUserPassword::class);
         Fortify::createUsersUsing(CreateNewUser::class);
 
-        // Allow login via membership number, email, or phone
+        // Login via email, phone, or membership number.
+        // Super-admins (is_admin=true) may only login with email or phone — not membership number.
         Fortify::authenticateUsing(function (Request $request) {
             $identifier = trim($request->input('email', ''));
             $password   = $request->input('password', '');
 
-            // 1. Try direct email match
+            // 1. Try direct email match (all users)
             $user = User::where('email', $identifier)->first();
 
-            // 2. Try membership number or phone via profile
+            // 2. Try phone via MembershipProfile (all users)
             if (! $user) {
                 $profile = MembershipProfile::query()
-                    ->where('membership_number', $identifier)
-                    ->orWhere('phone', $identifier)
+                    ->where('phone', $identifier)
                     ->first();
 
                 if ($profile && $profile->user_id) {
                     $user = User::find($profile->user_id);
+                }
+            }
+
+            // 3. Try membership number (members only — super-admins blocked)
+            if (! $user) {
+                $profile = MembershipProfile::query()
+                    ->where('membership_number', $identifier)
+                    ->first();
+
+                if ($profile && $profile->user_id) {
+                    $candidate = User::find($profile->user_id);
+                    // Block membership-number login for super-admins
+                    if ($candidate && ! $candidate->is_admin) {
+                        $user = $candidate;
+                    }
                 }
             }
 

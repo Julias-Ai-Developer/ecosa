@@ -97,9 +97,10 @@ class MembersIndex extends Component
             $plainPassword = Str::random(10);
 
             $user = User::create([
-                'name'     => $profile->full_name,
-                'email'    => $profile->email,
-                'password' => Hash::make($plainPassword),
+                'name'                => $profile->full_name,
+                'email'               => $profile->email,
+                'password'            => Hash::make($plainPassword),
+                'must_change_password' => true,
             ]);
 
             $profile->update(['user_id' => $user->id]);

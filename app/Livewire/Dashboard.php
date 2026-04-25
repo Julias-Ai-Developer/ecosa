@@ -70,10 +70,7 @@ class Dashboard extends Component
         $membership = $this->membershipProfile();
 
         $notifications = $membership
-            ? MemberNotification::scopeForMember(
-                MemberNotification::query()->latest(),
-                $membership->id
-              )->get()
+            ? MemberNotification::forMember($membership->id)->latest()->get()
             : collect();
 
         return view('livewire.dashboard', [

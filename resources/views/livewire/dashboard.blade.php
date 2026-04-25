@@ -9,7 +9,7 @@
                 <p class="mt-1 text-sm leading-6 text-zinc-500">Membership ID <span class="font-mono font-bold text-ecosa-blue">{{ $membership->membership_number }}</span> &mdash; manage your record and payment below.</p>
             </div>
             <div class="flex flex-wrap gap-3">
-                @if ($user->is_admin)
+                @if ($user->is_admin || $user->canAccessAdmin())
                     <a href="{{ route('admin.dashboard') }}" class="site-btn-primary">
                         <i class="fas fa-shield-halved text-xs"></i> Admin System
                     </a>

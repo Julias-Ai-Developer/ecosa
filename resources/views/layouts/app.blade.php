@@ -5,35 +5,41 @@
 @php
     $user = auth()->user();
 
-    $sidebarPendingCount = $user?->is_admin ? \App\Models\MembershipProfile::where('payment_status', 'pending_verification')->count() : 0;
-    $sidebarMessageCount = $user?->is_admin ? \App\Models\ContactInquiry::where('status', 'new')->count() : 0;
+    $userIsAdmin   = $user?->is_admin;
+    $userCanAdmin  = $userIsAdmin || ($user && $user->load('roles.permissions')->roles->isNotEmpty());
+    $allowedSlugs  = $user ? $user->allowedAdminSlugs() : [];
+
+    $sidebarPendingCount = $userCanAdmin ? \App\Models\MembershipProfile::where('payment_status', 'pending_verification')->count() : 0;
+    $sidebarMessageCount = $userCanAdmin ? \App\Models\ContactInquiry::where('status', 'new')->count() : 0;
 
     $adminSections = [
         [
             'heading' => 'Overview',
             'items' => [
-                ['label' => 'Dashboard',       'route' => 'admin.dashboard', 'icon' => 'fa-gauge-high',        'badge' => null],
+                ['label' => 'Dashboard',       'route' => 'admin.dashboard', 'icon' => 'fa-gauge-high',        'badge' => null, 'permission' => 'admin.dashboard'],
             ],
         ],
         [
             'heading' => 'Content',
             'items' => [
-                ['label' => 'News Manager',    'route' => 'admin.news',      'icon' => 'fa-newspaper',          'badge' => null],
-                ['label' => 'Community Pages', 'route' => 'admin.community', 'icon' => 'fa-layer-group',        'badge' => null],
-                ['label' => 'Team Content',    'route' => 'admin.team',      'icon' => 'fa-users-gear',         'badge' => null],
+                ['label' => 'News Manager',    'route' => 'admin.news',      'icon' => 'fa-newspaper',          'badge' => null, 'permission' => 'admin.news'],
+                ['label' => 'Community Pages', 'route' => 'admin.community', 'icon' => 'fa-layer-group',        'badge' => null, 'permission' => 'admin.community'],
+                ['label' => 'Team Content',    'route' => 'admin.team',      'icon' => 'fa-users-gear',         'badge' => null, 'permission' => 'admin.team'],
             ],
         ],
         [
             'heading' => 'Members',
             'items' => [
-                ['label' => 'All Members',     'route' => 'admin.members',   'icon' => 'fa-id-card',            'badge' => $sidebarPendingCount ?: null, 'badgeColor' => 'bg-ecosa-gold/30 text-ecosa-gold'],
-                ['label' => 'Messages',        'route' => 'admin.messages',  'icon' => 'fa-envelope-open-text', 'badge' => $sidebarMessageCount ?: null, 'badgeColor' => 'bg-white/20 text-white'],
-                ['label' => 'Notifications',   'route' => 'admin.notifications', 'icon' => 'fa-bell',           'badge' => null],
+                ['label' => 'All Members',     'route' => 'admin.members',   'icon' => 'fa-id-card',            'badge' => $sidebarPendingCount ?: null, 'badgeColor' => 'bg-ecosa-gold/30 text-ecosa-gold', 'permission' => 'admin.members'],
+                ['label' => 'Messages',        'route' => 'admin.messages',  'icon' => 'fa-envelope-open-text', 'badge' => $sidebarMessageCount ?: null, 'badgeColor' => 'bg-white/20 text-white',             'permission' => 'admin.messages'],
+                ['label' => 'Notifications',   'route' => 'admin.notifications', 'icon' => 'fa-bell',           'badge' => null, 'permission' => 'admin.notifications'],
             ],
         ],
         [
             'heading' => 'System',
             'items' => [
+                ['label' => 'Users',           'route' => 'admin.users',     'icon' => 'fa-users',              'badge' => null, 'permission' => 'admin.users'],
+                ['label' => 'Roles & Access',  'route' => 'admin.roles',     'icon' => 'fa-shield-halved',      'badge' => null, 'permission' => 'admin.roles'],
                 ['label' => 'Member Portal',   'route' => 'dashboard',       'icon' => 'fa-address-card',       'badge' => null],
                 ['label' => 'Public Website',  'route' => 'home',            'icon' => 'fa-globe',              'badge' => null],
                 ['label' => 'Settings',        'route' => 'profile.edit',    'icon' => 'fa-gear',               'badge' => null],
@@ -53,7 +59,7 @@
         ],
     ];
 
-    $navSections = $user?->is_admin ? $adminSections : $memberSections;
+    $navSections = $userCanAdmin ? $adminSections : $memberSections;
 @endphp
 
 <!DOCTYPE html>
@@ -83,7 +89,7 @@
             >
                 {{-- Logo area --}}
                 <div class="flex items-center gap-3 border-b border-black/10 px-5 py-5">
-                    <a href="{{ $user?->is_admin ? route('admin.dashboard') : route('dashboard') }}"
+                    <a href="{{ $userCanAdmin ? route('admin.dashboard') : route('dashboard') }}"
                        class="flex items-center gap-3">
                         <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white/15">
                             <img src="{{ asset('assets/images/logo.png') }}" alt="ECOSA" class="h-7 w-7 object-contain">
@@ -91,7 +97,7 @@
                         <div>
                             <p class="text-base font-bold leading-none text-white">ECOSA</p>
                             <p class="mt-0.5 text-[0.6rem] font-semibold uppercase tracking-[0.22em] text-white/55">
-                                {{ $user?->is_admin ? 'Admin System' : 'Member Portal' }}
+                                {{ $userCanAdmin ? 'Admin System' : 'Member Portal' }}
                             </p>
                         </div>
                     </a>
@@ -106,7 +112,15 @@
                         </p>
                         <div class="space-y-0.5">
                             @foreach ($section['items'] as $item)
-                                @php $isActive = request()->routeIs($item['route']); @endphp
+                                @php
+                                    // Hide items that require a permission the user doesn't have
+                                    // (only filtered for non-super-admin role users)
+                                    $permSlug = $item['permission'] ?? null;
+                                    if (!$userIsAdmin && $permSlug && !in_array($permSlug, $allowedSlugs)) {
+                                        continue;
+                                    }
+                                    $isActive = request()->routeIs($item['route']);
+                                @endphp
                                 <a href="{{ route($item['route']) }}"
                                    class="group flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-all duration-150
                                           {{ $isActive

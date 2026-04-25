@@ -13,7 +13,7 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Str;
 use Laravel\Fortify\TwoFactorAuthenticatable;
 
-#[Fillable(['name', 'email', 'password', 'is_admin'])]
+#[Fillable(['name', 'email', 'password', 'is_admin', 'must_change_password'])]
 #[Hidden(['password', 'two_factor_secret', 'two_factor_recovery_codes', 'remember_token'])]
 class User extends Authenticatable
 {
@@ -23,9 +23,10 @@ class User extends Authenticatable
     protected function casts(): array
     {
         return [
-            'email_verified_at' => 'datetime',
-            'is_admin' => 'boolean',
-            'password' => 'hashed',
+            'email_verified_at'   => 'datetime',
+            'is_admin'            => 'boolean',
+            'must_change_password' => 'boolean',
+            'password'            => 'hashed',
         ];
     }
 
@@ -71,7 +72,7 @@ class User extends Authenticatable
     {
         if ($this->is_admin) {
             return ['admin.dashboard', 'admin.news', 'admin.community', 'admin.team',
-                    'admin.members', 'admin.messages', 'admin.notifications', 'admin.roles'];
+                    'admin.members', 'admin.messages', 'admin.notifications', 'admin.roles', 'admin.users'];
         }
 
         return $this->roles->flatMap->permissions->pluck('slug')->unique()->values()->all();

@@ -164,70 +164,87 @@
         </div>
     </section>
 
-    {{-- Payment Modal --}}
+    {{-- Payment Drawer --}}
     @if ($showPaymentModal)
-        <div class="fixed inset-0 z-50 flex items-center justify-center bg-[#081b2c]/72 px-4 py-8 backdrop-blur-sm">
-            <div class="site-card w-full max-w-xl overflow-hidden rounded-[32px]">
-                <div class="border-b border-ecosa-blue/8 bg-ecosa-blue-deep px-6 py-5 text-white sm:px-8">
+        <div class="fixed inset-0 z-50 flex justify-end">
+            {{-- Light overlay — site visible behind --}}
+            <div class="absolute inset-0 bg-black/30" wire:click="closePaymentModal"></div>
+
+            {{-- Drawer panel --}}
+            <div class="relative z-10 flex h-full w-full flex-col bg-white shadow-2xl sm:max-w-[500px]">
+
+                {{-- Drawer header --}}
+                <div class="shrink-0 border-b border-ecosa-blue/8 bg-ecosa-blue-deep px-6 py-5 text-white">
                     <div class="flex items-start justify-between gap-4">
                         <div>
-                            <span class="inline-flex items-center gap-2 rounded-full border border-white/12 bg-white/10 px-3 py-1 text-[0.7rem] font-bold uppercase tracking-[0.22em] text-white">Step 2 — Payment</span>
-                            <h2 class="mt-4 font-display text-4xl font-semibold">Choose your payment method</h2>
-                            <p class="mt-3 text-sm leading-7 text-white/72">Registration fee: <strong class="text-ecosa-gold">UGX 20,000</strong>. Pay via MTN or Airtel Mobile Money.</p>
+                            <span class="inline-flex items-center gap-2 rounded-full border border-white/12 bg-white/10 px-3 py-1 text-[0.7rem] font-bold uppercase tracking-[0.22em] text-white/80">Step 2 of 2 — Payment</span>
+                            <h2 class="mt-3 font-display text-2xl font-semibold leading-snug">Complete your payment</h2>
+                            <p class="mt-1.5 text-sm text-white/65">Registration fee: <strong class="text-ecosa-gold">UGX 20,000</strong> via Mobile Money.</p>
                         </div>
-                        <button type="button" class="inline-flex h-11 w-11 items-center justify-center rounded-full border border-white/14 text-white" wire:click="closePaymentModal" aria-label="Close">
-                            <i class="fas fa-xmark"></i>
+                        <button type="button" wire:click="closePaymentModal" aria-label="Close"
+                                class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-white/15 text-white/60 transition hover:bg-white/10 hover:text-white">
+                            <i class="fas fa-xmark text-sm"></i>
                         </button>
                     </div>
                 </div>
 
-                <form wire:submit.prevent="completeRegistration" class="p-6 sm:p-8">
-                    <div class="grid gap-4 sm:grid-cols-2">
-                        @foreach ($this->paymentOptions() as $value => $label)
-                            <label class="cursor-pointer rounded-[24px] border-2 p-5 transition {{ $paymentMethod === $value ? 'border-ecosa-green bg-ecosa-green/5 shadow-[0_8px_24px_rgba(23,146,75,0.15)]' : 'border-ecosa-blue/10 bg-white hover:border-ecosa-green/30' }}">
-                                <input type="radio" value="{{ $value }}" wire:model.live="paymentMethod" class="sr-only">
-                                <div class="flex items-center gap-3">
-                                    <div class="flex h-10 w-10 items-center justify-center rounded-2xl {{ $paymentMethod === $value ? 'bg-ecosa-green text-white' : 'bg-ecosa-blue/8 text-ecosa-blue' }}">
-                                        <i class="fas fa-mobile-screen-button text-lg"></i>
-                                    </div>
-                                    <div>
-                                        <p class="font-accent text-sm font-bold {{ $paymentMethod === $value ? 'text-ecosa-green-deep' : 'text-ecosa-blue-deep' }}">{{ $label }}</p>
-                                        <p class="text-xs text-zinc-500">Mobile Money</p>
-                                    </div>
-                                    @if ($paymentMethod === $value)
-                                        <i class="fas fa-circle-check ml-auto text-ecosa-green"></i>
-                                    @endif
-                                </div>
-                            </label>
-                        @endforeach
-                    </div>
-                    @error('paymentMethod') <p class="site-error mt-2">{{ $message }}</p> @enderror
+                {{-- Drawer body — scrollable --}}
+                <form wire:submit.prevent="completeRegistration" class="flex flex-1 flex-col overflow-y-auto">
+                    <div class="flex-1 space-y-6 p-6">
 
-                    <div class="mt-6 grid gap-5">
+                        {{-- Payment method cards --}}
+                        <div>
+                            <p class="site-label mb-3">Payment Method</p>
+                            <div class="grid gap-3 sm:grid-cols-2">
+                                @foreach ($this->paymentOptions() as $value => $label)
+                                    <label class="cursor-pointer rounded-2xl border-2 p-4 transition {{ $paymentMethod === $value ? 'border-ecosa-green bg-ecosa-green/5' : 'border-ecosa-blue/10 bg-white hover:border-ecosa-green/30' }}">
+                                        <input type="radio" value="{{ $value }}" wire:model.live="paymentMethod" class="sr-only">
+                                        <div class="flex items-center gap-3">
+                                            <div class="flex h-9 w-9 items-center justify-center rounded-xl {{ $paymentMethod === $value ? 'bg-ecosa-green text-white' : 'bg-ecosa-blue/8 text-ecosa-blue' }}">
+                                                <i class="fas fa-mobile-screen-button"></i>
+                                            </div>
+                                            <div class="flex-1">
+                                                <p class="text-sm font-bold {{ $paymentMethod === $value ? 'text-ecosa-green-deep' : 'text-ecosa-blue-deep' }}">{{ $label }}</p>
+                                                <p class="text-xs text-zinc-500">Mobile Money</p>
+                                            </div>
+                                            @if ($paymentMethod === $value)
+                                                <i class="fas fa-circle-check text-ecosa-green"></i>
+                                            @endif
+                                        </div>
+                                    </label>
+                                @endforeach
+                            </div>
+                            @error('paymentMethod') <p class="site-error mt-2">{{ $message }}</p> @enderror
+                        </div>
+
+                        {{-- Mobile number --}}
                         <label>
                             <span class="site-label">Mobile Money Number</span>
                             <input type="tel" wire:model.blur="paymentPhone" class="site-input" placeholder="+256 7XX XXX XXX">
-                            <p class="mt-1 text-xs text-zinc-500">Enter the number you will send payment from.</p>
+                            <p class="mt-1 text-xs text-zinc-500">The number you will send payment from.</p>
                             @error('paymentPhone') <p class="site-error">{{ $message }}</p> @enderror
                         </label>
 
+                        {{-- Reference --}}
                         <label>
                             <span class="site-label">Transaction Reference <span class="font-normal text-zinc-400">(optional)</span></span>
-                            <input type="text" wire:model.blur="paymentReference" class="site-input" placeholder="Receipt or transaction reference number">
+                            <input type="text" wire:model.blur="paymentReference" class="site-input" placeholder="Receipt or transaction ID">
                             @error('paymentReference') <p class="site-error">{{ $message }}</p> @enderror
                         </label>
+
+                        {{-- Instructions --}}
+                        <div class="rounded-2xl border border-ecosa-gold/25 bg-ecosa-gold/8 p-4">
+                            <p class="font-accent text-xs font-bold text-ecosa-blue-deep">How to pay:</p>
+                            <ol class="mt-2 space-y-1 text-xs leading-6 text-zinc-600">
+                                <li>1. Send <strong>UGX 20,000</strong> to the ECOSA Mobile Money account.</li>
+                                <li>2. Enter your mobile money number above.</li>
+                                <li>3. Submit — our team verifies and activates your membership.</li>
+                            </ol>
+                        </div>
                     </div>
 
-                    <div class="mt-6 rounded-[20px] border border-ecosa-gold/20 bg-ecosa-gold/8 p-4">
-                        <p class="font-accent text-xs font-bold text-ecosa-blue-deep">How to pay via Mobile Money:</p>
-                        <ol class="mt-2 grid gap-1 text-xs leading-6 text-zinc-600">
-                            <li>1. Send <strong>UGX 20,000</strong> to the ECOSA account number.</li>
-                            <li>2. Enter your mobile money number above.</li>
-                            <li>3. Submit — our team verifies and activates your membership.</li>
-                        </ol>
-                    </div>
-
-                    <div class="mt-6 flex flex-wrap justify-end gap-3">
+                    {{-- Drawer footer --}}
+                    <div class="shrink-0 border-t border-zinc-100 p-6 flex flex-wrap gap-3 justify-end">
                         <button type="button" class="site-btn-ghost" wire:click="closePaymentModal">
                             <i class="fas fa-arrow-left mr-1"></i> Back
                         </button>
