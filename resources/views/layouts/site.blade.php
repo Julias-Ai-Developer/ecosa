@@ -72,12 +72,7 @@
         ['label' => 'Insurance Group', 'route' => 'site.community.insurance'],
     ];
 
-    $footerValues = [
-        ['icon' => 'fa-users', 'title' => 'Legacy & Heritage', 'text' => 'United by a shared school history and purpose.'],
-        ['icon' => 'fa-shield-heart', 'title' => 'Member Welfare', 'text' => 'Welfare, insurance, and solidarity support.'],
-        ['icon' => 'fa-handshake', 'title' => 'Community Impact', 'text' => 'Programs that give back to school and society.'],
-        ['icon' => 'fa-briefcase', 'title' => 'Professional Growth', 'text' => 'Networking, mentorship, and career connections.'],
-    ];
+
 @endphp
 
 <!DOCTYPE html>
@@ -85,7 +80,7 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>{{ filled($title) ? $title.' | ECOSA' : 'ECOSA | Equatorial College School Old Students Association' }}</title>
+        <title>{{ filled($title) ? $title . ' | ECOSA' : 'ECOSA | Equatorial College School Old Students Association' }}</title>
 
         <link rel="icon" href="/favicon.ico" sizes="any">
         <link rel="icon" href="/favicon.svg" type="image/svg+xml">
@@ -161,7 +156,7 @@
                             @php
                                 $itemActive = $item['active'] ?? request()->routeIs($item['route']);
                             @endphp
-                            @if (! empty($item['children']))
+                            @if (!empty($item['children']))
                                 <div class="site-nav-item {{ $itemActive ? 'is-active' : '' }} relative" x-data="{ open: false }" @mouseenter="open = true" @mouseleave="open = false">
                                     <div class="site-nav-link-group">
                                         <a href="{{ route($item['route']) }}" class="site-nav-link">{{ $item['label'] }}</a>
@@ -320,102 +315,84 @@
                 <path d="M0,0V5.63C149.93,59,314.09,71.32,475.83,42.57c43-7.64,84.23-20.12,127.61-26.46,59-8.63,112.48,12.24,165.56,35.4C827.93,77.22,886,95.24,951.2,90c86.53-7,172.46-45.71,248.8-84.81V0Z" fill="#17924b"></path>
             </svg>
         </div>
+<footer class="bg-ecosa-blue-deep text-white">
 
-        <footer class="bg-[#17924b] text-white">
-            {{-- Values Strip --}}
-            <div class="border-b border-white/10">
-                <div class="mx-auto max-w-7xl px-5 lg:px-8">
-                    <div class="grid divide-y divide-white/10 sm:grid-cols-2 sm:divide-x sm:divide-y-0 lg:grid-cols-4">
-                        @foreach ($footerValues as $val)
-                            <div class="flex items-center gap-4 px-4 py-8 xl:px-6">
-                                <div class="flex h-10 w-10 shrink-0 items-center justify-center text-ecosa-gold">
-                                    <i class="fas {{ $val['icon'] }} text-2xl"></i>
-                                </div>
-                                <div>
-                                    <p class="font-accent text-[0.8rem] font-bold uppercase tracking-wider text-white">{{ $val['title'] }}</p>
-                                    <p class="mt-1 text-xs leading-5 text-white/80">{{ $val['text'] }}</p>
-                                </div>
-                            </div>
-                        @endforeach
-                    </div>
-                </div>
-            </div>
+    {{-- Main Footer Content --}}
+    <div class="mx-auto max-w-7xl px-5 py-8 lg:px-8">
+        <div class="grid gap-8 lg:grid-cols-4">
 
-            {{-- Main Footer Content --}}
-            <div class="mx-auto max-w-7xl px-5 py-14 lg:px-8">
-                <div class="grid gap-10 lg:grid-cols-[1.5fr_1fr_1fr_1.5fr]">
+            {{-- Column 1: Reach Us --}}
+            <div>
+                <h3 class="text-sm font-bold uppercase tracking-wide">Reach Us</h3>
 
-                    {{-- Brand Column --}}
-                    <div>
-                        <div class="flex items-center gap-3">
-                            <img src="{{ asset('assets/images/logo.png') }}" alt="ECOSA Logo" class="h-16 w-16 rounded-xl bg-white object-contain p-2 shadow-sm">
-                            <div>
-                                <p class="font-display text-4xl font-bold text-white">ECOSA</p>
-                            </div>
-                        </div>
-                        <p class="mt-6 text-sm leading-8 text-white/80">
-                            Connecting Equatorial College School alumni through structured registration, community programs, welfare support, and school-impact initiatives.
+                <div class="mt-4 space-y-3 text-sm text-white/80">
+                    @foreach ($organization['phones'] as $phone)
+                        <p class="flex items-center gap-2">
+                            <i class="fas fa-phone text-white"></i>
+                            {{ $phone }}
                         </p>
-                    </div>
-
-                    {{-- Navigation Columns --}}
-                    <div>
-                        <h3 class="font-accent text-xs font-bold uppercase tracking-[0.2em] text-white">Quick Links</h3>
-                        <div class="mt-6 grid gap-4">
-                            @foreach ($footerQuickLinks as $link)
-                                <a href="{{ route($link['route']) }}" class="text-sm font-semibold text-white/80 transition hover:text-white">
-                                    {{ $link['label'] }}
-                                </a>
-                            @endforeach
-                        </div>
-                    </div>
-
-                    <div>
-                        <h3 class="font-accent text-xs font-bold uppercase tracking-[0.2em] text-white">About ECOSA</h3>
-                        <div class="mt-6 grid gap-4">
-                            @foreach ($footerAbout as $link)
-                                <a href="{{ route($link['route']) }}" class="text-sm font-semibold text-white/80 transition hover:text-white">
-                                    {{ $link['label'] }}
-                                </a>
-                            @endforeach
-                        </div>
-                    </div>
-
-                    {{-- Contact Column --}}
-                    <div>
-                        <h3 class="font-accent text-xs font-bold uppercase tracking-[0.2em] text-white">Contact Info</h3>
-                        <div class="mt-6 grid gap-5">
-                            <a href="mailto:{{ $organization['emails'][0] }}" class="flex items-start gap-3 text-sm text-white/80 transition hover:text-white">
-                                <i class="fas fa-envelope mt-1 text-ecosa-gold"></i>
-                                <span>{{ $organization['emails'][0] }}</span>
-                            </a>
-                            <a href="tel:{{ $organization['phones'][0] }}" class="flex items-center gap-3 text-sm text-white/80 transition hover:text-white">
-                                <i class="fas fa-phone text-ecosa-gold"></i>
-                                <span>{{ $organization['phones'][0] }}</span>
-                            </a>
-                            <div class="flex items-start gap-3 text-sm text-white/80">
-                                <i class="fas fa-location-dot mt-1 text-ecosa-gold"></i>
-                                <span>{{ $organization['location_short'] }}</span>
-                            </div>
-                        </div>
-                    </div>
-
+                    @endforeach
                 </div>
             </div>
 
-            {{-- Footer Bottom Bar --}}
-            <div class="border-t border-white/10 border-dashed">
-                <div class="mx-auto flex max-w-7xl flex-col items-center justify-between gap-4 px-5 py-6 sm:flex-row lg:px-8">
-                    <p class="text-xs font-semibold text-white/80">&copy; {{ date('Y') }} {{ $organization['short_name'] }}. All rights reserved. Designed by: <span class="font-bold text-white">Nugsoft</span></p>
-                    <div class="flex items-center gap-4">
-                        <a href="#" class="text-white/80 transition hover:text-white"><i class="fab fa-facebook-f"></i></a>
-                        <a href="#" class="text-white/80 transition hover:text-white"><i class="fab fa-instagram"></i></a>
-                        <a href="#" class="text-white/80 transition hover:text-white"><i class="fab fa-linkedin-in"></i></a>
-                        <a href="#" class="text-white/80 transition hover:text-white"><i class="fab fa-twitter"></i></a>
-                    </div>
+            {{-- Column 2: Location --}}
+            <div>
+                <h3 class="text-sm font-bold uppercase tracking-wide">Find Us</h3>
+
+                <div class="mt-4 text-sm text-white/80 space-y-2">
+                    <p>{{ $organization['name'] ?? 'ECOSA' }}</p>
+                    <p>{{ $organization['location_short'] }}</p>
+                    <p>{{ $organization['emails'][0] }}</p>
                 </div>
             </div>
-        </footer>
+
+            {{-- Column 3: Office Hours --}}
+            <div>
+                <h3 class="text-sm font-bold uppercase tracking-wide">Office Hours</h3>
+
+                <div class="mt-4 text-sm text-white/80 space-y-2">
+                    <p>Monday - Friday: 8:00hrs – 17:00hrs</p>
+                    <p>Saturday: 8:00hrs – 13:00hrs</p>
+                    <p>Sunday: Closed</p>
+                </div>
+            </div>
+
+            {{-- Column 4: Follow Us --}}
+            <div>
+                <h3 class="text-sm font-bold uppercase tracking-wide">Follow Us</h3>
+
+                <div class="mt-4 flex gap-4 text-white/80 text-lg">
+                    <a href="#" class="hover:text-white"><i class="fab fa-twitter"></i></a>
+                    <a href="#" class="hover:text-white"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" class="hover:text-white"><i class="fab fa-youtube"></i></a>
+                    <a href="#" class="hover:text-white"><i class="fab fa-linkedin-in"></i></a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    {{-- Bottom Bar --}}
+    <div class="border-t border-white/10">
+        <div class="mx-auto flex max-w-7xl flex-col items-center justify-between gap-4 px-5 py-4 sm:flex-row lg:px-8">
+
+            <p class="text-xs font-semibold text-white/80">
+                &copy; {{ date('Y') }} {{ $organization['short_name'] }}. All rights reserved.
+                Designed by:
+                <a href="https://www.kamatrustai.com" target="_blank" class="font-bold text-white hover:underline">
+                    Kamatrust Ai
+                </a>
+            </p>
+
+            <div class="flex gap-6 text-xs text-white/80">
+                <a href="#" class="hover:text-white">Testimonials</a>
+                <a href="#" class="hover:text-white">Partners</a>
+            </div>
+
+        </div>
+    </div>
+
+</footer>
 
         {{-- ======================================== --}}
         {{-- FLOATING ACTION BUTTONS                   --}}
