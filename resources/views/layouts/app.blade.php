@@ -4,16 +4,38 @@
 
 @php
     $user = auth()->user();
+
+    $sidebarPendingCount = $user?->is_admin ? \App\Models\MembershipProfile::where('payment_status', 'pending_verification')->count() : 0;
+    $sidebarMessageCount = $user?->is_admin ? \App\Models\ContactInquiry::where('status', 'new')->count() : 0;
+
     $adminSections = [
         [
-            'heading' => 'Control Center',
+            'heading' => 'Overview',
             'items' => [
-                ['label' => 'Admin Dashboard', 'route' => 'admin.dashboard', 'icon' => 'fa-gauge-high'],
-                ['label' => 'News Manager', 'route' => 'admin.news', 'icon' => 'fa-newspaper'],
-                ['label' => 'Community Pages', 'route' => 'admin.community', 'icon' => 'fa-layer-group'],
-                ['label' => 'Team Content', 'route' => 'admin.team', 'icon' => 'fa-users-gear'],
-                ['label' => 'Members', 'route' => 'admin.members', 'icon' => 'fa-id-card'],
-                ['label' => 'Messages', 'route' => 'admin.messages', 'icon' => 'fa-envelope-open-text'],
+                ['label' => 'Dashboard',       'route' => 'admin.dashboard', 'icon' => 'fa-gauge-high',        'badge' => null],
+            ],
+        ],
+        [
+            'heading' => 'Content',
+            'items' => [
+                ['label' => 'News Manager',    'route' => 'admin.news',      'icon' => 'fa-newspaper',          'badge' => null],
+                ['label' => 'Community Pages', 'route' => 'admin.community', 'icon' => 'fa-layer-group',        'badge' => null],
+                ['label' => 'Team Content',    'route' => 'admin.team',      'icon' => 'fa-users-gear',         'badge' => null],
+            ],
+        ],
+        [
+            'heading' => 'Members',
+            'items' => [
+                ['label' => 'All Members',     'route' => 'admin.members',   'icon' => 'fa-id-card',            'badge' => $sidebarPendingCount ?: null, 'badgeColor' => 'bg-ecosa-gold/30 text-ecosa-gold'],
+                ['label' => 'Messages',        'route' => 'admin.messages',  'icon' => 'fa-envelope-open-text', 'badge' => $sidebarMessageCount ?: null, 'badgeColor' => 'bg-white/20 text-white'],
+            ],
+        ],
+        [
+            'heading' => 'System',
+            'items' => [
+                ['label' => 'Member Portal',   'route' => 'dashboard',       'icon' => 'fa-address-card',       'badge' => null],
+                ['label' => 'Public Website',  'route' => 'home',            'icon' => 'fa-globe',              'badge' => null],
+                ['label' => 'Settings',        'route' => 'profile.edit',    'icon' => 'fa-gear',               'badge' => null],
             ],
         ],
     ];
@@ -22,15 +44,15 @@
         [
             'heading' => 'Member Area',
             'items' => [
-                ['label' => 'Member Portal', 'route' => 'dashboard', 'icon' => 'fa-address-card'],
-                ['label' => 'Membership Hub', 'route' => 'site.membership', 'icon' => 'fa-user-plus'],
-                ['label' => 'Public Website', 'route' => 'home', 'icon' => 'fa-globe'],
-                ['label' => 'Settings', 'route' => 'profile.edit', 'icon' => 'fa-gear'],
+                ['label' => 'Member Portal',   'route' => 'dashboard',       'icon' => 'fa-address-card',       'badge' => null],
+                ['label' => 'Membership Hub',  'route' => 'site.membership', 'icon' => 'fa-user-plus',          'badge' => null],
+                ['label' => 'Public Website',  'route' => 'home',            'icon' => 'fa-globe',              'badge' => null],
+                ['label' => 'Settings',        'route' => 'profile.edit',    'icon' => 'fa-gear',               'badge' => null],
             ],
         ],
     ];
 
-    $navSections = $user?->is_admin ? array_merge($adminSections, $memberSections) : $memberSections;
+    $navSections = $user?->is_admin ? $adminSections : $memberSections;
 @endphp
 
 <!DOCTYPE html>
@@ -38,100 +60,141 @@
     <head>
         @include('partials.head')
     </head>
-    <body class="ecosa-admin-surface min-h-screen text-zinc-900" x-data="{ sidebarOpen: false }">
-        <div class="min-h-screen">
+    <body class="bg-zinc-50 text-zinc-900 antialiased" x-data="{ sidebarOpen: false }">
+
+        <div class="flex h-screen overflow-hidden">
+
+            {{-- ===== MOBILE OVERLAY ===== --}}
             <div
                 x-cloak
                 x-show="sidebarOpen"
-                x-transition.opacity.duration.250ms
-                class="fixed inset-0 z-40 bg-[#081b2c]/65 lg:hidden"
+                x-transition.opacity.duration.200ms
+                class="fixed inset-0 z-30 bg-black/50 lg:hidden"
                 @click="sidebarOpen = false"
             ></div>
 
+            {{-- ===== SIDEBAR ===== --}}
             <aside
-                class="fixed inset-y-0 left-0 z-50 w-[290px] -translate-x-full border-r border-white/10 bg-[#081b2c] text-white shadow-2xl transition duration-300 lg:translate-x-0"
-                :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'"
+                class="fixed inset-y-0 left-0 z-40 flex w-64 shrink-0 flex-col bg-[#0e6433] text-white shadow-xl
+                       -translate-x-full transition-transform duration-300
+                       lg:static lg:translate-x-0"
+                :class="sidebarOpen ? 'translate-x-0' : ''"
             >
-                <div class="flex h-full flex-col">
-                    <div class="border-b border-white/8 px-6 py-6">
-                        <a href="{{ $user?->is_admin ? route('admin.dashboard') : route('dashboard') }}" class="flex items-center gap-3">
-                            <img src="{{ asset('assets/images/logo.png') }}" alt="ECOSA Logo" class="h-12 w-12 rounded-2xl bg-white object-contain p-2">
-                            <div>
-                                <p class="font-display text-2xl font-semibold leading-none">ECOSA</p>
-                                <p class="mt-1 text-xs font-bold uppercase tracking-[0.24em] text-white/50">
-                                    {{ $user?->is_admin ? 'Admin System' : 'Member Portal' }}
-                                </p>
-                            </div>
-                        </a>
-                    </div>
-
-                    <div class="flex-1 space-y-8 overflow-y-auto px-5 py-6">
-                        @foreach ($navSections as $section)
-                            <div>
-                                <p class="px-3 text-xs font-bold uppercase tracking-[0.24em] text-white/40">{{ $section['heading'] }}</p>
-                                <div class="mt-3 grid gap-2">
-                                    @foreach ($section['items'] as $item)
-                                        <a
-                                            href="{{ route($item['route']) }}"
-                                            class="{{ request()->routeIs($item['route']) ? 'bg-white text-[#081b2c] shadow-[0_18px_30px_rgba(255,255,255,0.15)]' : 'text-white/72 hover:bg-white/8 hover:text-white' }} flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-semibold"
-                                        >
-                                            <i class="fas {{ $item['icon'] }} w-4 text-center"></i>
-                                            <span>{{ $item['label'] }}</span>
-                                        </a>
-                                    @endforeach
-                                </div>
-                            </div>
-                        @endforeach
-                    </div>
-
-                    <div class="border-t border-white/8 px-5 py-5">
-                        <div class="rounded-[24px] border border-white/10 bg-white/6 p-4">
-                            <p class="text-sm font-bold text-white">{{ $user->name }}</p>
-                            <p class="mt-1 text-xs text-white/58">{{ $user->email }}</p>
-                            <form method="POST" action="{{ route('logout') }}" class="mt-4">
-                                @csrf
-                                <button type="submit" class="inline-flex w-full items-center justify-center gap-2 rounded-full border border-white/12 px-4 py-3 text-sm font-bold text-white transition hover:bg-white/10">
-                                    <i class="fas fa-arrow-right-from-bracket"></i>
-                                    <span>Log out</span>
-                                </button>
-                            </form>
+                {{-- Logo area --}}
+                <div class="flex items-center gap-3 border-b border-black/10 px-5 py-5">
+                    <a href="{{ $user?->is_admin ? route('admin.dashboard') : route('dashboard') }}"
+                       class="flex items-center gap-3">
+                        <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white/15">
+                            <img src="{{ asset('assets/images/logo.png') }}" alt="ECOSA" class="h-7 w-7 object-contain">
                         </div>
+                        <div>
+                            <p class="text-base font-bold leading-none text-white">ECOSA</p>
+                            <p class="mt-0.5 text-[0.6rem] font-semibold uppercase tracking-[0.22em] text-white/55">
+                                {{ $user?->is_admin ? 'Admin System' : 'Member Portal' }}
+                            </p>
+                        </div>
+                    </a>
+                </div>
+
+                {{-- Navigation --}}
+                <nav class="flex-1 overflow-y-auto px-3 py-5 space-y-5">
+                    @foreach ($navSections as $section)
+                    <div>
+                        <p class="mb-1 px-3 text-[0.58rem] font-bold uppercase tracking-[0.22em] text-white/40">
+                            {{ $section['heading'] }}
+                        </p>
+                        <div class="space-y-0.5">
+                            @foreach ($section['items'] as $item)
+                                @php $isActive = request()->routeIs($item['route']); @endphp
+                                <a href="{{ route($item['route']) }}"
+                                   class="group flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-all duration-150
+                                          {{ $isActive
+                                              ? 'bg-black/20 text-white shadow-inner'
+                                              : 'text-white/65 hover:bg-black/10 hover:text-white' }}">
+                                    <i class="fas {{ $item['icon'] }} w-4 shrink-0 text-center text-[0.8rem]
+                                               {{ $isActive ? 'text-ecosa-gold' : 'text-white/50 group-hover:text-white/80' }}"></i>
+                                    <span class="flex-1 leading-none">{{ $item['label'] }}</span>
+                                    @if(!empty($item['badge']))
+                                        <span class="rounded-full {{ $item['badgeColor'] ?? 'bg-white/20 text-white' }} px-2 py-0.5 text-[0.6rem] font-bold tabular-nums leading-none">
+                                            {{ $item['badge'] }}
+                                        </span>
+                                    @endif
+                                </a>
+                            @endforeach
+                        </div>
+                    </div>
+                    @endforeach
+                </nav>
+
+                {{-- User card --}}
+                <div class="border-t border-black/10 p-4">
+                    <div class="flex items-center gap-3 rounded-xl bg-black/15 px-3 py-3">
+                        <div class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-white/20 text-xs font-bold text-white">
+                            {{ $user->initials() }}
+                        </div>
+                        <div class="min-w-0 flex-1">
+                            <p class="truncate text-sm font-semibold leading-none text-white">{{ $user->name }}</p>
+                            <p class="mt-0.5 text-[0.65rem] text-white/50">{{ $user?->is_admin ? 'Administrator' : 'Member' }}</p>
+                        </div>
+                        <form method="POST" action="{{ route('logout') }}">
+                            @csrf
+                            <button type="submit" title="Log out"
+                                    class="flex h-7 w-7 items-center justify-center rounded-lg text-white/40 transition hover:bg-white/10 hover:text-white/80">
+                                <i class="fas fa-arrow-right-from-bracket text-xs"></i>
+                            </button>
+                        </form>
                     </div>
                 </div>
             </aside>
 
-            <div class="lg:pl-[290px]">
-                <header class="sticky top-0 z-30 border-b border-white/70 bg-white/85 backdrop-blur-xl">
-                    <div class="mx-auto flex max-w-7xl items-center justify-between gap-4 px-5 py-4 lg:px-8">
-                        <div class="flex items-center gap-3">
+            {{-- ===== MAIN CONTENT ===== --}}
+            <div class="flex flex-1 flex-col overflow-hidden">
+
+                {{-- Header --}}
+                <header class="shrink-0 border-b border-zinc-200 bg-white shadow-sm">
+                    <div class="flex items-center justify-between gap-4 px-5 py-3.5 lg:px-8">
+                        <div class="flex items-center gap-4">
                             <button
                                 type="button"
-                                class="inline-flex h-11 w-11 items-center justify-center rounded-full border border-ecosa-blue/10 text-ecosa-blue lg:hidden"
+                                class="flex h-9 w-9 items-center justify-center rounded-lg border border-zinc-200 text-zinc-600 lg:hidden"
                                 @click="sidebarOpen = true"
-                                aria-label="Open sidebar"
+                                aria-label="Open menu"
                             >
-                                <i class="fas fa-bars"></i>
+                                <i class="fas fa-bars text-sm"></i>
                             </button>
                             <div>
-                                <p class="text-xs font-bold uppercase tracking-[0.24em] text-zinc-400">{{ $user?->is_admin ? 'System visibility' : 'Member access' }}</p>
-                                <h1 class="font-display text-3xl font-semibold leading-none text-ecosa-blue-deep">{{ $title ?? 'ECOSA' }}</h1>
+                                <p class="text-[0.65rem] font-bold uppercase tracking-[0.22em] text-zinc-400">
+                                    {{ $user?->is_admin ? 'System Visibility' : 'Member Access' }}
+                                </p>
+                                <h1 class="text-xl font-bold leading-tight text-zinc-900">{{ $title ?? 'ECOSA' }}</h1>
                             </div>
                         </div>
 
-                        <div class="hidden items-center gap-3 md:flex">
-                            @if ($user?->is_admin)
-                                <a href="{{ route('admin.dashboard') }}" class="site-btn-ghost px-5 py-2.5">Admin Home</a>
+                        <div class="flex items-center gap-2">
+                            @if($user?->is_admin)
+                                <a href="{{ route('admin.dashboard') }}"
+                                   class="hidden rounded-lg border border-zinc-200 bg-white px-4 py-2 text-sm font-semibold text-zinc-700 transition hover:border-zinc-300 hover:text-zinc-900 md:inline-flex">
+                                    Admin Home
+                                </a>
                             @endif
-                            <a href="{{ route('dashboard') }}" class="site-btn-ghost px-5 py-2.5">Member Portal</a>
-                            <a href="{{ route('home') }}" class="site-btn-primary px-5 py-2.5">Public Website</a>
+                            <a href="{{ route('dashboard') }}"
+                               class="hidden rounded-lg border border-zinc-200 bg-white px-4 py-2 text-sm font-semibold text-zinc-700 transition hover:border-zinc-300 hover:text-zinc-900 md:inline-flex">
+                                Member Portal
+                            </a>
+                            <a href="{{ route('home') }}"
+                               class="rounded-lg bg-ecosa-green px-4 py-2 text-sm font-semibold text-white transition hover:bg-ecosa-green-deep">
+                                Public Website
+                            </a>
                         </div>
                     </div>
                 </header>
 
-                <main class="px-5 py-6 lg:px-8 lg:py-8">
+                {{-- Page content --}}
+                <main class="flex-1 overflow-y-auto px-5 py-6 lg:px-8 lg:py-8">
                     {{ $slot }}
                 </main>
             </div>
+
         </div>
 
         @persist('toast')

@@ -267,22 +267,22 @@
     <section class="border-t border-zinc-100 bg-white py-16">
         <div class="mx-auto max-w-7xl px-5 lg:px-8">
             <p class="mb-10 text-center font-accent text-xs font-bold uppercase tracking-[0.28em] text-zinc-400">Our Partners &amp; Supporters</p>
-            <div class="flex flex-wrap items-start justify-center gap-x-12 gap-y-8">
+            <div class="flex flex-wrap items-center justify-center gap-x-16 gap-y-10">
                 @foreach ($sponsors as $sponsor)
                     @if(!empty($sponsor['url']))
                         <a href="{{ $sponsor['url'] }}" target="_blank" rel="noopener noreferrer"
-                           class="group flex flex-col items-center gap-2 shrink-0">
+                           class="group flex flex-col items-center gap-3 shrink-0 px-6 py-4 rounded-xl transition duration-300 hover:bg-zinc-50">
                             <img src="{{ $sponsor['logo'] }}" alt="{{ $sponsor['name'] }}"
-                                 class="h-16 w-auto max-w-[160px] object-contain opacity-40 grayscale transition duration-300 group-hover:opacity-100 group-hover:grayscale-0 group-hover:scale-105">
-                            <span class="text-[10px] font-medium text-zinc-400 opacity-0 transition duration-300 group-hover:opacity-100 group-hover:text-zinc-500">
+                                 class="h-20 w-auto max-w-[180px] object-contain opacity-40 grayscale transition duration-300 group-hover:opacity-100 group-hover:grayscale-0 group-hover:scale-105">
+                            <span class="text-[11px] font-semibold tracking-wide text-zinc-400 opacity-0 transition duration-300 group-hover:opacity-100 group-hover:text-zinc-500 whitespace-nowrap">
                                 {{ parse_url($sponsor['url'], PHP_URL_HOST) ?: $sponsor['url'] }}
                             </span>
                         </a>
                     @else
-                        <div class="flex flex-col items-center gap-2 shrink-0">
+                        <div class="flex flex-col items-center gap-3 shrink-0 px-6 py-4">
                             <img src="{{ $sponsor['logo'] }}" alt="{{ $sponsor['name'] }}"
-                                 class="h-16 w-auto max-w-[160px] object-contain opacity-40 grayscale">
-                            <span class="text-[10px] font-medium text-transparent">{{ $sponsor['name'] }}</span>
+                                 class="h-20 w-auto max-w-[180px] object-contain opacity-40 grayscale">
+                            <span class="text-[11px] font-semibold text-transparent whitespace-nowrap">{{ $sponsor['name'] }}</span>
                         </div>
                     @endif
                 @endforeach

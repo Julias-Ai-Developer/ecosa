@@ -1,124 +1,212 @@
-<div class="mx-auto grid max-w-7xl gap-6 xl:grid-cols-[0.95fr_1.05fr]">
-    <section class="admin-panel p-6 sm:p-7">
-        <p class="text-xs font-bold uppercase tracking-[0.24em] text-zinc-400">Team Manager</p>
-        <h1 class="mt-3 font-display text-5xl font-semibold text-ecosa-blue-deep">Manage leadership and team presentation.</h1>
-        <p class="mt-4 text-sm leading-7 text-zinc-600">
-            This page controls the leadership profiles shown on the public website. Each entry can include a photo, title, portfolio, focus statement, and sort order.
-        </p>
+<div class="space-y-5" x-data="{ showForm: false }"
+     x-effect="if ($wire.leaderSaved) { showForm = false }">
 
-        @if ($leaderSaved)
-            <div class="site-success mt-6">Leadership profile published successfully.</div>
-        @endif
-
-        <form wire:submit.prevent="saveLeader" class="mt-6 grid gap-5">
-            <div class="grid gap-5 sm:grid-cols-2">
-                <label>
-                    <span class="site-label">Leader Name</span>
-                    <input type="text" wire:model.blur="leaderName" class="site-input" placeholder="Optional full name">
-                    @error('leaderName') <p class="site-error">{{ $message }}</p> @enderror
-                </label>
-                <label>
-                    <span class="site-label">Initials</span>
-                    <input type="text" wire:model.blur="leaderInitials" class="site-input" placeholder="EC">
-                    @error('leaderInitials') <p class="site-error">{{ $message }}</p> @enderror
-                </label>
-            </div>
-
-            <div class="grid gap-5 sm:grid-cols-2">
-                <label>
-                    <span class="site-label">Title</span>
-                    <input type="text" wire:model.blur="leaderTitle" class="site-input" placeholder="Chairperson">
-                    @error('leaderTitle') <p class="site-error">{{ $message }}</p> @enderror
-                </label>
-                <label>
-                    <span class="site-label">Portfolio</span>
-                    <input type="text" wire:model.blur="leaderPortfolio" class="site-input" placeholder="Strategic Leadership">
-                    @error('leaderPortfolio') <p class="site-error">{{ $message }}</p> @enderror
-                </label>
-            </div>
-
-            <label>
-                <span class="site-label">Focus Statement</span>
-                <textarea wire:model.blur="leaderFocus" rows="4" class="site-input" placeholder="What this leadership role delivers"></textarea>
-                @error('leaderFocus') <p class="site-error">{{ $message }}</p> @enderror
-            </label>
-
-            <div class="grid gap-5 sm:grid-cols-4">
-                <label>
-                    <span class="site-label">Icon</span>
-                    <input type="text" wire:model.blur="leaderIcon" class="site-input" placeholder="fa-user-tie">
-                </label>
-                <label>
-                    <span class="site-label">Tone</span>
-                    <select wire:model.blur="leaderTone" class="site-input">
-                        <option value="blue">Blue</option>
-                        <option value="green">Green</option>
-                        <option value="gold">Gold</option>
-                        <option value="rose">Rose</option>
-                    </select>
-                </label>
-                <label>
-                    <span class="site-label">Sort Order</span>
-                    <input type="number" wire:model.blur="leaderSortOrder" class="site-input">
-                    @error('leaderSortOrder') <p class="site-error">{{ $message }}</p> @enderror
-                </label>
-                <label>
-                    <span class="site-label">Photo</span>
-                    <input type="file" wire:model="leaderPhoto" accept="image/*" class="site-input">
-                    @error('leaderPhoto') <p class="site-error">{{ $message }}</p> @enderror
-                </label>
-            </div>
-
-            <button type="submit" class="site-btn-primary" wire:loading.attr="disabled" wire:target="saveLeader,leaderPhoto">
-                <span wire:loading.remove wire:target="saveLeader,leaderPhoto">Publish Team Profile</span>
-                <span wire:loading wire:target="saveLeader,leaderPhoto">Publishing...</span>
-            </button>
-        </form>
-    </section>
-
-    <section class="admin-panel p-6 sm:p-7">
-        <div class="flex items-end justify-between gap-4">
-            <div>
-                <p class="text-xs font-bold uppercase tracking-[0.24em] text-zinc-400">Leadership Records</p>
-                <h2 class="mt-2 font-display text-4xl font-semibold text-ecosa-blue-deep">Current public profiles</h2>
-            </div>
-            <span class="rounded-full bg-ecosa-blue/[0.04] px-4 py-2 text-xs font-bold uppercase tracking-[0.2em] text-ecosa-blue">{{ $leaders->count() }} total</span>
+    {{-- Toolbar --}}
+    <div class="flex items-center justify-between gap-4">
+        <div>
+            <h2 class="text-base font-bold text-zinc-900">Leadership &amp; Team</h2>
+            <p class="mt-0.5 text-xs text-zinc-500">Profiles shown on the public leadership page</p>
         </div>
+        <button type="button" @click="showForm = true"
+                class="inline-flex items-center gap-2 rounded-lg bg-ecosa-green px-4 py-2 text-sm font-semibold text-white transition hover:bg-ecosa-green-deep">
+            <i class="fas fa-plus text-xs"></i> Add Profile
+        </button>
+    </div>
 
-        <div class="mt-6 grid gap-4">
-            @forelse ($leaders as $leader)
-                <article class="rounded-[24px] border border-ecosa-blue/8 bg-ecosa-blue/[0.03] p-5">
-                    <div class="flex items-center gap-4">
-                        @if ($leader->photoUrl())
-                            <img src="{{ $leader->photoUrl() }}" alt="{{ $leader->title }}" class="h-16 w-16 rounded-2xl object-cover">
-                        @else
-                            <div class="flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl bg-ecosa-blue text-lg font-bold text-white">{{ $leader->initials }}</div>
-                        @endif
-                        <div class="min-w-0 flex-1">
-                            <p class="text-xs font-bold uppercase tracking-[0.2em] text-zinc-400">{{ $leader->portfolio }}</p>
-                            <h3 class="mt-1 font-display text-2xl font-semibold text-ecosa-blue-deep">{{ $leader->title }}</h3>
-                            <p class="mt-1 text-sm text-zinc-600">{{ $leader->name ?: $leader->initials }}</p>
-                        </div>
-                        <div class="flex shrink-0 items-center gap-2">
-                            <span class="rounded-full bg-white px-3 py-1 text-[0.65rem] font-bold uppercase tracking-[0.15em] text-zinc-500">Order {{ $leader->sort_order }}</span>
-                            <button
-                                type="button"
-                                wire:click="deleteLeader({{ $leader->id }})"
-                                wire:confirm="Delete profile for '{{ addslashes($leader->title) }}'? This cannot be undone."
-                                class="inline-flex h-9 w-9 items-center justify-center rounded-xl border border-rose-100 bg-rose-50 text-rose-500 transition hover:bg-rose-100"
-                                title="Delete this profile"
-                            >
+    {{-- Leaders Table --}}
+    <div class="overflow-hidden rounded-2xl border border-zinc-100 bg-white shadow-sm">
+        @if($leaders->isEmpty())
+            <div class="px-6 py-16 text-center">
+                <div class="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-zinc-100">
+                    <i class="fas fa-users-gear text-2xl text-zinc-300"></i>
+                </div>
+                <p class="mt-3 text-sm text-zinc-500">No leadership profiles yet.</p>
+                <button type="button" @click="showForm = true"
+                        class="mt-3 text-sm font-semibold text-ecosa-green hover:underline">
+                    Add your first profile
+                </button>
+            </div>
+        @else
+            <table class="w-full text-left text-sm">
+                <thead class="border-b border-zinc-100 bg-zinc-50">
+                    <tr>
+                        <th class="px-6 py-3 text-[0.65rem] font-bold uppercase tracking-[0.18em] text-zinc-400">Profile</th>
+                        <th class="px-6 py-3 text-[0.65rem] font-bold uppercase tracking-[0.18em] text-zinc-400">Title</th>
+                        <th class="px-6 py-3 text-[0.65rem] font-bold uppercase tracking-[0.18em] text-zinc-400">Portfolio</th>
+                        <th class="px-6 py-3 text-[0.65rem] font-bold uppercase tracking-[0.18em] text-zinc-400">Focus</th>
+                        <th class="px-6 py-3 text-[0.65rem] font-bold uppercase tracking-[0.18em] text-zinc-400">Order</th>
+                        <th class="px-6 py-3 text-right text-[0.65rem] font-bold uppercase tracking-[0.18em] text-zinc-400">Actions</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-zinc-50">
+                    @foreach($leaders as $leader)
+                    <tr class="transition hover:bg-zinc-50">
+                        <td class="px-6 py-4">
+                            <div class="flex items-center gap-3">
+                                @if($leader->photoUrl())
+                                    <img src="{{ $leader->photoUrl() }}" alt="{{ $leader->title }}"
+                                         class="h-10 w-10 shrink-0 rounded-xl object-cover">
+                                @else
+                                    <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-ecosa-blue text-sm font-bold text-white">
+                                        {{ $leader->initials }}
+                                    </div>
+                                @endif
+                                <p class="font-semibold text-zinc-900">{{ $leader->name ?: $leader->initials }}</p>
+                            </div>
+                        </td>
+                        <td class="px-6 py-4 font-medium text-zinc-800">{{ $leader->title }}</td>
+                        <td class="px-6 py-4 text-xs text-zinc-500">{{ $leader->portfolio }}</td>
+                        <td class="px-6 py-4 max-w-[220px]">
+                            <p class="line-clamp-2 text-xs leading-5 text-zinc-400">{{ str($leader->focus ?? '')->limit(80) ?: '—' }}</p>
+                        </td>
+                        <td class="px-6 py-4 text-xs text-zinc-400">{{ $leader->sort_order }}</td>
+                        <td class="px-6 py-4 text-right">
+                            <button type="button"
+                                    wire:click="deleteLeader({{ $leader->id }})"
+                                    wire:confirm="Delete profile for '{{ addslashes($leader->title) }}'? This cannot be undone."
+                                    class="ml-auto flex h-8 w-8 items-center justify-center rounded-lg border border-rose-100 bg-rose-50 text-rose-500 transition hover:bg-rose-100"
+                                    title="Delete">
                                 <i class="fas fa-trash-can text-xs"></i>
                             </button>
-                        </div>
-                    </div>
-                </article>
-            @empty
-                <div class="rounded-[24px] border border-dashed border-ecosa-blue/15 py-10 text-center">
-                    <i class="fas fa-users-gear text-3xl text-zinc-300"></i>
-                    <p class="mt-4 text-sm text-zinc-500">No leadership profiles have been created yet.</p>
-                </div>
-            @endforelse
+                        </td>
+                    </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        @endif
+    </div>
+
+    {{-- Drawer Overlay --}}
+    <div x-show="showForm" x-cloak
+         x-transition:enter="transition duration-200"
+         x-transition:enter-start="opacity-0"
+         x-transition:enter-end="opacity-100"
+         x-transition:leave="transition duration-150"
+         x-transition:leave-start="opacity-100"
+         x-transition:leave-end="opacity-0"
+         class="fixed inset-0 z-40 bg-black/40 backdrop-blur-sm"
+         @click="showForm = false"></div>
+
+    {{-- Drawer Panel --}}
+    <div x-show="showForm" x-cloak
+         x-transition:enter="transition duration-300 ease-out"
+         x-transition:enter-start="translate-x-full"
+         x-transition:enter-end="translate-x-0"
+         x-transition:leave="transition duration-200 ease-in"
+         x-transition:leave-start="translate-x-0"
+         x-transition:leave-end="translate-x-full"
+         class="fixed inset-y-0 right-0 z-50 flex w-full max-w-lg flex-col bg-white shadow-2xl"
+         @keydown.escape.window="showForm = false">
+
+        <div class="flex shrink-0 items-center justify-between border-b border-zinc-100 px-6 py-5">
+            <div>
+                <h3 class="text-base font-bold text-zinc-900">Add Leadership Profile</h3>
+                <p class="mt-0.5 text-xs text-zinc-500">This profile will appear on the public leadership page</p>
+            </div>
+            <button type="button" @click="showForm = false"
+                    class="flex h-8 w-8 items-center justify-center rounded-lg border border-zinc-200 text-zinc-400 transition hover:text-zinc-600">
+                <i class="fas fa-xmark text-sm"></i>
+            </button>
         </div>
-    </section>
+
+        <form wire:submit.prevent="saveLeader" class="flex flex-1 flex-col overflow-hidden">
+            <div class="flex-1 overflow-y-auto px-6 py-5 space-y-4">
+                @if($leaderSaved)
+                    <div class="rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-medium text-emerald-700">
+                        Profile published successfully.
+                    </div>
+                @endif
+
+                <div class="grid gap-4 sm:grid-cols-2">
+                    <div>
+                        <label class="mb-1.5 block text-xs font-semibold text-zinc-700">Full Name <span class="font-normal text-zinc-400">(optional)</span></label>
+                        <input type="text" wire:model.blur="leaderName"
+                               class="w-full rounded-lg border border-zinc-200 px-3 py-2 text-sm focus:border-ecosa-green focus:outline-none focus:ring-1 focus:ring-ecosa-green/30"
+                               placeholder="Optional full name">
+                        @error('leaderName') <p class="mt-1 text-xs text-rose-500">{{ $message }}</p> @enderror
+                    </div>
+                    <div>
+                        <label class="mb-1.5 block text-xs font-semibold text-zinc-700">Initials</label>
+                        <input type="text" wire:model.blur="leaderInitials"
+                               class="w-full rounded-lg border border-zinc-200 px-3 py-2 text-sm focus:border-ecosa-green focus:outline-none focus:ring-1 focus:ring-ecosa-green/30"
+                               placeholder="EC">
+                        @error('leaderInitials') <p class="mt-1 text-xs text-rose-500">{{ $message }}</p> @enderror
+                    </div>
+                </div>
+
+                <div class="grid gap-4 sm:grid-cols-2">
+                    <div>
+                        <label class="mb-1.5 block text-xs font-semibold text-zinc-700">Title</label>
+                        <input type="text" wire:model.blur="leaderTitle"
+                               class="w-full rounded-lg border border-zinc-200 px-3 py-2 text-sm focus:border-ecosa-green focus:outline-none focus:ring-1 focus:ring-ecosa-green/30"
+                               placeholder="Chairperson">
+                        @error('leaderTitle') <p class="mt-1 text-xs text-rose-500">{{ $message }}</p> @enderror
+                    </div>
+                    <div>
+                        <label class="mb-1.5 block text-xs font-semibold text-zinc-700">Portfolio</label>
+                        <input type="text" wire:model.blur="leaderPortfolio"
+                               class="w-full rounded-lg border border-zinc-200 px-3 py-2 text-sm focus:border-ecosa-green focus:outline-none focus:ring-1 focus:ring-ecosa-green/30"
+                               placeholder="Strategic Leadership">
+                        @error('leaderPortfolio') <p class="mt-1 text-xs text-rose-500">{{ $message }}</p> @enderror
+                    </div>
+                </div>
+
+                <div>
+                    <label class="mb-1.5 block text-xs font-semibold text-zinc-700">Focus Statement</label>
+                    <textarea wire:model.blur="leaderFocus" rows="3"
+                              class="w-full rounded-lg border border-zinc-200 px-3 py-2 text-sm focus:border-ecosa-green focus:outline-none focus:ring-1 focus:ring-ecosa-green/30"
+                              placeholder="What this leadership role delivers"></textarea>
+                    @error('leaderFocus') <p class="mt-1 text-xs text-rose-500">{{ $message }}</p> @enderror
+                </div>
+
+                <div class="grid gap-4 grid-cols-2">
+                    <div>
+                        <label class="mb-1.5 block text-xs font-semibold text-zinc-700">Icon</label>
+                        <input type="text" wire:model.blur="leaderIcon"
+                               class="w-full rounded-lg border border-zinc-200 px-3 py-2 text-sm focus:border-ecosa-green focus:outline-none"
+                               placeholder="fa-user-tie">
+                    </div>
+                    <div>
+                        <label class="mb-1.5 block text-xs font-semibold text-zinc-700">Tone</label>
+                        <select wire:model.blur="leaderTone"
+                                class="w-full rounded-lg border border-zinc-200 px-3 py-2 text-sm focus:border-ecosa-green focus:outline-none">
+                            <option value="blue">Blue</option>
+                            <option value="green">Green</option>
+                            <option value="gold">Gold</option>
+                            <option value="rose">Rose</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="grid gap-4 grid-cols-2">
+                    <div>
+                        <label class="mb-1.5 block text-xs font-semibold text-zinc-700">Sort Order</label>
+                        <input type="number" wire:model.blur="leaderSortOrder"
+                               class="w-full rounded-lg border border-zinc-200 px-3 py-2 text-sm focus:border-ecosa-green focus:outline-none">
+                        @error('leaderSortOrder') <p class="mt-1 text-xs text-rose-500">{{ $message }}</p> @enderror
+                    </div>
+                    <div>
+                        <label class="mb-1.5 block text-xs font-semibold text-zinc-700">Photo</label>
+                        <input type="file" wire:model="leaderPhoto" accept="image/*"
+                               class="w-full rounded-lg border border-zinc-200 px-3 py-2 text-sm text-zinc-600 focus:border-ecosa-green focus:outline-none">
+                        @error('leaderPhoto') <p class="mt-1 text-xs text-rose-500">{{ $message }}</p> @enderror
+                    </div>
+                </div>
+            </div>
+
+            <div class="shrink-0 flex justify-end gap-3 border-t border-zinc-100 px-6 py-4">
+                <button type="button" @click="showForm = false"
+                        class="rounded-lg border border-zinc-200 px-4 py-2 text-sm font-semibold text-zinc-600 transition hover:border-zinc-300">
+                    Cancel
+                </button>
+                <button type="submit"
+                        class="rounded-lg bg-ecosa-green px-5 py-2 text-sm font-semibold text-white transition hover:bg-ecosa-green-deep"
+                        wire:loading.attr="disabled" wire:target="saveLeader,leaderPhoto">
+                    <span wire:loading.remove wire:target="saveLeader,leaderPhoto">Publish Profile</span>
+                    <span wire:loading wire:target="saveLeader,leaderPhoto">Publishing...</span>
+                </button>
+            </div>
+        </form>
+    </div>
+
 </div>

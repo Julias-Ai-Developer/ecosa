@@ -1,149 +1,229 @@
-<div class="mx-auto grid max-w-7xl gap-6 xl:grid-cols-[0.95fr_1.05fr]">
-    <section class="admin-panel p-6 sm:p-7">
-        <p class="text-xs font-bold uppercase tracking-[0.24em] text-zinc-400">Community Manager</p>
-        <h1 class="mt-3 font-display text-5xl font-semibold text-ecosa-blue-deep">Manage events, projects, and the insurance group pages.</h1>
-        <p class="mt-4 text-sm leading-7 text-zinc-600">
-            This module powers the community area on the public site. Each item belongs to a dedicated route-driven page so the structure remains clear and corporate.
-        </p>
+<div class="space-y-5" x-data="{ showForm: false }"
+     x-effect="if ($wire.programSaved) { showForm = false }">
 
-        @if ($programSaved)
-            <div class="site-success mt-6">Community entry published successfully.</div>
-        @endif
-
-        <form wire:submit.prevent="saveProgram" class="mt-6 grid gap-5">
-            <div class="grid gap-5 sm:grid-cols-2">
-                <label>
-                    <span class="site-label">Program Type</span>
-                    <select wire:model.blur="programType" class="site-input">
-                        <option value="event">Event</option>
-                        <option value="project">Project</option>
-                        <option value="insurance_group">Insurance Group</option>
-                    </select>
-                    @error('programType') <p class="site-error">{{ $message }}</p> @enderror
-                </label>
-                <label>
-                    <span class="site-label">Status</span>
-                    <select wire:model.blur="programStatus" class="site-input">
-                        <option value="upcoming">Upcoming</option>
-                        <option value="active">Active</option>
-                        <option value="completed">Completed</option>
-                    </select>
-                    @error('programStatus') <p class="site-error">{{ $message }}</p> @enderror
-                </label>
-            </div>
-
-            <label>
-                <span class="site-label">Title</span>
-                <input type="text" wire:model.blur="programTitle" class="site-input" placeholder="Headline for the entry">
-                @error('programTitle') <p class="site-error">{{ $message }}</p> @enderror
-            </label>
-
-            <label>
-                <span class="site-label">Summary</span>
-                <textarea wire:model.blur="programSummary" rows="4" class="site-input" placeholder="Card summary and intro text"></textarea>
-                @error('programSummary') <p class="site-error">{{ $message }}</p> @enderror
-            </label>
-
-            <label>
-                <span class="site-label">Body</span>
-                <textarea wire:model.blur="programBody" rows="6" class="site-input" placeholder="Optional extended public description"></textarea>
-                @error('programBody') <p class="site-error">{{ $message }}</p> @enderror
-            </label>
-
-            <div class="grid gap-5 sm:grid-cols-2">
-                <label>
-                    <span class="site-label">Location</span>
-                    <input type="text" wire:model.blur="programLocation" class="site-input" placeholder="Campus, regional chapter, online...">
-                    @error('programLocation') <p class="site-error">{{ $message }}</p> @enderror
-                </label>
-                <label>
-                    <span class="site-label">Feature Image</span>
-                    <input type="file" wire:model="programImage" accept="image/*" class="site-input">
-                    @error('programImage') <p class="site-error">{{ $message }}</p> @enderror
-                </label>
-            </div>
-
-            <div class="grid gap-5 sm:grid-cols-4">
-                <label>
-                    <span class="site-label">Starts At</span>
-                    <input type="date" wire:model.blur="programStartsAt" class="site-input">
-                    @error('programStartsAt') <p class="site-error">{{ $message }}</p> @enderror
-                </label>
-                <label>
-                    <span class="site-label">Ends At</span>
-                    <input type="date" wire:model.blur="programEndsAt" class="site-input">
-                    @error('programEndsAt') <p class="site-error">{{ $message }}</p> @enderror
-                </label>
-                <label>
-                    <span class="site-label">CTA Label</span>
-                    <input type="text" wire:model.blur="programCtaLabel" class="site-input" placeholder="Learn more">
-                    @error('programCtaLabel') <p class="site-error">{{ $message }}</p> @enderror
-                </label>
-                <label>
-                    <span class="site-label">Sort Order</span>
-                    <input type="number" wire:model.blur="programSortOrder" class="site-input">
-                    @error('programSortOrder') <p class="site-error">{{ $message }}</p> @enderror
-                </label>
-            </div>
-
-            <label>
-                <span class="site-label">CTA URL</span>
-                <input type="url" wire:model.blur="programCtaUrl" class="site-input" placeholder="https://...">
-                @error('programCtaUrl') <p class="site-error">{{ $message }}</p> @enderror
-            </label>
-
-            <button type="submit" class="site-btn-primary" wire:loading.attr="disabled" wire:target="saveProgram,programImage">
-                <span wire:loading.remove wire:target="saveProgram,programImage">Publish Community Entry</span>
-                <span wire:loading wire:target="saveProgram,programImage">Publishing...</span>
-            </button>
-        </form>
-    </section>
-
-    <section class="admin-panel p-6 sm:p-7">
-        <div class="flex items-end justify-between gap-4">
-            <div>
-                <p class="text-xs font-bold uppercase tracking-[0.24em] text-zinc-400">Community Records</p>
-                <h2 class="mt-2 font-display text-4xl font-semibold text-ecosa-blue-deep">Current public entries</h2>
-            </div>
-            <span class="rounded-full bg-ecosa-blue/[0.04] px-4 py-2 text-xs font-bold uppercase tracking-[0.2em] text-ecosa-blue">{{ $programs->count() }} total</span>
+    {{-- Toolbar --}}
+    <div class="flex items-center justify-between gap-4">
+        <div>
+            <h2 class="text-base font-bold text-zinc-900">Community Programs</h2>
+            <p class="mt-0.5 text-xs text-zinc-500">Events, projects and insurance group entries on the public site</p>
         </div>
+        <button type="button" @click="showForm = true"
+                class="inline-flex items-center gap-2 rounded-lg bg-ecosa-green px-4 py-2 text-sm font-semibold text-white transition hover:bg-ecosa-green-deep">
+            <i class="fas fa-plus text-xs"></i> Add Entry
+        </button>
+    </div>
 
-        <div class="mt-6 grid gap-4">
-            @forelse ($programs as $program)
-                <article class="rounded-[24px] border border-ecosa-blue/8 bg-ecosa-blue/[0.03] p-5">
-                    <div class="flex items-center justify-between gap-3">
-                        <span class="site-chip">{{ $program->typeLabel() }}</span>
-                        <div class="flex items-center gap-2">
-                            <span class="rounded-full bg-white px-3 py-1 text-[0.65rem] font-bold uppercase tracking-[0.15em] text-ecosa-green-deep">{{ $program->status }}</span>
-                            <button
-                                type="button"
-                                wire:click="deleteProgram({{ $program->id }})"
-                                wire:confirm="Delete '{{ addslashes($program->title) }}'? This cannot be undone."
-                                class="inline-flex h-8 w-8 items-center justify-center rounded-xl border border-rose-100 bg-rose-50 text-rose-500 transition hover:bg-rose-100"
-                                title="Delete this entry"
-                            >
+    {{-- Programs Table --}}
+    <div class="overflow-hidden rounded-2xl border border-zinc-100 bg-white shadow-sm">
+        @if($programs->isEmpty())
+            <div class="px-6 py-16 text-center">
+                <div class="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-zinc-100">
+                    <i class="fas fa-layer-group text-2xl text-zinc-300"></i>
+                </div>
+                <p class="mt-3 text-sm text-zinc-500">No community entries yet.</p>
+                <button type="button" @click="showForm = true"
+                        class="mt-3 text-sm font-semibold text-ecosa-green hover:underline">
+                    Add your first entry
+                </button>
+            </div>
+        @else
+            <table class="w-full text-left text-sm">
+                <thead class="border-b border-zinc-100 bg-zinc-50">
+                    <tr>
+                        <th class="px-6 py-3 text-[0.65rem] font-bold uppercase tracking-[0.18em] text-zinc-400">Type</th>
+                        <th class="px-6 py-3 text-[0.65rem] font-bold uppercase tracking-[0.18em] text-zinc-400">Title</th>
+                        <th class="px-6 py-3 text-[0.65rem] font-bold uppercase tracking-[0.18em] text-zinc-400">Location</th>
+                        <th class="px-6 py-3 text-[0.65rem] font-bold uppercase tracking-[0.18em] text-zinc-400">Schedule</th>
+                        <th class="px-6 py-3 text-[0.65rem] font-bold uppercase tracking-[0.18em] text-zinc-400">Status</th>
+                        <th class="px-6 py-3 text-right text-[0.65rem] font-bold uppercase tracking-[0.18em] text-zinc-400">Actions</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-zinc-50">
+                    @foreach($programs as $program)
+                    <tr class="transition hover:bg-zinc-50">
+                        <td class="px-6 py-4">
+                            <span class="rounded-full bg-ecosa-blue/8 px-2.5 py-1 text-[0.65rem] font-bold uppercase tracking-[0.12em] text-ecosa-blue">{{ $program->typeLabel() }}</span>
+                        </td>
+                        <td class="px-6 py-4 max-w-[220px]">
+                            <p class="truncate font-semibold text-zinc-900">{{ $program->title }}</p>
+                            <p class="mt-0.5 truncate text-xs text-zinc-400">{{ str($program->summary)->limit(60) }}</p>
+                        </td>
+                        <td class="px-6 py-4 text-xs text-zinc-500">{{ $program->location ?: '—' }}</td>
+                        <td class="px-6 py-4 text-xs text-zinc-400">{{ $program->starts_at ? $program->scheduleLabel() : '—' }}</td>
+                        <td class="px-6 py-4">
+                            <span class="rounded-full px-2.5 py-1 text-xs font-semibold
+                                {{ $program->status === 'active' ? 'bg-emerald-50 text-emerald-700' : ($program->status === 'upcoming' ? 'bg-blue-50 text-blue-700' : 'bg-zinc-100 text-zinc-500') }}">
+                                {{ ucfirst($program->status) }}
+                            </span>
+                        </td>
+                        <td class="px-6 py-4 text-right">
+                            <button type="button"
+                                    wire:click="deleteProgram({{ $program->id }})"
+                                    wire:confirm="Delete '{{ addslashes($program->title) }}'? This cannot be undone."
+                                    class="ml-auto flex h-8 w-8 items-center justify-center rounded-lg border border-rose-100 bg-rose-50 text-rose-500 transition hover:bg-rose-100"
+                                    title="Delete">
                                 <i class="fas fa-trash-can text-xs"></i>
                             </button>
-                        </div>
-                    </div>
-                    <h3 class="mt-4 font-display text-2xl font-semibold text-ecosa-blue-deep">{{ $program->title }}</h3>
-                    <p class="mt-3 text-sm leading-7 text-zinc-600">{{ $program->summary }}</p>
-                    @if ($program->location)
-                        <p class="mt-3 inline-flex items-center gap-2 text-sm font-semibold text-ecosa-green-deep">
-                            <i class="fas fa-location-dot text-ecosa-green text-xs"></i>
-                            {{ $program->location }}
-                        </p>
-                    @endif
-                    @if ($program->starts_at)
-                        <p class="mt-2 text-xs text-zinc-400">{{ $program->scheduleLabel() }}</p>
-                    @endif
-                </article>
-            @empty
-                <div class="rounded-[24px] border border-dashed border-ecosa-blue/15 py-10 text-center">
-                    <i class="fas fa-layer-group text-3xl text-zinc-300"></i>
-                    <p class="mt-4 text-sm text-zinc-500">No community entries have been created yet.</p>
-                </div>
-            @endforelse
+                        </td>
+                    </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        @endif
+    </div>
+
+    {{-- Drawer Overlay --}}
+    <div x-show="showForm" x-cloak
+         x-transition:enter="transition duration-200"
+         x-transition:enter-start="opacity-0"
+         x-transition:enter-end="opacity-100"
+         x-transition:leave="transition duration-150"
+         x-transition:leave-start="opacity-100"
+         x-transition:leave-end="opacity-0"
+         class="fixed inset-0 z-40 bg-black/40 backdrop-blur-sm"
+         @click="showForm = false"></div>
+
+    {{-- Drawer Panel --}}
+    <div x-show="showForm" x-cloak
+         x-transition:enter="transition duration-300 ease-out"
+         x-transition:enter-start="translate-x-full"
+         x-transition:enter-end="translate-x-0"
+         x-transition:leave="transition duration-200 ease-in"
+         x-transition:leave-start="translate-x-0"
+         x-transition:leave-end="translate-x-full"
+         class="fixed inset-y-0 right-0 z-50 flex w-full max-w-lg flex-col bg-white shadow-2xl"
+         @keydown.escape.window="showForm = false">
+
+        <div class="flex shrink-0 items-center justify-between border-b border-zinc-100 px-6 py-5">
+            <div>
+                <h3 class="text-base font-bold text-zinc-900">Add Community Entry</h3>
+                <p class="mt-0.5 text-xs text-zinc-500">Create a new event, project or insurance group listing</p>
+            </div>
+            <button type="button" @click="showForm = false"
+                    class="flex h-8 w-8 items-center justify-center rounded-lg border border-zinc-200 text-zinc-400 transition hover:text-zinc-600">
+                <i class="fas fa-xmark text-sm"></i>
+            </button>
         </div>
-    </section>
+
+        <form wire:submit.prevent="saveProgram" class="flex flex-1 flex-col overflow-hidden">
+            <div class="flex-1 overflow-y-auto px-6 py-5 space-y-4">
+                @if($programSaved)
+                    <div class="rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-medium text-emerald-700">
+                        Entry published successfully.
+                    </div>
+                @endif
+
+                <div class="grid gap-4 sm:grid-cols-2">
+                    <div>
+                        <label class="mb-1.5 block text-xs font-semibold text-zinc-700">Program Type</label>
+                        <select wire:model.blur="programType"
+                                class="w-full rounded-lg border border-zinc-200 px-3 py-2 text-sm focus:border-ecosa-green focus:outline-none focus:ring-1 focus:ring-ecosa-green/30">
+                            <option value="event">Event</option>
+                            <option value="project">Project</option>
+                            <option value="insurance_group">Insurance Group</option>
+                        </select>
+                        @error('programType') <p class="mt-1 text-xs text-rose-500">{{ $message }}</p> @enderror
+                    </div>
+                    <div>
+                        <label class="mb-1.5 block text-xs font-semibold text-zinc-700">Status</label>
+                        <select wire:model.blur="programStatus"
+                                class="w-full rounded-lg border border-zinc-200 px-3 py-2 text-sm focus:border-ecosa-green focus:outline-none focus:ring-1 focus:ring-ecosa-green/30">
+                            <option value="upcoming">Upcoming</option>
+                            <option value="active">Active</option>
+                            <option value="completed">Completed</option>
+                        </select>
+                        @error('programStatus') <p class="mt-1 text-xs text-rose-500">{{ $message }}</p> @enderror
+                    </div>
+                </div>
+
+                <div>
+                    <label class="mb-1.5 block text-xs font-semibold text-zinc-700">Title</label>
+                    <input type="text" wire:model.blur="programTitle"
+                           class="w-full rounded-lg border border-zinc-200 px-3 py-2 text-sm focus:border-ecosa-green focus:outline-none focus:ring-1 focus:ring-ecosa-green/30"
+                           placeholder="Headline for the entry">
+                    @error('programTitle') <p class="mt-1 text-xs text-rose-500">{{ $message }}</p> @enderror
+                </div>
+
+                <div>
+                    <label class="mb-1.5 block text-xs font-semibold text-zinc-700">Summary</label>
+                    <textarea wire:model.blur="programSummary" rows="3"
+                              class="w-full rounded-lg border border-zinc-200 px-3 py-2 text-sm focus:border-ecosa-green focus:outline-none focus:ring-1 focus:ring-ecosa-green/30"
+                              placeholder="Card summary and intro text"></textarea>
+                    @error('programSummary') <p class="mt-1 text-xs text-rose-500">{{ $message }}</p> @enderror
+                </div>
+
+                <div>
+                    <label class="mb-1.5 block text-xs font-semibold text-zinc-700">Body <span class="font-normal text-zinc-400">(optional)</span></label>
+                    <textarea wire:model.blur="programBody" rows="3"
+                              class="w-full rounded-lg border border-zinc-200 px-3 py-2 text-sm focus:border-ecosa-green focus:outline-none focus:ring-1 focus:ring-ecosa-green/30"
+                              placeholder="Extended public description"></textarea>
+                </div>
+
+                <div class="grid gap-4 sm:grid-cols-2">
+                    <div>
+                        <label class="mb-1.5 block text-xs font-semibold text-zinc-700">Location</label>
+                        <input type="text" wire:model.blur="programLocation"
+                               class="w-full rounded-lg border border-zinc-200 px-3 py-2 text-sm focus:border-ecosa-green focus:outline-none focus:ring-1 focus:ring-ecosa-green/30"
+                               placeholder="Campus, regional, online...">
+                        @error('programLocation') <p class="mt-1 text-xs text-rose-500">{{ $message }}</p> @enderror
+                    </div>
+                    <div>
+                        <label class="mb-1.5 block text-xs font-semibold text-zinc-700">Feature Image</label>
+                        <input type="file" wire:model="programImage" accept="image/*"
+                               class="w-full rounded-lg border border-zinc-200 px-3 py-2 text-sm text-zinc-600 focus:border-ecosa-green focus:outline-none">
+                        @error('programImage') <p class="mt-1 text-xs text-rose-500">{{ $message }}</p> @enderror
+                    </div>
+                </div>
+
+                <div class="grid gap-4 grid-cols-2">
+                    <div>
+                        <label class="mb-1.5 block text-xs font-semibold text-zinc-700">Starts At</label>
+                        <input type="date" wire:model.blur="programStartsAt"
+                               class="w-full rounded-lg border border-zinc-200 px-3 py-2 text-sm focus:border-ecosa-green focus:outline-none">
+                        @error('programStartsAt') <p class="mt-1 text-xs text-rose-500">{{ $message }}</p> @enderror
+                    </div>
+                    <div>
+                        <label class="mb-1.5 block text-xs font-semibold text-zinc-700">Ends At</label>
+                        <input type="date" wire:model.blur="programEndsAt"
+                               class="w-full rounded-lg border border-zinc-200 px-3 py-2 text-sm focus:border-ecosa-green focus:outline-none">
+                    </div>
+                </div>
+
+                <div class="grid gap-4 grid-cols-2">
+                    <div>
+                        <label class="mb-1.5 block text-xs font-semibold text-zinc-700">CTA Label</label>
+                        <input type="text" wire:model.blur="programCtaLabel"
+                               class="w-full rounded-lg border border-zinc-200 px-3 py-2 text-sm focus:border-ecosa-green focus:outline-none"
+                               placeholder="Learn more">
+                    </div>
+                    <div>
+                        <label class="mb-1.5 block text-xs font-semibold text-zinc-700">Sort Order</label>
+                        <input type="number" wire:model.blur="programSortOrder"
+                               class="w-full rounded-lg border border-zinc-200 px-3 py-2 text-sm focus:border-ecosa-green focus:outline-none">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="mb-1.5 block text-xs font-semibold text-zinc-700">CTA URL <span class="font-normal text-zinc-400">(optional)</span></label>
+                    <input type="url" wire:model.blur="programCtaUrl"
+                           class="w-full rounded-lg border border-zinc-200 px-3 py-2 text-sm focus:border-ecosa-green focus:outline-none"
+                           placeholder="https://...">
+                </div>
+            </div>
+
+            <div class="shrink-0 flex justify-end gap-3 border-t border-zinc-100 px-6 py-4">
+                <button type="button" @click="showForm = false"
+                        class="rounded-lg border border-zinc-200 px-4 py-2 text-sm font-semibold text-zinc-600 transition hover:border-zinc-300">
+                    Cancel
+                </button>
+                <button type="submit"
+                        class="rounded-lg bg-ecosa-green px-5 py-2 text-sm font-semibold text-white transition hover:bg-ecosa-green-deep"
+                        wire:loading.attr="disabled" wire:target="saveProgram,programImage">
+                    <span wire:loading.remove wire:target="saveProgram,programImage">Publish Entry</span>
+                    <span wire:loading wire:target="saveProgram,programImage">Publishing...</span>
+                </button>
+            </div>
+        </form>
+    </div>
+
 </div>
