@@ -2,10 +2,16 @@
 
 namespace App\Livewire\Admin;
 
+use App\Mail\MemberCredentialsMail;
 use App\Models\MemberNotification;
 use App\Models\MembershipProfile;
+use App\Models\Role;
+use App\Models\User;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Title;
 use Livewire\Component;
@@ -70,14 +76,50 @@ class MembersIndex extends Component
 
     public function verifyPayment(int $membershipProfileId): void
     {
-        MembershipProfile::query()
-            ->whereKey($membershipProfileId)
-            ->update([
-                'membership_status' => 'active',
-                'payment_status' => 'paid',
-                'amount_paid' => MembershipProfile::REGISTRATION_FEE,
-                'paid_at' => now(),
+        $profile = MembershipProfile::query()->findOrFail($membershipProfileId);
+
+        $profile->update([
+            'membership_status' => 'active',
+            'payment_status'    => 'paid',
+            'amount_paid'       => MembershipProfile::REGISTRATION_FEE,
+            'paid_at'           => now(),
+        ]);
+
+        // Create portal account if none exists
+        $user = User::query()
+            ->where('email', $profile->email)
+            ->orWhere(fn ($q) => $q->whereKey($profile->user_id))
+            ->first();
+
+        $plainPassword = null;
+
+        if (! $user) {
+            $plainPassword = Str::random(10);
+
+            $user = User::create([
+                'name'     => $profile->full_name,
+                'email'    => $profile->email,
+                'password' => Hash::make($plainPassword),
             ]);
+
+            $profile->update(['user_id' => $user->id]);
+        }
+
+        // Assign member role
+        $memberRole = Role::where('slug', 'member')->first();
+        if ($memberRole && ! $user->roles()->where('slug', 'member')->exists()) {
+            $user->roles()->attach($memberRole);
+        }
+
+        // Send credentials only when we created a new account
+        if ($plainPassword) {
+            Mail::to($profile->email)->send(new MemberCredentialsMail(
+                fullName:        $profile->full_name,
+                membershipNumber: $profile->membership_number,
+                email:           $profile->email,
+                plainPassword:   $plainPassword,
+            ));
+        }
     }
 
     public function openMessageDrawer(int $membershipProfileId): void

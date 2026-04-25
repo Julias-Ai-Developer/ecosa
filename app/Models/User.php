@@ -2,11 +2,11 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -20,11 +20,6 @@ class User extends Authenticatable
     /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable, TwoFactorAuthenticatable;
 
-    /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
     protected function casts(): array
     {
         return [
@@ -34,9 +29,6 @@ class User extends Authenticatable
         ];
     }
 
-    /**
-     * Get the user's initials
-     */
     public function initials(): string
     {
         return Str::of($this->name)
@@ -49,5 +41,39 @@ class User extends Authenticatable
     public function membershipProfile(): HasOne
     {
         return $this->hasOne(MembershipProfile::class);
+    }
+
+    public function roles(): BelongsToMany
+    {
+        return $this->belongsToMany(Role::class);
+    }
+
+    public function hasRole(string $slug): bool
+    {
+        return $this->is_admin || $this->roles->contains('slug', $slug);
+    }
+
+    public function hasPermission(string $slug): bool
+    {
+        if ($this->is_admin) {
+            return true;
+        }
+
+        return $this->roles->flatMap->permissions->contains('slug', $slug);
+    }
+
+    public function canAccessAdmin(): bool
+    {
+        return $this->is_admin || $this->roles->isNotEmpty();
+    }
+
+    public function allowedAdminSlugs(): array
+    {
+        if ($this->is_admin) {
+            return ['admin.dashboard', 'admin.news', 'admin.community', 'admin.team',
+                    'admin.members', 'admin.messages', 'admin.notifications', 'admin.roles'];
+        }
+
+        return $this->roles->flatMap->permissions->pluck('slug')->unique()->values()->all();
     }
 }

@@ -3,66 +3,100 @@
     <head>
         @include('partials.head')
     </head>
-    <body class="site-shell min-h-screen antialiased">
-        <div class="grid min-h-screen lg:grid-cols-[1.05fr_0.95fr]">
-            <div class="relative hidden overflow-hidden bg-[#081b2c] px-10 py-14 text-white lg:flex">
-                <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(255,214,0,0.14),transparent_28%),radial-gradient(circle_at_bottom_right,rgba(23,146,75,0.18),transparent_24%)]"></div>
-                <div class="relative z-10 flex max-w-xl flex-col justify-between">
-                    <div>
-                        <a href="{{ route('home') }}" class="flex items-center gap-3">
-                            <img src="{{ asset('assets/images/logo.png') }}" alt="ECOSA Logo" class="h-14 w-14 rounded-2xl bg-white object-contain p-2">
-                            <div>
-                                <p class="font-display text-3xl font-semibold">ECOSA</p>
-                                <p class="mt-1 text-xs font-bold uppercase tracking-[0.24em] text-white/55">Member Access Platform</p>
-                            </div>
-                        </a>
+    <body class="min-h-screen antialiased" style="background:#eef3f9;">
 
-                        <div class="mt-16 max-w-xl">
-                            <span class="site-chip border-white/12 bg-white/10 text-white">Association Portal</span>
-                            <h1 class="mt-6 font-display text-6xl font-semibold leading-[0.94] text-balance">
-                                Alumni access built like a real institution.
-                            </h1>
-                            <p class="mt-6 max-w-lg text-lg leading-8 text-white/72">
-                                Secure membership details, payment visibility, profile settings, and an administrative backend designed for a serious alumni association.
-                            </p>
-                        </div>
-                    </div>
+        <div class="flex min-h-screen">
 
-                    <div class="grid gap-4 sm:grid-cols-3">
-                        <div class="rounded-[24px] border border-white/10 bg-white/7 p-5">
-                            <p class="text-xs font-bold uppercase tracking-[0.24em] text-white/45">Members</p>
-                            <p class="mt-3 font-display text-4xl font-semibold">500+</p>
-                        </div>
-                        <div class="rounded-[24px] border border-white/10 bg-white/7 p-5">
-                            <p class="text-xs font-bold uppercase tracking-[0.24em] text-white/45">Payments</p>
-                            <p class="mt-3 font-display text-4xl font-semibold">Live</p>
-                        </div>
-                        <div class="rounded-[24px] border border-white/10 bg-white/7 p-5">
-                            <p class="text-xs font-bold uppercase tracking-[0.24em] text-white/45">Support</p>
-                            <p class="mt-3 font-display text-4xl font-semibold">Online</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            {{-- Left Panel — School Image --}}
+            <div class="relative hidden w-[55%] flex-col overflow-hidden lg:flex"
+                 style="background: linear-gradient(160deg,#0a2540 0%,#173a60 60%,#17924b 100%);">
 
-            <div class="flex min-h-screen items-center justify-center px-6 py-12 sm:px-10 lg:px-14">
-                <div class="w-full max-w-md">
-                    <a href="{{ route('home') }}" class="mb-8 flex items-center gap-3 lg:hidden" wire:navigate>
-                        <img src="{{ asset('assets/images/logo.png') }}" alt="ECOSA Logo" class="h-12 w-12 rounded-2xl bg-white object-contain p-2 shadow-sm">
+                {{-- Background photo --}}
+                <img src="{{ asset('assets/images/school/Equatorial-College-School5.jpeg') }}"
+                     alt="Equatorial College"
+                     class="absolute inset-0 h-full w-full object-cover opacity-30 mix-blend-luminosity">
+
+                {{-- Overlay gradient --}}
+                <div class="absolute inset-0"
+                     style="background: linear-gradient(160deg, rgba(10,37,64,0.82) 0%, rgba(23,58,96,0.68) 55%, rgba(23,146,75,0.55) 100%);"></div>
+
+                {{-- Content --}}
+                <div class="relative z-10 flex h-full flex-col justify-between px-14 py-14">
+                    {{-- Logo --}}
+                    <a href="{{ route('home') }}" class="flex items-center gap-4">
+                        <img src="{{ asset('assets/images/logo.png') }}"
+                             alt="ECOSA Logo"
+                             class="h-14 w-14 rounded-2xl bg-white object-contain p-2 shadow-lg">
                         <div>
-                            <p class="font-display text-3xl font-semibold text-ecosa-blue-deep">ECOSA</p>
-                            <p class="text-xs font-bold uppercase tracking-[0.22em] text-zinc-500">Portal Access</p>
+                            <p class="text-2xl font-bold tracking-tight text-white">ECOSA</p>
+                            <p class="text-xs font-semibold uppercase tracking-[0.22em] text-white/55">Member Portal</p>
                         </div>
                     </a>
 
-                    <div class="site-card overflow-hidden">
-                        <div class="h-2 bg-[linear-gradient(90deg,#173a60,#67bc45,#ffd600)]"></div>
-                        <div class="p-8 sm:p-10">
-                            {{ $slot }}
+                    {{-- Main message --}}
+                    <div class="max-w-lg">
+                        <div class="mb-6 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-widest text-white/70">
+                            <span class="h-1.5 w-1.5 rounded-full bg-emerald-400"></span>
+                            Equatorial College Old Students Association
+                        </div>
+                        <h1 class="text-5xl font-bold leading-tight text-white">
+                            Your alumni home,<br>
+                            <span style="color:#67bc45;">always open.</span>
+                        </h1>
+                        <p class="mt-5 text-lg leading-8 text-white/70">
+                            Access your membership record, track your payment status, and stay connected with the ECOSA community — all in one place.
+                        </p>
+                    </div>
+
+                    {{-- Stats row --}}
+                    <div class="grid grid-cols-3 gap-4">
+                        <div class="rounded-2xl border border-white/10 bg-white/8 p-5 backdrop-blur-sm">
+                            <p class="text-xs font-bold uppercase tracking-widest text-white/45">Members</p>
+                            <p class="mt-2 text-3xl font-bold text-white">500+</p>
+                        </div>
+                        <div class="rounded-2xl border border-white/10 bg-white/8 p-5 backdrop-blur-sm">
+                            <p class="text-xs font-bold uppercase tracking-widest text-white/45">Since</p>
+                            <p class="mt-2 text-3xl font-bold text-white">1985</p>
+                        </div>
+                        <div class="rounded-2xl border border-white/10 bg-white/8 p-5 backdrop-blur-sm">
+                            <p class="text-xs font-bold uppercase tracking-widest text-white/45">Verified</p>
+                            <p class="mt-2 text-3xl font-bold text-white">Secure</p>
                         </div>
                     </div>
                 </div>
             </div>
+
+            {{-- Right Panel — Form --}}
+            <div class="flex flex-1 flex-col items-center justify-center px-6 py-12 sm:px-10 lg:px-14"
+                 style="background:#eef3f9;">
+
+                {{-- Mobile logo --}}
+                <a href="{{ route('home') }}" class="mb-8 flex items-center gap-3 lg:hidden">
+                    <img src="{{ asset('assets/images/logo.png') }}"
+                         alt="ECOSA Logo"
+                         class="h-12 w-12 rounded-2xl bg-white object-contain p-2 shadow-sm">
+                    <div>
+                        <p class="text-2xl font-bold text-[#173a60]">ECOSA</p>
+                        <p class="text-xs font-semibold uppercase tracking-[0.22em] text-zinc-500">Portal Access</p>
+                    </div>
+                </a>
+
+                <div class="w-full max-w-sm">
+                    {{-- Card --}}
+                    <div class="overflow-hidden rounded-2xl bg-white shadow-xl ring-1 ring-black/5">
+                        {{-- Blue top bar --}}
+                        <div style="height:4px; background: linear-gradient(90deg,#173a60,#17924b,#ffd600);"></div>
+                        <div class="px-8 py-9">
+                            {{ $slot }}
+                        </div>
+                    </div>
+
+                    <p class="mt-6 text-center text-xs text-zinc-400">
+                        &copy; {{ date('Y') }} Equatorial College Old Students Association
+                    </p>
+                </div>
+            </div>
+
         </div>
 
         @persist('toast')
