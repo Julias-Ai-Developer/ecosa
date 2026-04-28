@@ -17,35 +17,71 @@
                 @endforeach
             </div>
 
-            <div class="mt-12 text-center">
-                <h2 class="font-display text-3xl font-bold text-ecosa-blue-deep sm:text-4xl">Management Team</h2>
-            </div>
+            {{-- Dynamic grouped sections --}}
+            @foreach ($sections as $section)
+                <div class="mt-14">
+                    {{-- Section heading --}}
+                    <div class="flex items-center gap-4">
+                        <div class="h-px flex-1 bg-zinc-100"></div>
+                        <h2 class="font-display text-2xl font-bold text-ecosa-blue-deep sm:text-3xl">
+                            {{ $section['label'] }}
+                        </h2>
+                        <div class="h-px flex-1 bg-zinc-100"></div>
+                    </div>
 
-            <div class="mt-6 grid gap-x-6 gap-y-8 sm:grid-cols-2 lg:grid-cols-4">
-                @foreach ($leaders as $leader)
-                    @php
-                        $displayPhoto = ! empty($leader['photo'])
-                            ? $leader['photo']
-                            : asset('assets/images/placeholders/leader-placeholder.svg');
-                        $displayName = ! empty($leader['name']) ? $leader['name'] : $leader['title'];
-                        $displayRole = ! empty($leader['name']) ? $leader['title'] : $leader['portfolio'];
-                    @endphp
-                    <article class="overflow-hidden rounded-[3px] bg-white shadow-sm ring-1 ring-zinc-100">
-                        <div class="aspect-[4/4.45] overflow-hidden bg-zinc-100">
-                            <img
-                                src="{{ $displayPhoto }}"
-                                alt="{{ $displayName }}"
-                                class="h-full w-full object-cover"
+                    {{-- Members grid --}}
+                    <div class="mt-8 grid gap-x-6 gap-y-8 sm:grid-cols-2 lg:grid-cols-4">
+                        @foreach ($section['members'] as $leader)
+                            @php
+                                $displayPhoto = !empty($leader['photo'])
+                                    ? $leader['photo']
+                                    : asset('assets/images/placeholders/chairperson-ecosa-placeholder.svg');
+                                $displayName = !empty($leader['name']) ? $leader['name'] : $leader['title'];
+                                $displayRole = !empty($leader['name']) ? $leader['title'] : $leader['portfolio'];
+                            @endphp
+
+                            <article
+                                class="group overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-zinc-100 transition hover:shadow-md"
+                                x-data="{ hovered: false }"
+                                @mouseenter="hovered = true"
+                                @mouseleave="hovered = false"
                             >
-                        </div>
+                                {{-- Photo area --}}
+                                <div class="relative aspect-[3/3.6] overflow-hidden bg-zinc-100">
+                                    <img
+                                        src="{{ $displayPhoto }}"
+                                        alt="{{ $displayName }}"
+                                        class="h-full w-full object-cover transition duration-300 group-hover:scale-105"
+                                    >
+                                    {{-- Hover social overlay --}}
+                                    <div
+                                        x-show="hovered"
+                                        x-transition:enter="transition duration-200 ease-out"
+                                        x-transition:enter-start="opacity-0 translate-y-3"
+                                        x-transition:enter-end="opacity-100 translate-y-0"
+                                        x-transition:leave="transition duration-150 ease-in"
+                                        x-transition:leave-start="opacity-100 translate-y-0"
+                                        x-transition:leave-end="opacity-0 translate-y-3"
+                                        class="absolute inset-x-0 bottom-0 flex items-center justify-center gap-4 bg-ecosa-blue-deep/90 py-3 backdrop-blur-sm"
+                                        x-cloak
+                                    >
+                                        <a href="#" class="text-white/70 transition hover:text-ecosa-green" title="Facebook"><i class="fab fa-facebook-f text-sm"></i></a>
+                                        <a href="#" class="text-white/70 transition hover:text-ecosa-green" title="Twitter"><i class="fab fa-twitter text-sm"></i></a>
+                                        <a href="#" class="text-white/70 transition hover:text-ecosa-green" title="Instagram"><i class="fab fa-instagram text-sm"></i></a>
+                                        <a href="#" class="text-white/70 transition hover:text-ecosa-green" title="LinkedIn"><i class="fab fa-linkedin-in text-sm"></i></a>
+                                    </div>
+                                </div>
 
-                        <div class="min-h-[74px] px-4 py-4 text-center">
-                            <h3 class="text-sm font-extrabold leading-snug text-zinc-950">{{ $displayName }}</h3>
-                            <p class="mt-1 text-[0.68rem] font-medium leading-5 text-blue-600">{{ $displayRole }}</p>
-                        </div>
-                    </article>
-                @endforeach
-            </div>
+                                {{-- Name & role --}}
+                                <div class="px-4 py-4 text-center">
+                                    <h3 class="text-sm font-extrabold leading-snug text-zinc-950">{{ $displayName }}</h3>
+                                    <p class="mt-1 text-[0.7rem] font-semibold leading-5 text-ecosa-blue">{{ $displayRole }}</p>
+                                </div>
+                            </article>
+                        @endforeach
+                    </div>
+                </div>
+            @endforeach
         </div>
     </section>
 

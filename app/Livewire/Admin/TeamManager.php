@@ -35,9 +35,20 @@ class TeamManager extends Component
 
     public int $leaderSortOrder = 0;
 
+    public string $leaderGroup = 'top_management';
+
     public mixed $leaderPhoto = null;
 
     public bool $leaderSaved = false;
+
+    public static function groups(): array
+    {
+        return [
+            'top_management'       => 'Top Management',
+            'class_representatives' => 'Class Representatives',
+            'chapter_leaders'      => 'Chapter Leaders',
+        ];
+    }
 
     public function newEntry(): void
     {
@@ -45,6 +56,7 @@ class TeamManager extends Component
         $this->leaderIcon = 'fa-user-tie';
         $this->leaderTone = 'blue';
         $this->leaderSortOrder = 0;
+        $this->leaderGroup = 'top_management';
         $this->editingId = null;
         $this->leaderSaved = false;
         $this->resetValidation();
@@ -62,6 +74,7 @@ class TeamManager extends Component
         $this->leaderIcon = $record->icon ?? 'fa-user-tie';
         $this->leaderTone = $record->tone ?? 'blue';
         $this->leaderSortOrder = $record->sort_order;
+        $this->leaderGroup = $record->group ?? 'top_management';
         $this->leaderPhoto = null;
         $this->leaderSaved = false;
         $this->resetValidation();
@@ -78,6 +91,7 @@ class TeamManager extends Component
             'leaderIcon'      => ['required', 'string', 'max:80'],
             'leaderTone'      => ['required', Rule::in(['blue', 'green', 'gold', 'rose'])],
             'leaderSortOrder' => ['required', 'integer', 'min:0', 'max:500'],
+            'leaderGroup'     => ['required', Rule::in(array_keys(self::groups()))],
             'leaderPhoto'     => ['nullable', 'image', 'max:2048'],
         ]);
 
@@ -86,14 +100,15 @@ class TeamManager extends Component
             : null;
 
         $data = [
-            'name'      => $validated['leaderName'] ?: null,
-            'initials'  => Str::upper($validated['leaderInitials'] ?: Str::substr($validated['leaderName'] ?? '', 0, 2)),
-            'title'     => $validated['leaderTitle'],
-            'portfolio' => $validated['leaderPortfolio'],
-            'focus'     => $validated['leaderFocus'],
-            'icon'      => $validated['leaderIcon'],
-            'tone'      => $validated['leaderTone'],
+            'name'       => $validated['leaderName'] ?: null,
+            'initials'   => Str::upper($validated['leaderInitials'] ?: Str::substr($validated['leaderName'] ?? '', 0, 2)),
+            'title'      => $validated['leaderTitle'],
+            'portfolio'  => $validated['leaderPortfolio'],
+            'focus'      => $validated['leaderFocus'],
+            'icon'       => $validated['leaderIcon'],
+            'tone'       => $validated['leaderTone'],
             'sort_order' => $validated['leaderSortOrder'],
+            'group'      => $validated['leaderGroup'],
         ];
 
         if ($this->editingId) {
@@ -111,6 +126,7 @@ class TeamManager extends Component
         $this->leaderIcon = 'fa-user-tie';
         $this->leaderTone = 'blue';
         $this->leaderSortOrder = 0;
+        $this->leaderGroup = 'top_management';
         $this->editingId = null;
         $this->leaderSaved = true;
     }
@@ -124,7 +140,8 @@ class TeamManager extends Component
     public function render(): View
     {
         return view('livewire.admin.team-manager', [
-            'leaders' => LeadershipMember::query()->orderBy('sort_order')->latest()->get(),
+            'leaders' => LeadershipMember::query()->orderBy('group')->orderBy('sort_order')->latest()->get(),
+            'groups'  => self::groups(),
         ]);
     }
 }

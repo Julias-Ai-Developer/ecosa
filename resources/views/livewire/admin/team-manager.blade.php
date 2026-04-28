@@ -31,9 +31,9 @@
                 <thead class="border-b border-zinc-100 bg-zinc-50">
                     <tr>
                         <th class="px-6 py-3 text-[0.65rem] font-bold uppercase tracking-[0.18em] text-zinc-400">Profile</th>
+                        <th class="px-6 py-3 text-[0.65rem] font-bold uppercase tracking-[0.18em] text-zinc-400">Group</th>
                         <th class="px-6 py-3 text-[0.65rem] font-bold uppercase tracking-[0.18em] text-zinc-400">Title</th>
                         <th class="px-6 py-3 text-[0.65rem] font-bold uppercase tracking-[0.18em] text-zinc-400">Portfolio</th>
-                        <th class="px-6 py-3 text-[0.65rem] font-bold uppercase tracking-[0.18em] text-zinc-400">Focus</th>
                         <th class="px-6 py-3 text-[0.65rem] font-bold uppercase tracking-[0.18em] text-zinc-400">Order</th>
                         <th class="px-6 py-3 text-right text-[0.65rem] font-bold uppercase tracking-[0.18em] text-zinc-400">Actions</th>
                     </tr>
@@ -54,11 +54,15 @@
                                 <p class="font-semibold text-zinc-900">{{ $leader->name ?: $leader->initials }}</p>
                             </div>
                         </td>
+                        <td class="px-6 py-4">
+                            @php
+                                $groupLabels = ['top_management' => ['label' => 'Top Management', 'color' => 'bg-ecosa-blue/10 text-ecosa-blue-deep'], 'class_representatives' => ['label' => 'Class Reps', 'color' => 'bg-ecosa-green/10 text-ecosa-green-deep'], 'chapter_leaders' => ['label' => 'Chapter Leaders', 'color' => 'bg-amber-50 text-amber-700']];
+                                $g = $groupLabels[$leader->group] ?? ['label' => $leader->group, 'color' => 'bg-zinc-100 text-zinc-600'];
+                            @endphp
+                            <span class="rounded-full px-2.5 py-1 text-[0.65rem] font-bold {{ $g['color'] }}">{{ $g['label'] }}</span>
+                        </td>
                         <td class="px-6 py-4 font-medium text-zinc-800">{{ $leader->title }}</td>
                         <td class="px-6 py-4 text-xs text-zinc-500">{{ $leader->portfolio }}</td>
-                        <td class="px-6 py-4 max-w-[220px]">
-                            <p class="line-clamp-2 text-xs leading-5 text-zinc-400">{{ str($leader->focus ?? '')->limit(80) ?: '—' }}</p>
-                        </td>
                         <td class="px-6 py-4 text-xs text-zinc-400">{{ $leader->sort_order }}</td>
                         <td class="px-6 py-4 text-right">
                             <div class="flex items-center justify-end gap-2">
@@ -144,6 +148,18 @@
                                placeholder="EC">
                         @error('leaderInitials') <p class="mt-1 text-xs text-rose-500">{{ $message }}</p> @enderror
                     </div>
+                </div>
+
+                {{-- Group --}}
+                <div>
+                    <label class="mb-1.5 block text-xs font-semibold text-zinc-700">Section / Group</label>
+                    <select wire:model.blur="leaderGroup"
+                            class="w-full rounded-lg border border-zinc-200 px-3 py-2 text-sm focus:border-ecosa-green focus:outline-none focus:ring-1 focus:ring-ecosa-green/30">
+                        @foreach($groups as $value => $label)
+                            <option value="{{ $value }}">{{ $label }}</option>
+                        @endforeach
+                    </select>
+                    @error('leaderGroup') <p class="mt-1 text-xs text-rose-500">{{ $message }}</p> @enderror
                 </div>
 
                 <div class="grid gap-4 sm:grid-cols-2">

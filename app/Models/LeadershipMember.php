@@ -17,6 +17,7 @@ use Illuminate\Database\Eloquent\Model;
     'tone',
     'photo_path',
     'sort_order',
+    'group',
     'is_published',
 ])]
 class LeadershipMember extends Model
