@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 #[Fillable([
     'user_id',
@@ -22,11 +23,16 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
     'marital_status',
     'membership_status',
     'payment_status',
+    'payment_purpose',
     'registration_fee',
     'amount_paid',
     'payment_method',
     'payment_phone',
     'payment_reference',
+    'payment_confirmed_by',
+    'payment_confirmed_at',
+    'payment_verified_by',
+    'payment_verified_at',
     'paid_at',
 ])]
 class MembershipProfile extends Model
@@ -41,6 +47,8 @@ class MembershipProfile extends Model
             'completion_year' => 'integer',
             'registration_fee' => 'integer',
             'amount_paid' => 'integer',
+            'payment_confirmed_at' => 'datetime',
+            'payment_verified_at' => 'datetime',
             'paid_at' => 'datetime',
         ];
     }
@@ -57,6 +65,21 @@ class MembershipProfile extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function chapterMembership(): HasOne
+    {
+        return $this->hasOne(ChapterMembership::class);
+    }
+
+    public function confirmedBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'payment_confirmed_by');
+    }
+
+    public function verifiedBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'payment_verified_by');
+    }
+
     public function membershipStatusLabel(): string
     {
         return match ($this->membership_status) {
@@ -70,6 +93,7 @@ class MembershipProfile extends Model
     {
         return match ($this->payment_status) {
             'paid' => 'Paid',
+            'confirmed' => 'Confirmed - Awaiting Verification',
             'pending_verification' => 'Pending Verification',
             default => 'Unpaid',
         };
@@ -79,6 +103,7 @@ class MembershipProfile extends Model
     {
         return match ($this->payment_status) {
             'paid' => 'bg-[#67bc45] text-white',
+            'confirmed' => 'bg-[#173a60] text-white',
             'pending_verification' => 'bg-[#ffd600] text-[#102b47]',
             default => 'bg-[#e91e63] text-white',
         };
@@ -87,10 +112,21 @@ class MembershipProfile extends Model
     public function paymentMethodLabel(): string
     {
         return match ($this->payment_method) {
-            'mtn_mobile_money' => 'MTN Mobile Money',
+            'mtn_mobile_money' => 'MTN MoMo',
             'airtel_money' => 'Airtel Money',
             'mastercard' => 'Mastercard',
             default => 'Not recorded',
+        };
+    }
+
+    public function paymentPurposeLabel(): string
+    {
+        return match ($this->payment_purpose) {
+            'donation' => 'Donation',
+            'chapter_support' => 'Chapter Support',
+            'project_support' => 'Project Support',
+            'welfare_support' => 'Welfare / Insurance Support',
+            default => 'Membership',
         };
     }
 

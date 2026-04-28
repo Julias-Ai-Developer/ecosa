@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -49,6 +50,11 @@ class User extends Authenticatable
         return $this->belongsToMany(Role::class);
     }
 
+    public function chaptersCreated(): HasMany
+    {
+        return $this->hasMany(Chapter::class, 'created_by');
+    }
+
     public function hasRole(string $slug): bool
     {
         return $this->is_admin || $this->roles->contains('slug', $slug);
@@ -72,7 +78,9 @@ class User extends Authenticatable
     {
         if ($this->is_admin) {
             return ['admin.dashboard', 'admin.news', 'admin.community', 'admin.team',
-                    'admin.members', 'admin.messages', 'admin.notifications', 'admin.roles', 'admin.users'];
+                    'admin.chapters', 'admin.resources', 'admin.members', 'admin.messages',
+                    'admin.notifications', 'admin.roles', 'admin.users', 'admin.payments.view',
+                    'admin.payments.confirm', 'admin.payments.verify'];
         }
 
         return $this->roles->flatMap->permissions->pluck('slug')->unique()->values()->all();

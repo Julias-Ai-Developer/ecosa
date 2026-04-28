@@ -74,10 +74,113 @@ class EcosaSite
     public static function membershipBenefits(): array
     {
         return [
-            'Priority access to alumni business, mentorship, and professional networking opportunities.',
-            'A verified digital membership profile with ECOSA membership ID and payment history.',
-            'Invitations to flagship reunions, regional engagement forums, and school-impact projects.',
-            'Structured welfare coordination, including the insurance group and emergency solidarity support.',
+            'Know and reconnect with close friends, classmates, chapter members, professionals, and business owners in the ECOSA network.',
+            'Access leadership guidance through the patron, elders group, executive leaders, and chapter contacts when support is needed.',
+            'Advertise or discover alumni businesses through searchable professional and business information.',
+            'Support ECOSA voluntarily through membership payments, donations, chapter support, project support, and welfare contributions.',
+            'Take part in chapters, health insurance conversations, proposals, projects, resources, and member-focused reports.',
+        ];
+    }
+
+    public static function guidingPrinciples(): array
+    {
+        return [
+            [
+                'title' => 'Respect and accountability',
+                'text' => 'Members engage with dignity, protect the ECOSA name, and remain accountable to agreed association decisions.',
+            ],
+            [
+                'title' => 'Voluntary contribution',
+                'text' => 'Support is encouraged on a willing note, with clear payment purpose and verification by the responsible team.',
+            ],
+            [
+                'title' => 'One member, one chapter',
+                'text' => 'A member belongs to one primary chapter at a time to keep coordination, reporting, and chapter support clear.',
+            ],
+            [
+                'title' => 'Service before status',
+                'text' => 'Leadership, elders, patrons, and chapter heads exist to guide members and strengthen the wider alumni family.',
+            ],
+        ];
+    }
+
+    public static function leadershipContactLevels(): array
+    {
+        return [
+            [
+                'level' => 'Patron',
+                'purpose' => 'High-level guidance, association protection, and institutional counsel.',
+            ],
+            [
+                'level' => 'Elders Group',
+                'purpose' => 'Experience-based advice, conflict guidance, mentorship, and member support.',
+            ],
+            [
+                'level' => 'Executive Committee',
+                'purpose' => 'Daily coordination, records, communication, finance, projects, and member decisions.',
+            ],
+            [
+                'level' => 'Chapter Leaders',
+                'purpose' => 'Local member mobilization, chapter confirmation, close-friend networks, and regional support.',
+            ],
+        ];
+    }
+
+    public static function leadershipGroups(): array
+    {
+        return [
+            [
+                'title' => 'Top Leadership',
+                'text' => 'Chairperson, vice chairperson, treasurer, secretary, and executive officers responsible for association decisions.',
+                'roles' => ['Chairperson', 'Vice Chairperson', 'Treasurer', 'General Secretary'],
+            ],
+            [
+                'title' => 'Patron and Pioneers',
+                'text' => 'Senior guides, founders, pioneers, and elders who provide long-term counsel and institutional memory.',
+                'roles' => ['Patron', 'Pioneers', 'Elders Group', 'Advisory Team'],
+            ],
+            [
+                'title' => 'Chapter Leaders',
+                'text' => 'Approved chapter heads who coordinate professional, business, regional, diaspora, and class-year groups.',
+                'roles' => ['Regional Leads', 'Professional Leads', 'Business Leads', 'Diaspora Leads'],
+            ],
+            [
+                'title' => 'Class Representatives',
+                'text' => 'Representatives by completion year who help classmates reconnect, organize, and seek the right support.',
+                'roles' => ['Year Representatives', 'Class Coordinators', 'Peer Mobilizers'],
+            ],
+        ];
+    }
+
+    public static function chapters(): array
+    {
+        return [
+            [
+                'name' => 'Kampala Chapter',
+                'region' => 'Central Uganda',
+                'focus' => 'Professional networking, business discovery, and city-based ECOSA coordination.',
+            ],
+            [
+                'name' => 'Ibanda Chapter',
+                'region' => 'Western Uganda',
+                'focus' => 'School-facing support, local alumni coordination, and community project follow-up.',
+            ],
+            [
+                'name' => 'Diaspora Chapter',
+                'region' => 'Outside Uganda',
+                'focus' => 'Remote participation, fundraising support, professional links, and international member updates.',
+            ],
+        ];
+    }
+
+    public static function resources(): array
+    {
+        return [
+            'ECOSA constitution and governance documents',
+            'Project proposals and shortlists',
+            'External documents and partner resources',
+            'Ugandan anthem and school heritage materials',
+            'Membership details, chapter guidelines, and reporting templates',
         ];
     }
 
@@ -235,8 +338,20 @@ class EcosaSite
         return match ($type) {
             'project' => [
                 [
+                    'title' => 'Health insurance and welfare proposal',
+                    'summary' => 'A structured project area for member welfare, insurance conversations, emergency support, and proposal review.',
+                    'location' => 'Association-wide',
+                    'status' => 'active',
+                ],
+                [
+                    'title' => 'Chapter creation and coordination',
+                    'summary' => 'A project stream for creating chapters, listing available chapters, confirming members, and keeping one primary chapter per member.',
+                    'location' => 'Regional chapters and diaspora',
+                    'status' => 'active',
+                ],
+                [
                     'title' => 'Campus improvement partnership',
-                    'summary' => 'A structured alumni contribution drive focused on visible campus upgrades and shared ownership.',
+                    'summary' => 'A structured alumni contribution drive focused on visible campus upgrades, school support, and shared ownership.',
                     'location' => 'Equatorial College School',
                     'status' => 'active',
                 ],
@@ -300,8 +415,19 @@ class EcosaSite
     public static function paymentOptions(): array
     {
         return [
-            'mtn_mobile_money' => 'MTN Mobile Money',
+            'mtn_mobile_money' => 'MTN MoMo',
             'airtel_money' => 'Airtel Money',
+        ];
+    }
+
+    public static function paymentPurposeOptions(): array
+    {
+        return [
+            'membership' => 'Membership',
+            'donation' => 'Donation',
+            'chapter_support' => 'Chapter Support',
+            'project_support' => 'Project Support',
+            'welfare_support' => 'Welfare / Insurance Support',
         ];
     }
 

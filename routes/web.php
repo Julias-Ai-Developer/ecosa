@@ -2,11 +2,13 @@
 
 use App\Http\Middleware\EnsureUserIsAdmin;
 use App\Livewire\Admin\CommunityManager;
+use App\Livewire\Admin\ChaptersManager;
 use App\Livewire\Admin\DashboardIndex;
 use App\Livewire\Admin\MessagesIndex;
 use App\Livewire\Admin\MembersIndex;
 use App\Livewire\Admin\NewsManager;
 use App\Livewire\Admin\NotificationsManager;
+use App\Livewire\Admin\ResourcesManager;
 use App\Livewire\Admin\RolesManager;
 use App\Livewire\Admin\TeamManager;
 use App\Livewire\Admin\UsersManager;
@@ -24,6 +26,8 @@ use App\Livewire\Site\Home;
 use App\Livewire\Site\Leadership;
 use App\Livewire\Site\Membership;
 use App\Livewire\Site\MembershipHub;
+use App\Livewire\Site\Chapters;
+use App\Livewire\Site\Resources;
 use App\Livewire\Site\Updates;
 use App\Livewire\Site\UpdateDetail;
 use Illuminate\Support\Facades\Route;
@@ -40,12 +44,15 @@ Route::livewire('community/events', CommunityEvents::class)->name('site.communit
 Route::livewire('community/projects', CommunityProjects::class)->name('site.community.projects');
 Route::livewire('community/projects/{program}', CommunityProjectDetail::class)->name('site.community.projects.show');
 Route::livewire('community/insurance-group', CommunityInsurance::class)->name('site.community.insurance');
+Route::livewire('community/chapters', Chapters::class)->name('site.chapters');
+Route::livewire('resources', Resources::class)->name('site.resources');
 Route::livewire('latest-updates', Updates::class)->name('site.updates');
 Route::livewire('latest-updates/{update}', UpdateDetail::class)->name('site.updates.show');
 Route::livewire('contact-us', Contact::class)->name('site.contact');
 
 Route::middleware(['auth'])->group(function () {
     Route::livewire('dashboard', Dashboard::class)->name('dashboard');
+    Route::livewire('dashboard/chapters', \App\Livewire\Member\Chapters::class)->name('member.chapters');
     Route::livewire('password/change', ChangePassword::class)->name('password.change');
 });
 
@@ -54,6 +61,8 @@ Route::middleware(['auth', 'verified', EnsureUserIsAdmin::class])->group(functio
     Route::redirect('admin/content', 'admin/news');
     Route::livewire('admin/news', NewsManager::class)->name('admin.news');
     Route::livewire('admin/community', CommunityManager::class)->name('admin.community');
+    Route::livewire('admin/chapters', ChaptersManager::class)->name('admin.chapters');
+    Route::livewire('admin/resources', ResourcesManager::class)->name('admin.resources');
     Route::livewire('admin/team', TeamManager::class)->name('admin.team');
     Route::livewire('admin/members', MembersIndex::class)->name('admin.members');
     Route::livewire('admin/messages', MessagesIndex::class)->name('admin.messages');

@@ -60,6 +60,60 @@
         </div>
     </section>
 
+    <section class="site-section bg-white">
+        <div class="mx-auto max-w-7xl px-5 lg:px-8">
+            <x-site.section-heading
+                eyebrow="Chapters, Projects & Resources"
+                title="Community work now includes chapters, health insurance, proposals, and documents."
+                text="Members should be able to see available chapters, understand how to create or support a chapter, review projects, and access useful association resources."
+                align="center"
+            />
+
+            <div class="mt-10 grid gap-6 lg:grid-cols-3">
+                <article class="site-card p-7">
+                    <span class="site-chip">Available Chapters</span>
+                    <div class="mt-5 grid gap-4">
+                        @foreach ($chapters as $chapter)
+                            <div class="rounded-[20px] border border-ecosa-blue/8 bg-ecosa-blue/[0.03] p-5">
+                                <h3 class="font-display text-xl font-semibold text-ecosa-blue-deep">{{ $chapter['name'] }}</h3>
+                                <p class="mt-1 text-xs font-bold uppercase tracking-[0.2em] text-zinc-400">{{ $chapter['region'] }}</p>
+                                <p class="mt-3 text-sm leading-7 text-zinc-600">{{ $chapter['focus'] }}</p>
+                            </div>
+                        @endforeach
+                    </div>
+                    <p class="mt-5 text-xs leading-6 text-zinc-500">A member should belong to one primary chapter at a time. Chapter joining should be confirmed and verified by ECOSA.</p>
+                    <a href="{{ route('site.chapters') }}" class="site-btn-primary mt-6 w-full">Open Chapters Page</a>
+                </article>
+
+                <article class="site-card p-7">
+                    <span class="site-chip">Project Areas</span>
+                    <div class="mt-5 grid gap-3">
+                        @foreach (['Health insurance and welfare project', 'Project proposals and fundraising', 'Chapter creation and chapter support', 'Business advertising and alumni directory', 'Professional search by chapter, profession, or business'] as $projectArea)
+                            <div class="flex gap-3 rounded-[18px] border border-ecosa-blue/8 px-4 py-3">
+                                <i class="fas fa-check mt-1 text-sm text-ecosa-green"></i>
+                                <p class="text-sm leading-6 text-zinc-600">{{ $projectArea }}</p>
+                            </div>
+                        @endforeach
+                    </div>
+                    <a href="{{ route('site.community.projects') }}" class="site-btn-primary mt-6 w-full">View Projects</a>
+                </article>
+
+                <article class="site-card p-7">
+                    <span class="site-chip">Resources</span>
+                    <div class="mt-5 grid gap-3">
+                        @foreach ($resources as $resource)
+                            <div class="flex gap-3 rounded-[18px] bg-ecosa-green/[0.07] px-4 py-3">
+                                <i class="fas fa-file-lines mt-1 text-sm text-ecosa-green"></i>
+                                <p class="text-sm leading-6 text-zinc-600">{{ $resource }}</p>
+                            </div>
+                        @endforeach
+                    </div>
+                    <a href="{{ route('site.resources') }}" class="site-btn-secondary mt-6 w-full">Open Resources</a>
+                </article>
+            </div>
+        </div>
+    </section>
+
     <section class="site-section bg-ecosa-mist">
         <div class="mx-auto max-w-7xl px-5 lg:px-8">
             <div class="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">

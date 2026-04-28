@@ -24,6 +24,8 @@
             'items' => [
                 ['label' => 'News Manager',    'route' => 'admin.news',      'icon' => 'fa-newspaper',          'badge' => null, 'permission' => 'admin.news'],
                 ['label' => 'Community Pages', 'route' => 'admin.community', 'icon' => 'fa-layer-group',        'badge' => null, 'permission' => 'admin.community'],
+                ['label' => 'Chapters',        'route' => 'admin.chapters',  'icon' => 'fa-people-group',       'badge' => null, 'permission' => 'admin.chapters'],
+                ['label' => 'Resources',       'route' => 'admin.resources', 'icon' => 'fa-folder-open',        'badge' => null, 'permission' => 'admin.resources'],
                 ['label' => 'Team Content',    'route' => 'admin.team',      'icon' => 'fa-users-gear',         'badge' => null, 'permission' => 'admin.team'],
             ],
         ],
@@ -52,7 +54,9 @@
             'heading' => 'Member Area',
             'items' => [
                 ['label' => 'Member Portal',   'route' => 'dashboard',       'icon' => 'fa-address-card',       'badge' => null],
+                ['label' => 'My Chapter',      'route' => 'member.chapters', 'icon' => 'fa-people-group',       'badge' => null],
                 ['label' => 'Membership Hub',  'route' => 'site.membership', 'icon' => 'fa-user-plus',          'badge' => null],
+                ['label' => 'Resources',       'route' => 'site.resources',  'icon' => 'fa-folder-open',        'badge' => null],
                 ['label' => 'Public Website',  'route' => 'home',            'icon' => 'fa-globe',              'badge' => null],
                 ['label' => 'Settings',        'route' => 'profile.edit',    'icon' => 'fa-gear',               'badge' => null],
             ],
@@ -107,9 +111,6 @@
                 <nav class="flex-1 overflow-y-auto px-3 py-5 space-y-5">
                     @foreach ($navSections as $section)
                     <div>
-                        <p class="mb-1 px-3 text-[0.58rem] font-bold uppercase tracking-[0.22em] text-white/40">
-                            {{ $section['heading'] }}
-                        </p>
                         <div class="space-y-0.5">
                             @foreach ($section['items'] as $item)
                                 @php

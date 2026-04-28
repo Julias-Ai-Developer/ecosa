@@ -23,7 +23,7 @@ return new class extends Migration
             $table->foreignId('notification_id')->constrained('member_notifications')->cascadeOnDelete();
             $table->foreignId('member_profile_id')->constrained('membership_profiles')->cascadeOnDelete();
             $table->timestamp('read_at')->useCurrent();
-            $table->unique(['notification_id', 'member_profile_id']);
+            $table->unique(['notification_id', 'member_profile_id'], 'mnr_notification_member_unique');
         });
     }
 

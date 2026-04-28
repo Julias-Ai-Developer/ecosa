@@ -91,6 +91,44 @@
         </div>
     </section>
 
+    {{-- ===== WHY JOIN / GUIDING PRINCIPLES ===== --}}
+    <section class="site-section">
+        <div class="mx-auto max-w-7xl px-5 lg:px-8">
+            <div class="grid gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:items-start">
+                <div>
+                    <x-site.section-heading
+                        eyebrow="Why Join ECOSA"
+                        title="Membership should connect people, guidance, business, and service."
+                        text="ECOSA gives old students a structured way to know one another, support fellow alumni, find chapter contacts, advertise businesses, and contribute willingly to association work."
+                    />
+                    <div class="mt-8 grid gap-4">
+                        @foreach ($benefits as $benefit)
+                            <div class="flex gap-3 rounded-[18px] border border-ecosa-blue/8 bg-white p-4 shadow-sm">
+                                <div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-ecosa-green text-white">
+                                    <i class="fas fa-check text-xs"></i>
+                                </div>
+                                <p class="text-sm leading-7 text-zinc-600">{{ $benefit }}</p>
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
+
+                <div>
+                    <span class="site-chip">Ground Rules</span>
+                    <h3 class="mt-5 font-display text-4xl font-semibold text-ecosa-blue-deep">Guiding principles for a trusted alumni network.</h3>
+                    <div class="mt-6 grid gap-4 sm:grid-cols-2">
+                        @foreach ($guidingPrinciples as $principle)
+                            <article class="site-card p-6">
+                                <h4 class="font-display text-xl font-semibold text-ecosa-blue-deep">{{ $principle['title'] }}</h4>
+                                <p class="mt-3 text-sm leading-7 text-zinc-600">{{ $principle['text'] }}</p>
+                            </article>
+                        @endforeach
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
     {{-- ===== PROGRAMS SHOWCASE ===== --}}
     <section class="site-section bg-ecosa-mist">
         <div class="mx-auto max-w-7xl px-5 lg:px-8">
@@ -169,7 +207,7 @@
                     <div class="grid gap-3 p-5 sm:grid-cols-2">
                         <div class="rounded-[16px] bg-ecosa-blue/[0.04] p-4">
                             <p class="font-accent text-xs font-bold uppercase tracking-[0.22em] text-zinc-500">Payment Options</p>
-                            <p class="mt-2 text-sm font-bold text-ecosa-blue-deep">MTN Mobile Money &amp; Airtel Money</p>
+                            <p class="mt-2 text-sm font-bold text-ecosa-blue-deep">MTN MoMo &amp; Airtel Money</p>
                         </div>
                         <div class="rounded-[16px] bg-ecosa-green/[0.08] p-4">
                             <p class="font-accent text-xs font-bold uppercase tracking-[0.22em] text-zinc-500">Portal Benefit</p>
@@ -186,9 +224,9 @@
                     </div>
                     <div class="p-5">
                         <div class="rounded-[16px] bg-ecosa-gold/[0.14] p-4">
-                            <p class="font-accent text-xs font-bold uppercase tracking-[0.22em] text-zinc-600">Registration Fee</p>
-                            <p class="mt-2 font-display text-3xl font-bold text-ecosa-blue-deep">UGX 20,000</p>
-                            <p class="mt-2 text-xs leading-6 text-zinc-600">After registration, your membership ID is emailed and linked to your member portal.</p>
+                            <p class="font-accent text-xs font-bold uppercase tracking-[0.22em] text-zinc-600">Payments & Contributions</p>
+                            <p class="mt-2 font-display text-3xl font-bold text-ecosa-blue-deep">Choose your purpose</p>
+                            <p class="mt-2 text-xs leading-6 text-zinc-600">Members can submit membership payments, donations, chapter support, project support, or welfare contributions for verification.</p>
                         </div>
                         <a href="{{ route('site.membership.register') }}" class="site-btn-primary mt-4 w-full">Go to Registration Page</a>
                     </div>

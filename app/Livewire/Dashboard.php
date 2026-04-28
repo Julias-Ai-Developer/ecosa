@@ -46,7 +46,7 @@ class Dashboard extends Component
         }
 
         $this->validate([
-            'paymentMethod' => ['required', Rule::in(['mtn_mobile_money', 'airtel_money', 'mastercard'])],
+            'paymentMethod' => ['required', Rule::in(array_keys(EcosaSite::paymentOptions()))],
             'paymentReference' => ['required', 'string', 'min:4', 'max:80'],
         ], [], [
             'paymentMethod' => 'payment method',
@@ -58,6 +58,10 @@ class Dashboard extends Component
             'amount_paid' => MembershipProfile::REGISTRATION_FEE,
             'payment_method' => $this->paymentMethod,
             'payment_reference' => $this->paymentReference,
+            'payment_confirmed_by' => null,
+            'payment_confirmed_at' => null,
+            'payment_verified_by' => null,
+            'payment_verified_at' => null,
             'paid_at' => now(),
         ]);
 

@@ -51,6 +51,7 @@ class Home extends Component
             'heroSlides'       => EcosaSite::heroSlides(),
             'showcaseCards'    => EcosaSite::homeShowcaseCards(),
             'benefits'         => EcosaSite::membershipBenefits(),
+            'guidingPrinciples' => EcosaSite::guidingPrinciples(),
             'membershipTracks' => EcosaSite::membershipTracks(),
             'sponsors'         => EcosaSite::sponsors(),
             'leaders'          => $leaders->isNotEmpty() ? $leaders : collect(EcosaSite::leadershipFallback()),

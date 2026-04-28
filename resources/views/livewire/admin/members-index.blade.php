@@ -85,19 +85,30 @@
 
         {{-- Toolbar --}}
         <div class="border-b border-zinc-100 px-6 py-4">
+            @error('paymentVerification')
+                <div class="mb-3 rounded-lg border border-rose-200 bg-rose-50 px-4 py-3 text-sm font-semibold text-rose-600">
+                    {{ $message }}
+                </div>
+            @enderror
             <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                 <div>
                     <h2 class="text-base font-bold text-zinc-900">Member Registry</h2>
                     <p class="mt-0.5 text-xs text-zinc-500">Click any row to view full member details</p>
                 </div>
-                <a href="{{ route('site.membership.register') }}"
-                   class="inline-flex shrink-0 items-center gap-2 rounded-lg bg-ecosa-green px-4 py-2 text-sm font-semibold text-white transition hover:bg-ecosa-green-deep">
-                    <i class="fas fa-user-plus text-xs"></i> Register Member
-                </a>
+                <div class="flex flex-wrap gap-2">
+                    <button type="button" wire:click="exportReport"
+                            class="inline-flex shrink-0 items-center gap-2 rounded-lg border border-ecosa-blue/15 bg-white px-4 py-2 text-sm font-semibold text-ecosa-blue-deep transition hover:border-ecosa-green hover:text-ecosa-green">
+                        <i class="fas fa-file-export text-xs"></i> Export Report
+                    </button>
+                    <a href="{{ route('site.membership.register') }}"
+                       class="inline-flex shrink-0 items-center gap-2 rounded-lg bg-ecosa-green px-4 py-2 text-sm font-semibold text-white transition hover:bg-ecosa-green-deep">
+                        <i class="fas fa-user-plus text-xs"></i> Register Member
+                    </a>
+                </div>
             </div>
 
             {{-- Filters --}}
-            <div class="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-[1fr_160px_160px_160px_auto]">
+            <div class="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-[1fr_160px_170px_160px_160px_auto]">
                 <div class="relative">
                     <i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-xs text-zinc-400"></i>
                     <input type="search" wire:model.live.debounce.300ms="search"
@@ -109,8 +120,19 @@
                         class="rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-2 text-sm text-zinc-700 focus:border-ecosa-green focus:outline-none focus:ring-1 focus:ring-ecosa-green/30">
                     <option value="all">All payments</option>
                     <option value="paid">Paid</option>
+                    <option value="confirmed">Confirmed</option>
                     <option value="pending_verification">Pending</option>
                     <option value="unpaid">Unpaid</option>
+                </select>
+
+                <select wire:model.live="paymentPurpose"
+                        class="rounded-lg border border-zinc-200 bg-zinc-50 px-3 py-2 text-sm text-zinc-700 focus:border-ecosa-green focus:outline-none focus:ring-1 focus:ring-ecosa-green/30">
+                    <option value="all">All purposes</option>
+                    <option value="membership">Membership</option>
+                    <option value="donation">Donation</option>
+                    <option value="chapter_support">Chapter Support</option>
+                    <option value="project_support">Project Support</option>
+                    <option value="welfare_support">Welfare Support</option>
                 </select>
 
                 <select wire:model.live="membershipStatus"
@@ -146,6 +168,7 @@
                         <th class="px-6 py-3 text-[0.65rem] font-bold uppercase tracking-[0.18em] text-zinc-400">Professional</th>
                         <th class="px-6 py-3 text-[0.65rem] font-bold uppercase tracking-[0.18em] text-zinc-400">Membership</th>
                         <th class="px-6 py-3 text-[0.65rem] font-bold uppercase tracking-[0.18em] text-zinc-400">Payment</th>
+                        <th class="px-6 py-3 text-[0.65rem] font-bold uppercase tracking-[0.18em] text-zinc-400">Purpose</th>
                         <th class="px-6 py-3 text-[0.65rem] font-bold uppercase tracking-[0.18em] text-zinc-400">Method</th>
                         <th class="px-6 py-3 text-[0.65rem] font-bold uppercase tracking-[0.18em] text-zinc-400">Joined</th>
                         <th class="px-6 py-3 text-right text-[0.65rem] font-bold uppercase tracking-[0.18em] text-zinc-400">Actions</th>
@@ -175,11 +198,14 @@
                             </td>
                             <td class="px-6 py-3.5">
                                 <span class="rounded-full px-2.5 py-1 text-xs font-semibold {{ $member->paymentStatusTone() }}">{{ $member->paymentStatusLabel() }}</span>
-                                @if($member->payment_reference)
+                                @if($canViewPaymentDetails && $member->payment_reference)
                                     <p class="mt-0.5 text-[0.65rem] text-zinc-400">{{ $member->payment_reference }}</p>
+                                @elseif(!$canViewPaymentDetails)
+                                    <p class="mt-0.5 text-[0.65rem] text-zinc-400">Restricted</p>
                                 @endif
                             </td>
-                            <td class="px-6 py-3.5 text-xs text-zinc-500">{{ $member->paymentMethodLabel() }}</td>
+                            <td class="px-6 py-3.5 text-xs font-semibold text-zinc-600">{{ $member->paymentPurposeLabel() }}</td>
+                            <td class="px-6 py-3.5 text-xs text-zinc-500">{{ $canViewPaymentDetails ? $member->paymentMethodLabel() : 'Restricted' }}</td>
                             <td class="px-6 py-3.5 text-xs text-zinc-400">{{ $member->created_at->format('M j, Y') }}</td>
                             <td class="px-6 py-3.5 text-right" @click.stop>
                                 <div class="flex items-center justify-end gap-2">
@@ -200,10 +226,26 @@
                                                 title="Mark as pending">
                                             Set Pending
                                         </button>
+                                    @elseif($member->payment_status === 'confirmed')
+                                        <button type="button"
+                                                @if($canVerifyPayments) wire:click="verifyPayment({{ $member->id }})" @endif
+                                                @disabled(!$canVerifyPayments)
+                                                class="rounded-lg px-3 py-1.5 text-xs font-semibold text-white transition {{ $canVerifyPayments ? 'bg-ecosa-blue hover:bg-ecosa-blue-deep' : 'cursor-not-allowed bg-zinc-300' }}"
+                                                title="{{ $canVerifyPayments ? 'Verify payment' : 'No permission to verify payments' }}">
+                                            <i class="fas fa-circle-check mr-1"></i> Verify
+                                        </button>
                                     @else
-                                        <button type="button" wire:click="verifyPayment({{ $member->id }})"
-                                                class="rounded-lg bg-ecosa-green px-3 py-1.5 text-xs font-semibold text-white transition hover:bg-ecosa-green-deep"
-                                                title="Verify payment">
+                                        <button type="button"
+                                                @if($canConfirmPayments) wire:click="confirmPayment({{ $member->id }})" @endif
+                                                @disabled(!$canConfirmPayments)
+                                                class="rounded-lg px-3 py-1.5 text-xs font-semibold text-white transition {{ $canConfirmPayments ? 'bg-amber-500 hover:bg-amber-600' : 'cursor-not-allowed bg-zinc-300' }}"
+                                                title="{{ $canConfirmPayments ? 'Confirm received' : 'No permission to confirm payments' }}">
+                                            <i class="fas fa-receipt mr-1"></i> Confirm
+                                        </button>
+                                        <button type="button"
+                                                disabled
+                                                class="cursor-not-allowed rounded-lg bg-zinc-300 px-3 py-1.5 text-xs font-semibold text-white"
+                                                title="Payment must be confirmed before verification">
                                             <i class="fas fa-check mr-1"></i> Verify
                                         </button>
                                     @endif
@@ -212,7 +254,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="9" class="px-6 py-14 text-center">
+                            <td colspan="10" class="px-6 py-14 text-center">
                                 <div class="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-zinc-100">
                                     <i class="fas fa-users text-xl text-zinc-300"></i>
                                 </div>
@@ -308,9 +350,12 @@
             <div class="grid grid-cols-2 gap-3">
                 @foreach([
                     ['Status', $viewingMember->paymentStatusLabel()],
-                    ['Method', $viewingMember->paymentMethodLabel()],
-                    ['Amount', 'UGX '.number_format($viewingMember->amount_paid ?? 0)],
-                    ['Payment Phone', $viewingMember->payment_phone ?: '—'],
+                    ['Purpose', $viewingMember->paymentPurposeLabel()],
+                    ['Method', $canViewPaymentDetails ? $viewingMember->paymentMethodLabel() : 'Restricted'],
+                    ['Amount', $canViewPaymentDetails ? 'UGX '.number_format($viewingMember->amount_paid ?? 0) : 'Restricted'],
+                    ['Payment Phone', $canViewPaymentDetails ? ($viewingMember->payment_phone ?: '—') : 'Restricted'],
+                    ['Confirmed By', $viewingMember->confirmedBy?->name ?: 'Not confirmed'],
+                    ['Verified By', $viewingMember->verifiedBy?->name ?: 'Not verified'],
                 ] as [$label, $value])
                 <div class="rounded-xl border border-zinc-100 bg-zinc-50 p-3">
                     <p class="text-xs text-zinc-400">{{ $label }}</p>
@@ -340,10 +385,22 @@
                         class="rounded-lg border border-amber-200 bg-amber-50 px-4 py-2 text-sm font-semibold text-amber-700 transition hover:bg-amber-100">
                     <i class="fas fa-clock mr-1 text-xs"></i> Set Pending
                 </button>
+            @elseif($viewingMember->payment_status === 'confirmed')
+                <button
+                        @if($canVerifyPayments) wire:click="verifyPayment({{ $viewingMember->id }})" @endif
+                        @disabled(!$canVerifyPayments)
+                        class="rounded-lg px-4 py-2 text-sm font-semibold text-white transition {{ $canVerifyPayments ? 'bg-ecosa-blue hover:bg-ecosa-blue-deep' : 'cursor-not-allowed bg-zinc-300' }}">
+                    <i class="fas fa-circle-check mr-1 text-xs"></i> Verify &amp; Send Receipt
+                </button>
             @else
-                <button wire:click="verifyPayment({{ $viewingMember->id }})"
-                        class="rounded-lg bg-ecosa-green px-4 py-2 text-sm font-semibold text-white transition hover:bg-ecosa-green-deep">
-                    <i class="fas fa-check mr-1 text-xs"></i> Verify &amp; Activate
+                <button
+                        @if($canConfirmPayments) wire:click="confirmPayment({{ $viewingMember->id }})" @endif
+                        @disabled(!$canConfirmPayments)
+                        class="rounded-lg px-4 py-2 text-sm font-semibold text-white transition {{ $canConfirmPayments ? 'bg-amber-500 hover:bg-amber-600' : 'cursor-not-allowed bg-zinc-300' }}">
+                    <i class="fas fa-receipt mr-1 text-xs"></i> Confirm Receipt
+                </button>
+                <button disabled class="cursor-not-allowed rounded-lg bg-zinc-300 px-4 py-2 text-sm font-semibold text-white">
+                    <i class="fas fa-circle-check mr-1 text-xs"></i> Verify Disabled
                 </button>
             @endif
         </div>

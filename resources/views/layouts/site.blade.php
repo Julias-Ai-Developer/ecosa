@@ -40,13 +40,19 @@
                 ['label' => 'Community Overview', 'route' => 'site.community'],
                 ['label' => 'Events', 'route' => 'site.community.events'],
                 ['label' => 'Projects', 'route' => 'site.community.projects'],
+                ['label' => 'Chapters', 'route' => 'site.chapters'],
                 ['label' => 'Insurance Group', 'route' => 'site.community.insurance'],
             ],
-            'active' => request()->routeIs('site.community', 'site.community.events', 'site.community.projects', 'site.community.insurance'),
+            'active' => request()->routeIs('site.community', 'site.community.events', 'site.community.projects', 'site.chapters', 'site.community.insurance'),
         ],
         [
             'label' => 'Updates',
             'route' => 'site.updates',
+            'children' => [],
+        ],
+        [
+            'label' => 'Resources',
+            'route' => 'site.resources',
             'children' => [],
         ],
         [
@@ -61,6 +67,8 @@
         ['label' => 'Membership Hub', 'route' => 'site.membership'],
         ['label' => 'Register Now', 'route' => 'site.membership.register'],
         ['label' => 'Community Events', 'route' => 'site.community.events'],
+        ['label' => 'Chapters', 'route' => 'site.chapters'],
+        ['label' => 'Resources', 'route' => 'site.resources'],
         ['label' => 'Latest Updates', 'route' => 'site.updates'],
     ];
 
@@ -69,6 +77,7 @@
         ['label' => 'Leadership', 'route' => 'site.leadership'],
         ['label' => 'Governance', 'route' => 'site.governance'],
         ['label' => 'Projects', 'route' => 'site.community.projects'],
+        ['label' => 'Chapters', 'route' => 'site.chapters'],
         ['label' => 'Insurance Group', 'route' => 'site.community.insurance'],
     ];
 
@@ -137,7 +146,6 @@
                     <img src="{{ asset('assets/images/logo.png') }}" alt="ECOSA Logo" class="h-14 w-14 rounded-2xl border border-ecosa-blue/10 bg-white object-contain p-2 shadow-sm">
                     <div>
                         <p class="font-display text-2xl font-semibold leading-none text-ecosa-blue-deep">ECOSA</p>
-                        <p class="mt-1 text-xs font-bold uppercase tracking-[0.24em] text-zinc-500">Old Students Association</p>
                     </div>
                 </a>
 

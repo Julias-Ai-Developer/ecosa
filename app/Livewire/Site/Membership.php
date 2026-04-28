@@ -38,7 +38,11 @@ class Membership extends Component
 
     public string $maritalStatus = 'single';
 
+    public string $paymentPurpose = 'membership';
+
     public string $paymentMethod = 'mtn_mobile_money';
+
+    public string $paymentAmount = '20000';
 
     public string $paymentReference = '';
 
@@ -63,6 +67,7 @@ class Membership extends Component
         $this->businessName = trim((string) request()->query('business_name', $this->businessName));
         $this->businessNature = trim((string) request()->query('business_nature', $this->businessNature));
         $this->paymentPhone = trim((string) request()->query('payment_phone', $this->paymentPhone));
+        $this->paymentAmount = trim((string) request()->query('payment_amount', $this->paymentAmount));
         $this->paymentReference = trim((string) request()->query('payment_reference', $this->paymentReference));
 
         $occupationType = (string) request()->query('occupation_type', $this->occupationType);
@@ -79,6 +84,11 @@ class Membership extends Component
         if (array_key_exists($paymentMethod, $this->paymentOptions())) {
             $this->paymentMethod = $paymentMethod;
         }
+
+        $paymentPurpose = (string) request()->query('payment_purpose', $this->paymentPurpose);
+        if (array_key_exists($paymentPurpose, $this->paymentPurposeOptions())) {
+            $this->paymentPurpose = $paymentPurpose;
+        }
     }
 
     public function openPaymentModal(): void
@@ -93,27 +103,39 @@ class Membership extends Component
         $this->openPaymentModal();
     }
 
+    public function updatedPaymentPurpose(): void
+    {
+        $this->paymentAmount = $this->paymentPurpose === 'membership'
+            ? (string) MembershipProfile::REGISTRATION_FEE
+            : '';
+    }
+
     public function completeRegistration(): void
     {
         $this->validateRegistrationDetails();
 
         $this->validate([
             'paymentMethod' => ['required', Rule::in(array_keys($this->paymentOptions()))],
+            'paymentPurpose' => ['required', Rule::in(array_keys($this->paymentPurposeOptions()))],
+            'paymentAmount' => ['required', 'integer', 'min:1'],
             'paymentPhone' => ['required_if:paymentMethod,mtn_mobile_money,airtel_money', 'nullable', 'string', 'max:40'],
             'paymentReference' => ['nullable', 'string', 'max:80'],
         ], [], [
             'paymentMethod' => 'payment method',
+            'paymentPurpose' => 'payment purpose',
+            'paymentAmount' => 'payment amount',
             'paymentPhone' => 'payment phone number',
             'paymentReference' => 'payment reference',
         ]);
 
         $email = Str::lower($this->email);
 
-        // Generate a temp password only for brand-new accounts
         $plainPassword = null;
         $existingUser = User::query()->where('email', $email)->first();
+        $user = $existingUser;
 
-        if (! $existingUser) {
+        // Generate portal credentials only for actual membership registration.
+        if (! $existingUser && $this->paymentPurpose === 'membership') {
             $plainPassword = Str::random(10);
             $user = User::create([
                 'name'                 => $this->fullName,
@@ -121,8 +143,7 @@ class Membership extends Component
                 'password'             => $plainPassword,
                 'must_change_password' => true,
             ]);
-        } else {
-            $user = $existingUser;
+        } elseif ($user) {
             if ($user->name !== $this->fullName) {
                 $user->forceFill(['name' => $this->fullName])->save();
             }
@@ -136,12 +157,12 @@ class Membership extends Component
         ]);
 
         $profile->fill([
-            'user_id'          => $user->id,
+            'user_id'          => $user?->id,
             'full_name'        => $this->fullName,
             'email'            => $email,
             'phone'            => $this->phone,
             'current_address'  => $this->currentAddress,
-            'completion_year'  => (int) $this->completionYear,
+            'completion_year'  => filled($this->completionYear) ? (int) $this->completionYear : null,
             'occupation_type'  => $this->occupationType,
             'occupation_title' => $this->occupationTitle,
             'business_name'    => filled($this->businessName) ? $this->businessName : null,
@@ -149,8 +170,9 @@ class Membership extends Component
             'marital_status'   => $this->maritalStatus,
             'membership_status' => $profile->membership_status ?? 'pending',
             'payment_status'   => 'pending_verification',
+            'payment_purpose'  => $this->paymentPurpose,
             'registration_fee' => MembershipProfile::REGISTRATION_FEE,
-            'amount_paid'      => MembershipProfile::REGISTRATION_FEE,
+            'amount_paid'      => (int) $this->paymentAmount,
             'payment_method'   => $this->paymentMethod,
             'payment_phone'    => filled($this->paymentPhone) ? $this->paymentPhone : null,
             'payment_reference' => filled($this->paymentReference) ? $this->paymentReference : $this->paymentPhone,
@@ -158,7 +180,9 @@ class Membership extends Component
         ]);
         $profile->save();
 
-        Mail::to($profile->email)->send(new MembershipRegistered($profile, $plainPassword));
+        if ($this->paymentPurpose === 'membership') {
+            Mail::to($profile->email)->send(new MembershipRegistered($profile, $plainPassword));
+        }
 
         $this->submitted = true;
         $this->showPaymentModal = false;
@@ -173,11 +197,14 @@ class Membership extends Component
             'occupationTitle',
             'businessName',
             'businessNature',
+            'paymentAmount',
             'paymentReference',
             'paymentPhone',
         );
         $this->occupationType = 'professional';
         $this->maritalStatus = 'single';
+        $this->paymentPurpose = 'membership';
+        $this->paymentAmount = (string) MembershipProfile::REGISTRATION_FEE;
         $this->paymentMethod = 'mtn_mobile_money';
     }
 
@@ -189,6 +216,11 @@ class Membership extends Component
     public function paymentOptions(): array
     {
         return EcosaSite::paymentOptions();
+    }
+
+    public function paymentPurposeOptions(): array
+    {
+        return EcosaSite::paymentPurposeOptions();
     }
 
     public function occupationTypes(): array
@@ -203,18 +235,32 @@ class Membership extends Component
 
     private function validateRegistrationDetails(): void
     {
-        $this->validate([
+        $membershipRules = $this->paymentPurpose === 'membership'
+            ? [
+                'completionYear' => ['required', 'integer', 'min:1950', 'max:'.date('Y')],
+                'occupationType' => ['required', Rule::in(array_keys($this->occupationTypes()))],
+                'occupationTitle' => ['required', 'string', 'min:2', 'max:120'],
+                'businessName' => ['required_if:occupationType,business', 'nullable', 'string', 'max:120'],
+                'businessNature' => ['required_if:occupationType,business', 'nullable', 'string', 'max:160'],
+                'maritalStatus' => ['required', Rule::in(array_keys($this->maritalStatuses()))],
+            ]
+            : [
+                'completionYear' => ['nullable', 'integer', 'min:1950', 'max:'.date('Y')],
+                'occupationType' => ['nullable', Rule::in(array_keys($this->occupationTypes()))],
+                'occupationTitle' => ['nullable', 'string', 'max:120'],
+                'businessName' => ['nullable', 'string', 'max:120'],
+                'businessNature' => ['nullable', 'string', 'max:160'],
+                'maritalStatus' => ['nullable', Rule::in(array_keys($this->maritalStatuses()))],
+            ];
+
+        $this->validate(array_merge([
+            'paymentPurpose' => ['required', Rule::in(array_keys($this->paymentPurposeOptions()))],
             'fullName' => ['required', 'string', 'min:3', 'max:120'],
             'email' => ['required', 'email', 'max:160'],
-            'completionYear' => ['required', 'integer', 'min:1950', 'max:'.date('Y')],
             'phone' => ['required', 'string', 'max:40'],
             'currentAddress' => ['required', 'string', 'min:6', 'max:180'],
-            'occupationType' => ['required', Rule::in(array_keys($this->occupationTypes()))],
-            'occupationTitle' => ['required', 'string', 'min:2', 'max:120'],
-            'businessName' => ['required_if:occupationType,business', 'nullable', 'string', 'max:120'],
-            'businessNature' => ['required_if:occupationType,business', 'nullable', 'string', 'max:160'],
-            'maritalStatus' => ['required', Rule::in(array_keys($this->maritalStatuses()))],
-        ], [], [
+        ], $membershipRules), [], [
+            'paymentPurpose' => 'payment purpose',
             'fullName' => 'full name',
             'completionYear' => 'year of completion',
             'currentAddress' => 'current address',

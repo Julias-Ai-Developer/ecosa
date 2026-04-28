@@ -34,6 +34,8 @@ class Leadership extends Component
                     'photo' => $leader->photoUrl(),
                 ])->all()
                 : EcosaSite::leadershipFallback(),
+            'contactLevels' => EcosaSite::leadershipContactLevels(),
+            'leadershipGroups' => EcosaSite::leadershipGroups(),
             'metrics' => [
                 ['value' => '8+', 'label' => 'Leadership roles'],
                 ['value' => '500+', 'label' => 'Alumni community'],

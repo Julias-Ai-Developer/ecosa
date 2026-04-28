@@ -27,10 +27,10 @@
                         @endforeach
 
                         <div class="site-card p-6">
-                            <p class="text-xs font-bold uppercase tracking-[0.24em] text-zinc-400">Registration Fee</p>
-                            <p class="mt-4 font-display text-5xl font-semibold text-ecosa-blue-deep">UGX 20,000</p>
+                            <p class="text-xs font-bold uppercase tracking-[0.24em] text-zinc-400">Payments & Support</p>
+                            <p class="mt-4 font-display text-4xl font-semibold text-ecosa-blue-deep">Choose your purpose</p>
                             <p class="mt-4 text-sm leading-7 text-zinc-600">
-                                After registration, the system emails your membership ID and links the record to your member portal account.
+                                Membership shows the agreed registration fee after selection. Donations and support payments allow you to enter the amount you have sent.
                             </p>
                         </div>
 
@@ -45,7 +45,7 @@
                                         <i class="fas fa-mobile-screen-button text-xl text-[#FFC200]"></i>
                                     </div>
                                     <div>
-                                        <p class="font-accent text-sm font-bold text-ecosa-blue-deep">MTN Mobile Money</p>
+                                        <p class="font-accent text-sm font-bold text-ecosa-blue-deep">MTN MoMo</p>
                                         <p class="text-xs text-zinc-500">Send &amp; confirm instantly</p>
                                     </div>
                                 </div>
@@ -81,6 +81,21 @@
                     <h2 class="mt-3 font-display text-4xl font-semibold text-ecosa-blue-deep">Complete your membership form</h2>
 
                     <form wire:submit.prevent="openPaymentModal" class="mt-6 grid gap-5">
+                        <label>
+                            <span class="site-label">What do you want to do?</span>
+                            <select wire:model.live="paymentPurpose" class="site-input">
+                                @foreach ($this->paymentPurposeOptions() as $value => $label)
+                                    <option value="{{ $value }}">{{ $label }}</option>
+                                @endforeach
+                            </select>
+                            @if($paymentPurpose === 'membership')
+                                <p class="mt-1 text-xs font-semibold text-ecosa-green-deep">Membership registration fee: UGX 20,000.</p>
+                            @else
+                                <p class="mt-1 text-xs text-zinc-500">For donations or support, only basic contact details and payment confirmation are required.</p>
+                            @endif
+                            @error('paymentPurpose') <p class="site-error">{{ $message }}</p> @enderror
+                        </label>
+
                         <div class="grid gap-5 sm:grid-cols-2">
                             <label>
                                 <span class="site-label">Full Name</span>
@@ -110,6 +125,7 @@
                             @error('currentAddress') <p class="site-error">{{ $message }}</p> @enderror
                         </label>
 
+                        @if($paymentPurpose === 'membership')
                         <div class="grid gap-5 sm:grid-cols-2">
                             <label>
                                 <span class="site-label">Professional Category</span>
@@ -151,6 +167,7 @@
                             </select>
                             @error('maritalStatus') <p class="site-error">{{ $message }}</p> @enderror
                         </label>
+                        @endif
 
                         <button type="submit" class="site-btn-primary mt-2 w-full" wire:loading.attr="disabled" wire:target="openPaymentModal">
                             <span wire:loading.remove wire:target="openPaymentModal">
@@ -179,7 +196,7 @@
                         <div>
                             <span class="inline-flex items-center gap-2 rounded-full border border-white/12 bg-white/10 px-3 py-1 text-[0.7rem] font-bold uppercase tracking-[0.22em] text-white/80">Step 2 of 2 — Payment</span>
                             <h2 class="mt-3 font-display text-2xl font-semibold leading-snug">Complete your payment</h2>
-                            <p class="mt-1.5 text-sm text-white/65">Registration fee: <strong class="text-ecosa-gold">UGX 20,000</strong> via Mobile Money.</p>
+                            <p class="mt-1.5 text-sm text-white/65">Choose a payment purpose, confirm payment details, and wait for ECOSA verification.</p>
                         </div>
                         <button type="button" wire:click="closePaymentModal" aria-label="Close"
                                 class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-white/15 text-white/60 transition hover:bg-white/10 hover:text-white">
@@ -191,6 +208,23 @@
                 {{-- Drawer body — scrollable --}}
                 <form wire:submit.prevent="completeRegistration" class="flex flex-1 flex-col overflow-y-auto">
                     <div class="flex-1 space-y-6 p-6">
+
+                        <label>
+                            <span class="site-label">What are you paying for?</span>
+                            <select wire:model.live="paymentPurpose" class="site-input">
+                                @foreach ($this->paymentPurposeOptions() as $value => $label)
+                                    <option value="{{ $value }}">{{ $label }}</option>
+                                @endforeach
+                            </select>
+                            @error('paymentPurpose') <p class="site-error">{{ $message }}</p> @enderror
+                        </label>
+
+                        <label>
+                            <span class="site-label">Amount Paid (UGX)</span>
+                            <input type="number" wire:model.blur="paymentAmount" class="site-input" min="1" step="1" placeholder="Enter amount paid">
+                            <p class="mt-1 text-xs text-zinc-500">For membership, use the agreed registration amount. For donations or support, enter the amount you sent.</p>
+                            @error('paymentAmount') <p class="site-error">{{ $message }}</p> @enderror
+                        </label>
 
                         {{-- Payment method cards --}}
                         <div>
@@ -236,9 +270,10 @@
                         <div class="rounded-2xl border border-ecosa-gold/25 bg-ecosa-gold/8 p-4">
                             <p class="font-accent text-xs font-bold text-ecosa-blue-deep">How to pay:</p>
                             <ol class="mt-2 space-y-1 text-xs leading-6 text-zinc-600">
-                                <li>1. Send <strong>UGX 20,000</strong> to the ECOSA Mobile Money account.</li>
-                                <li>2. Enter your mobile money number above.</li>
-                                <li>3. Submit — our team verifies and activates your membership.</li>
+                                <li>1. Send the agreed amount to the ECOSA Mobile Money account.</li>
+                                <li>2. Select the payment purpose: membership, donation, chapter support, project support, or welfare support.</li>
+                                <li>3. Enter your mobile money number and transaction reference if available.</li>
+                                <li>4. Submit — the ECOSA team confirms and verifies the payment.</li>
                             </ol>
                         </div>
                     </div>

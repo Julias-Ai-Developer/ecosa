@@ -48,6 +48,9 @@ return new class extends Migration
             ['name' => 'View Messages',        'slug' => 'admin.messages',       'group' => 'Members'],
             ['name' => 'Send Notifications',   'slug' => 'admin.notifications',  'group' => 'Members'],
             ['name' => 'Manage Roles',         'slug' => 'admin.roles',          'group' => 'System'],
+            ['name' => 'View Payment Details',  'slug' => 'admin.payments.view',  'group' => 'Payments'],
+            ['name' => 'Confirm Payments',      'slug' => 'admin.payments.confirm', 'group' => 'Payments'],
+            ['name' => 'Verify Payments',       'slug' => 'admin.payments.verify', 'group' => 'Payments'],
         ];
 
         DB::table('permissions')->insert(array_map(fn ($p) => array_merge($p, [

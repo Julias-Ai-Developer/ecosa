@@ -21,6 +21,8 @@ class Community extends Component
             'events' => $this->programs('event', 2),
             'projects' => $this->programs('project', 2),
             'insurancePrograms' => $this->programs('insurance_group', 2),
+            'chapters' => EcosaSite::chapters(),
+            'resources' => EcosaSite::resources(),
             'updates' => NewsUpdate::query()
                 ->published()
                 ->latest('published_at')
