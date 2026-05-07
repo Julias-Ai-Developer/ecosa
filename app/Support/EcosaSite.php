@@ -60,13 +60,13 @@ class EcosaSite
             ],
             [
                 'eyebrow' => 'Membership, Visibility, and Impact',
-                'title' => 'A Stronger Platform for Senior Alumni',
-                'text' => 'A more corporate website experience for members, leaders, partners, and school-centered community programs.',
+                'title' => 'Business, Careers, Welfare, and Shared Projects',
+                'text' => 'A practical platform where alumni can find opportunities, support one another, join chapters, and contribute to shared ECOSA work.',
                 'image' => asset('assets/images/school/aerialview.jpeg'),
-                'primary_cta_label' => 'View Updates',
-                'primary_cta_route' => 'site.updates',
-                'secondary_cta_label' => 'Leadership Page',
-                'secondary_cta_route' => 'site.leadership',
+                'primary_cta_label' => 'Explore Community',
+                'primary_cta_route' => 'site.community',
+                'secondary_cta_label' => 'Membership Hub',
+                'secondary_cta_route' => 'site.membership',
             ],
         ];
     }
@@ -74,11 +74,11 @@ class EcosaSite
     public static function membershipBenefits(): array
     {
         return [
-            'Know and reconnect with close friends, classmates, chapter members, professionals, and business owners in the ECOSA network.',
-            'Access leadership guidance through the patron, elders group, executive leaders, and chapter contacts when support is needed.',
-            'Advertise or discover alumni businesses through searchable professional and business information.',
-            'Support ECOSA voluntarily through membership payments, donations, chapter support, project support, and welfare contributions.',
-            'Take part in chapters, health insurance conversations, proposals, projects, resources, and member-focused reports.',
+            'Professional networking for career growth, hiring, mentorship, and collaboration.',
+            'Business networking that helps alumni list, discover, and support member-owned businesses.',
+            'Welfare support and social events including reunions, sports, and alumni gatherings.',
+            'Community programs that organize alumni service, mentorship, and local support activities.',
+            'Shared projects such as SACCOs, investment groups, chapter support, and alumni initiatives.',
         ];
     }
 
@@ -86,16 +86,16 @@ class EcosaSite
     {
         return [
             [
-                'title' => 'Respect and accountability',
-                'text' => 'Members engage with dignity, protect the ECOSA name, and remain accountable to agreed association decisions.',
+                'title' => 'Transparency',
+                'text' => 'ECOSA keeps communication, payments, projects, and public updates clear enough for members to follow with confidence.',
             ],
             [
-                'title' => 'Voluntary contribution',
-                'text' => 'Support is encouraged on a willing note, with clear payment purpose and verification by the responsible team.',
+                'title' => 'Accountability',
+                'text' => 'Members and leaders remain answerable to agreed association decisions, verified contributions, and responsible conduct.',
             ],
             [
-                'title' => 'One member, one chapter',
-                'text' => 'A member belongs to one primary chapter at a time to keep coordination, reporting, and chapter support clear.',
+                'title' => 'Unity',
+                'text' => 'The association brings old students together across years, professions, businesses, locations, and chapters.',
             ],
             [
                 'title' => 'Service before status',
@@ -176,11 +176,11 @@ class EcosaSite
     public static function resources(): array
     {
         return [
-            'ECOSA constitution and governance documents',
-            'Project proposals and shortlists',
-            'External documents and partner resources',
-            'Ugandan anthem and school heritage materials',
-            'Membership details, chapter guidelines, and reporting templates',
+            'ECOSA Constitution',
+            'Membership guidelines and ground rules',
+            'Chapter guidelines and reporting templates',
+            'Public resources and partner documents',
+            'Project proposals, SACCO notes, and shared opportunity documents',
         ];
     }
 
@@ -194,22 +194,22 @@ class EcosaSite
                 'route' => 'site.leadership',
             ],
             [
-                'title' => 'Membership Registration',
-                'summary' => 'A cleaner flow for alumni records, payment, and digital membership identity.',
+                'title' => 'Membership Hub',
+                'summary' => 'Who qualifies, how to register, contribution options, and member ground rules.',
                 'image' => asset('assets/images/school/Equatorial-College-School5.jpeg'),
-                'route' => 'site.membership.register',
-            ],
-            [
-                'title' => 'Alumni Business Network',
-                'summary' => 'A more visible platform for professionals, entrepreneurs, and partner opportunities.',
-                'image' => asset('assets/images/school/aerialview.jpeg'),
                 'route' => 'site.membership',
             ],
             [
-                'title' => 'School Support Projects',
-                'summary' => 'Visible project pages for mentorship, campus support, and strategic giving.',
+                'title' => 'Alumni Business Network',
+                'summary' => 'A visible platform for alumni businesses, services, products, and referrals.',
+                'image' => asset('assets/images/school/aerialview.jpeg'),
+                'route' => 'site.community',
+            ],
+            [
+                'title' => 'Professional Network',
+                'summary' => 'Profiles for careers, experience, skills, hiring, collaboration, and connections.',
                 'image' => asset('assets/images/school/Equatorial-College-School5.jpeg'),
-                'route' => 'site.community.projects',
+                'route' => 'site.community',
             ],
             [
                 'title' => 'Events & Reunions',
@@ -231,7 +231,7 @@ class EcosaSite
         return [
             [
                 'title' => 'Alumni Registration',
-                'summary' => 'For individual old students ready to create a verified ECOSA profile and submit payment.',
+                'summary' => 'For old students ready to create an ECOSA profile and submit membership contribution details.',
                 'route' => 'site.membership.register',
                 'icon' => 'fa-id-card',
             ],

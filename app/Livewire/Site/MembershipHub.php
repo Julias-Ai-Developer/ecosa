@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Site;
 
+use App\Models\NewsUpdate;
 use App\Support\EcosaSite;
 use Illuminate\Contracts\View\View;
 use Livewire\Attributes\Layout;
@@ -21,6 +22,19 @@ class MembershipHub extends Component
             'paymentPurposeOptions' => EcosaSite::paymentPurposeOptions(),
             'guidingPrinciples' => EcosaSite::guidingPrinciples(),
             'chapters' => EcosaSite::chapters(),
+            'updates' => NewsUpdate::query()
+                ->published()
+                ->whereIn('category', ['Membership', 'Association'])
+                ->latest('published_at')
+                ->latest()
+                ->limit(3)
+                ->get(),
+            'fallbackUpdates' => EcosaSite::updatesFallback(),
+            'qualifiers' => [
+                'Old students and former learners of Equatorial College School.',
+                'Class representatives and chapter coordinators helping alumni register.',
+                'Diaspora alumni who want to stay connected and contribute remotely.',
+            ],
             'sectors' => [
                 'Education and public service',
                 'Corporate leadership and entrepreneurship',

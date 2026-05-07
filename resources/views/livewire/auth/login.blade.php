@@ -3,6 +3,12 @@
     {{-- Heading --}}
     <h1 style="font-size:1.45rem;font-weight:700;color:#111827;margin:0 0 6px;">Welcome back!</h1>
     <p style="font-size:13.5px;color:#6b7280;margin:0 0 28px;">Sign in with your Member ID, email or phone number.</p>
+    <p style="font-size:13px;color:#6b7280;margin:-14px 0 24px;">
+        New member?
+        <a href="{{ route('site.membership.register') }}" style="font-weight:700;color:#17924b;text-decoration:none;">
+            Register with ECOSA
+        </a>
+    </p>
 
     {{-- Session status --}}
     @if (session('status'))

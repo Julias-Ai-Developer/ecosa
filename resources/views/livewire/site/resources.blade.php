@@ -9,9 +9,9 @@
     <section class="site-section">
         <div class="mx-auto max-w-7xl px-5 lg:px-8">
             <x-site.section-heading
-                eyebrow="Documents & Media"
-                title="Documentation, external documents, shortlists, anthems, videos, audio, and gallery resources."
-                text="Admins can publish resource files or external links for members and the public."
+                eyebrow="Documents & Public Resources"
+                title="Constitution, guidelines, public documents, and shared opportunity resources."
+                text="Important ECOSA documents are kept here so members can find governance guidance, chapter information, project notes, and public resources without crowding the homepage."
                 align="center"
             />
 

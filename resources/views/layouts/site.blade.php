@@ -28,8 +28,9 @@
             'route' => 'site.membership',
             'children' => [
                 ['label' => 'Membership Hub', 'route' => 'site.membership'],
-                ['label' => 'Register', 'route' => 'site.membership.register'],
-                ['label' => 'Member Login', 'route' => 'login'],
+                ['label' => 'Who Qualifies', 'route' => 'site.membership', 'fragment' => 'who-qualifies'],
+                ['label' => 'Registration Form', 'route' => 'site.membership.register'],
+                ['label' => 'Login / Register', 'route' => 'login'],
             ],
             'active' => request()->routeIs('site.membership', 'site.membership.register'),
         ],
@@ -38,17 +39,14 @@
             'route' => 'site.community',
             'children' => [
                 ['label' => 'Community Overview', 'route' => 'site.community'],
-                ['label' => 'Events', 'route' => 'site.community.events'],
+                ['label' => 'Events & Welfare', 'route' => 'site.community.events'],
                 ['label' => 'Projects', 'route' => 'site.community.projects'],
+                ['label' => 'Business Network', 'route' => 'site.community', 'fragment' => 'business-network'],
+                ['label' => 'Professional Network', 'route' => 'site.community', 'fragment' => 'professional-network'],
                 ['label' => 'Chapters', 'route' => 'site.chapters'],
-                ['label' => 'Insurance Group', 'route' => 'site.community.insurance'],
+                ['label' => 'Welfare / Insurance', 'route' => 'site.community.insurance'],
             ],
             'active' => request()->routeIs('site.community', 'site.community.events', 'site.community.projects', 'site.chapters', 'site.community.insurance'),
-        ],
-        [
-            'label' => 'Updates',
-            'route' => 'site.updates',
-            'children' => [],
         ],
         [
             'label' => 'Resources',
@@ -65,11 +63,10 @@
     $footerQuickLinks = [
         ['label' => 'Home', 'route' => 'home'],
         ['label' => 'Membership Hub', 'route' => 'site.membership'],
-        ['label' => 'Register Now', 'route' => 'site.membership.register'],
+        ['label' => 'Login / Register', 'route' => 'login'],
         ['label' => 'Community Events', 'route' => 'site.community.events'],
         ['label' => 'Chapters', 'route' => 'site.chapters'],
         ['label' => 'Resources', 'route' => 'site.resources'],
-        ['label' => 'Latest Updates', 'route' => 'site.updates'],
     ];
 
     $footerAbout = [
@@ -81,6 +78,7 @@
         ['label' => 'Insurance Group', 'route' => 'site.community.insurance'],
     ];
 
+    $navHref = fn (array $link): string => route($link['route']) . (filled($link['fragment'] ?? null) ? '#' . $link['fragment'] : '');
 
 @endphp
 
@@ -133,7 +131,7 @@
                     </span>
                     <a href="{{ route('login') }}" class="inline-flex items-center gap-2 text-white/80 hover:text-white">
                         <i class="fas fa-lock text-ecosa-green"></i>
-                        <span>Member Login</span>
+                        <span>Login / Register</span>
                     </a>
                 </div>
             </div>
@@ -179,7 +177,7 @@
                                         class="absolute left-1/2 top-full mt-4 w-72 -translate-x-1/2 rounded-[24px] border border-ecosa-blue/8 bg-white p-3 shadow-[var(--shadow-soft)]"
                                     >
                                         @foreach ($item['children'] as $child)
-                                            <a href="{{ route($child['route']) }}" class="flex items-center justify-between rounded-2xl px-4 py-3 text-sm font-semibold text-ecosa-blue-deep transition hover:bg-ecosa-blue/5">
+                                            <a href="{{ $navHref($child) }}" class="flex items-center justify-between rounded-2xl px-4 py-3 text-sm font-semibold text-ecosa-blue-deep transition hover:bg-ecosa-blue/5">
                                                 <span>{{ $child['label'] }}</span>
                                                 <i class="fas fa-arrow-right text-xs text-zinc-400"></i>
                                             </a>
@@ -195,8 +193,7 @@
                     </nav>
 
                     <div class="flex items-center gap-3">
-                        <a href="{{ route('site.membership.register') }}" class="site-nav-cta-outline whitespace-nowrap">Register</a>
-                        <a href="{{ route('login') }}" class="whitespace-nowrap rounded-[10px] bg-ecosa-green px-4 py-2 text-sm font-bold text-white transition hover:bg-ecosa-green-deep">Log in</a>
+                        <a href="{{ route('login') }}" class="whitespace-nowrap rounded-[10px] bg-ecosa-green px-4 py-2 text-sm font-bold text-white transition hover:bg-ecosa-green-deep">Login / Register</a>
                     </div>
                 </div>
             </div>
@@ -214,7 +211,7 @@
                                 </summary>
                                 <div class="mt-3 grid gap-2">
                                     @foreach ($item['children'] as $child)
-                                        <a href="{{ route($child['route']) }}" class="rounded-[10px] border-l-2 px-4 py-3 text-sm font-semibold {{ request()->routeIs($child['route']) ? 'border-ecosa-green bg-white text-ecosa-green-deep' : 'border-transparent text-zinc-700 hover:border-ecosa-green/35 hover:bg-white' }}">
+                                        <a href="{{ $navHref($child) }}" class="rounded-[10px] border-l-2 px-4 py-3 text-sm font-semibold {{ request()->routeIs($child['route']) ? 'border-ecosa-green bg-white text-ecosa-green-deep' : 'border-transparent text-zinc-700 hover:border-ecosa-green/35 hover:bg-white' }}">
                                             {{ $child['label'] }}
                                         </a>
                                     @endforeach
@@ -229,8 +226,7 @@
                     @endforeach
 
                     <div class="grid gap-3 pt-2 sm:grid-cols-2">
-                        <a href="{{ route('site.membership.register') }}" class="site-nav-cta-outline w-full">Register</a>
-                        <a href="{{ route('login') }}" class="site-nav-cta-fill w-full">Log in</a>
+                        <a href="{{ route('login') }}" class="site-nav-cta-fill w-full sm:col-span-2">Login / Register</a>
                     </div>
                 </div>
             </div>

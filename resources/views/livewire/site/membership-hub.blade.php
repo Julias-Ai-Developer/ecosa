@@ -11,10 +11,27 @@
             <div class="site-grid-2 items-start">
                 <div>
                     <x-site.section-heading
-                        eyebrow="Membership Benefits"
-                        title="A stronger public explanation before registration starts."
-                        text="This page gives visitors the clarity they need before entering the actual registration form and payment step."
+                        eyebrow="Membership Hub"
+                        title="Who qualifies, how registration works, and how members contribute."
+                        text="This hub keeps the full membership explanation here while the homepage stays simple and introductory."
                     />
+
+                    <article id="who-qualifies" class="site-card mt-8 scroll-mt-32 p-7">
+                        <span class="site-chip">Who Qualifies</span>
+                        <div class="mt-5 grid gap-3">
+                            @foreach ($qualifiers as $qualifier)
+                                <div class="flex gap-3 rounded-[18px] border border-ecosa-blue/8 bg-ecosa-blue/[0.03] px-4 py-3">
+                                    <i class="fas fa-user-check mt-1 text-sm text-ecosa-green"></i>
+                                    <p class="text-sm leading-6 text-zinc-600">{{ $qualifier }}</p>
+                                </div>
+                            @endforeach
+                        </div>
+                        <div class="mt-6 grid gap-3 sm:grid-cols-2">
+                            <a href="{{ route('login') }}" class="site-btn-primary">Login / Register</a>
+                            <a href="{{ route('site.membership.register') }}" class="site-btn-secondary">Open Registration Form</a>
+                        </div>
+                    </article>
+
                     <div class="mt-8 grid gap-4">
                         @foreach ($benefits as $benefit)
                             <div class="site-card flex gap-4 rounded-[24px] p-5">
@@ -63,7 +80,7 @@
 
                     <article class="site-card p-7">
                         <span class="site-chip">Payments</span>
-                        <p class="mt-4 text-sm leading-7 text-zinc-600">Members choose what they are paying for, confirm payment details, and ECOSA verifies before activation or reporting.</p>
+                        <p class="mt-4 text-sm leading-7 text-zinc-600">Members choose what they are paying for, confirm payment details, and ECOSA verifies before activation or reporting. Contribution options include membership, donations, chapter support, project support, and welfare or insurance support.</p>
                         <div class="mt-5 grid gap-3 sm:grid-cols-2">
                             @foreach ($paymentPurposeOptions as $paymentPurpose)
                                 <div class="rounded-[20px] border border-ecosa-blue/8 px-4 py-3 text-sm font-bold text-ecosa-blue-deep">{{ $paymentPurpose }}</div>
@@ -101,6 +118,41 @@
                         </a>
                     </article>
                 @endforeach
+            </div>
+        </div>
+    </section>
+
+    <section class="site-section">
+        <div class="mx-auto max-w-7xl px-5 lg:px-8">
+            <x-site.section-heading
+                eyebrow="Membership Updates"
+                title="Relevant updates for members."
+                text="Membership notices, payment guidance, chapter information, and association updates are shown here instead of crowding the main navigation."
+                align="center"
+            />
+
+            <div class="mt-10 grid gap-6 md:grid-cols-3">
+                @forelse ($updates as $update)
+                    <article class="site-card overflow-hidden">
+                        <img src="{{ $update->imageUrl() }}" alt="{{ $update->title }}" class="h-48 w-full object-cover">
+                        <div class="p-6">
+                            <span class="site-chip">{{ $update->category }}</span>
+                            <h3 class="mt-4 font-display text-xl font-semibold text-ecosa-blue-deep">{{ $update->title }}</h3>
+                            <p class="mt-3 text-sm leading-7 text-zinc-600">{{ $update->summary }}</p>
+                        </div>
+                    </article>
+                @empty
+                    @foreach ($fallbackUpdates as $update)
+                        <article class="site-card overflow-hidden">
+                            <img src="{{ $update['image'] }}" alt="{{ $update['title'] }}" class="h-48 w-full object-cover">
+                            <div class="p-6">
+                                <span class="site-chip">{{ $update['category'] }}</span>
+                                <h3 class="mt-4 font-display text-xl font-semibold text-ecosa-blue-deep">{{ $update['title'] }}</h3>
+                                <p class="mt-3 text-sm leading-7 text-zinc-600">{{ $update['summary'] }}</p>
+                            </div>
+                        </article>
+                    @endforeach
+                @endforelse
             </div>
         </div>
     </section>

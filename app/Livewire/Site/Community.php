@@ -23,6 +23,30 @@ class Community extends Component
             'insurancePrograms' => $this->programs('insurance_group', 2),
             'chapters' => EcosaSite::chapters(),
             'resources' => EcosaSite::resources(),
+            'businesses' => [
+                [
+                    'name' => 'Alumni Enterprise Desk',
+                    'services' => 'Business listings, referrals, procurement visibility, and member-to-member service discovery.',
+                ],
+                [
+                    'name' => 'ECOSA Market Link',
+                    'services' => 'Products, professional services, agriculture, logistics, consulting, retail, and creative work from alumni.',
+                ],
+            ],
+            'professionals' => [
+                [
+                    'name' => 'Career Profiles',
+                    'profession' => 'Education, health, engineering, public service, finance, law, technology, and entrepreneurship.',
+                    'experience' => 'Member-submitted experience levels for mentorship, hiring, and collaboration.',
+                    'skills' => 'Leadership, technical skills, sector knowledge, advisory support, and project delivery.',
+                ],
+                [
+                    'name' => 'Professional Connections',
+                    'profession' => 'Cross-sector alumni directory',
+                    'experience' => 'Designed for hiring leads, referrals, peer guidance, and chapter-based support.',
+                    'skills' => 'Collaboration, networking, mentoring, business development, and practical problem solving.',
+                ],
+            ],
             'updates' => NewsUpdate::query()
                 ->published()
                 ->latest('published_at')
