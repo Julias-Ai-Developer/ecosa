@@ -70,14 +70,14 @@
         </div>
     </section>
 
-    {{-- ===== WHY CHOOSE ECOSA ===== --}}
+    {{-- ===== WHY JOIN ECOSA ===== --}}
     <section class="site-section relative overflow-hidden bg-ecosa-blue-deep">
         <img src="{{ asset('assets/images/school/aerialview.jpeg') }}" alt="" class="absolute inset-0 h-full w-full object-cover opacity-20" aria-hidden="true">
         <div class="relative mx-auto max-w-7xl px-5 lg:px-8">
             <div class="mb-12 text-center">
-                <span class="inline-flex items-center gap-2 rounded-full border border-white/12 bg-white/8 px-4 py-2 text-[0.72rem] font-bold uppercase tracking-[0.28em] text-ecosa-gold">Why Choose ECOSA</span>
-                <h2 class="mt-5 font-display text-4xl font-semibold leading-tight text-white sm:text-5xl lg:text-6xl">Why Choose <span class="text-ecosa-gold">ECOSA?</span></h2>
-                <p class="mx-auto mt-5 max-w-2xl text-base leading-8 text-white/72">Join a structured alumni association built on transparency, community impact, and real benefits for every member.</p>
+                <span class="inline-flex items-center gap-2 rounded-full border border-white/12 bg-white/8 px-4 py-2 text-[0.72rem] font-bold uppercase tracking-[0.28em] text-ecosa-gold">Why Join ECOSA</span>
+                <h2 class="mt-5 font-display text-4xl font-semibold leading-tight text-white sm:text-5xl lg:text-6xl">Real benefits for <span class="text-ecosa-gold">old students.</span></h2>
+                <p class="mx-auto mt-5 max-w-2xl text-base leading-8 text-white/72">ECOSA is built around practical alumni value: careers, business, welfare, events, community programs, projects, and chapters.</p>
             </div>
             <div class="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
                 @foreach ([['icon'=>'fa-user-tie','title'=>'Professional Networking','text'=>'Find alumni by profession, experience, and skills for hiring, mentorship, collaboration, and career support.'],['icon'=>'fa-briefcase','title'=>'Business Networking','text'=>'Discover member-owned businesses, services, products, and referral opportunities across the alumni family.'],['icon'=>'fa-people-arrows','title'=>'Welfare & Events','text'=>'Stay connected through reunions, sports, social gatherings, welfare conversations, and member support.'],['icon'=>'fa-handshake','title'=>'Community Programs','text'=>'Join alumni-led programs that support members, chapters, mentorship, and community service.'],['icon'=>'fa-diagram-project','title'=>'Shared Projects','text'=>'Explore SACCOs, investment groups, alumni initiatives, chapter projects, and other shared opportunities.'],['icon'=>'fa-map-location-dot','title'=>'Chapters','text'=>'Connect through location, diaspora, professional, business, and class-year chapters for closer coordination.']] as $feature)
@@ -91,51 +91,14 @@
         </div>
     </section>
 
-    {{-- ===== WHY JOIN / GUIDING PRINCIPLES ===== --}}
-    <section class="site-section">
-        <div class="mx-auto max-w-7xl px-5 lg:px-8">
-            <div class="grid gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:items-start">
-                <div>
-                    <x-site.section-heading
-                        eyebrow="Why Join ECOSA"
-                        title="Membership should connect people, guidance, business, and service."
-                        text="ECOSA gives old students a structured way to know one another, support fellow alumni, find chapter contacts, advertise businesses, and contribute willingly to association work."
-                    />
-                    <div class="mt-8 grid gap-4">
-                        @foreach ($benefits as $benefit)
-                            <div class="flex gap-3 rounded-[18px] border border-ecosa-blue/8 bg-white p-4 shadow-sm">
-                                <div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-ecosa-green text-white">
-                                    <i class="fas fa-check text-xs"></i>
-                                </div>
-                                <p class="text-sm leading-7 text-zinc-600">{{ $benefit }}</p>
-                            </div>
-                        @endforeach
-                    </div>
-                </div>
-
-                <div>
-                    <span class="site-chip">Core Principles</span>
-                    <h3 class="mt-5 font-display text-4xl font-semibold text-ecosa-blue-deep">Transparency, accountability, and unity guide the network.</h3>
-                    <div class="mt-6 grid gap-4 sm:grid-cols-2">
-                        @foreach ($guidingPrinciples as $principle)
-                            <article class="site-card p-6">
-                                <h4 class="font-display text-xl font-semibold text-ecosa-blue-deep">{{ $principle['title'] }}</h4>
-                                <p class="mt-3 text-sm leading-7 text-zinc-600">{{ $principle['text'] }}</p>
-                            </article>
-                        @endforeach
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
     {{-- ===== PROGRAMS SHOWCASE ===== --}}
     <section class="site-section bg-ecosa-mist">
         <div class="mx-auto max-w-7xl px-5 lg:px-8">
-            <x-site.section-heading eyebrow="Programs & Member Services" title="Every ECOSA service is easier to discover." text="Focused destinations for the areas that matter most: membership, business, professional links, community, resources, and chapters." align="center"/>
+            <x-site.section-heading eyebrow="Member Services" title="The main ECOSA areas are easy to open." text="Leadership, membership, business, professional links, welfare, shared projects, and chapters are presented as clear destinations." align="center"/>
             <div class="mt-10 grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
                 @foreach ($showcaseCards as $card)
-                    <a href="{{ route($card['route']) }}" class="group relative flex min-h-[240px] flex-col overflow-hidden rounded-[28px] shadow-[var(--shadow-card)]">
+                    @php $showcaseHref = route($card['route']) . (filled($card['fragment'] ?? null) ? '#' . $card['fragment'] : ''); @endphp
+                    <a href="{{ $showcaseHref }}" class="group relative flex min-h-[240px] flex-col overflow-hidden rounded-[28px] shadow-[var(--shadow-card)]">
                         <img src="{{ $card['image'] }}" alt="{{ $card['title'] }}" class="absolute inset-0 h-full w-full object-cover transition duration-500 group-hover:scale-105">
                         <div class="absolute inset-0 bg-[linear-gradient(180deg,rgba(8,27,44,0.08),rgba(8,27,44,0.88))]"></div>
                         <div class="absolute inset-x-0 bottom-0 p-6 text-white">
@@ -238,9 +201,10 @@
     {{-- ===== COMMUNITY SECTION (image + description + link) ===== --}}
     <section class="site-section bg-ecosa-mist">
         <div class="mx-auto max-w-7xl px-5 lg:px-8">
-            <x-site.section-heading eyebrow="Community Structure" title="Events, welfare, projects, business, professional networks, and chapters." text="The most important ECOSA community features are directly visible and easy to open." align="center"/>
-            <div class="mt-10 grid gap-6 sm:grid-cols-3">
-                @foreach ([['image'=>asset('assets/images/school/aerialview.jpeg'),'chip'=>'Events & Welfare','icon'=>'fa-calendar-days','title'=>'Events & Welfare','desc'=>'Reunions, sports, social gatherings, welfare conversations, and practical member support.','route'=>'site.community.events','color'=>'ecosa-blue'],['image'=>asset('assets/images/school/Equatorial-College-School5.jpeg'),'chip'=>'Projects','icon'=>'fa-briefcase','title'=>'Shared Projects','desc'=>'SACCOs, investment groups, alumni initiatives, school support activities, and shared opportunities.','route'=>'site.community.projects','color'=>'ecosa-green'],['image'=>asset('assets/images/school/aerialview.jpeg'),'chip'=>'Networks','icon'=>'fa-user-tie','title'=>'Business & Professional Networks','desc'=>'Alumni businesses and professional profiles for hiring, collaboration, connections, and referrals.','route'=>'site.community','color'=>'ecosa-blue']] as $item)
+            <x-site.section-heading eyebrow="Community Structure" title="Events, projects, business network, professional network, and chapters." text="Business and professional networks are kept separate so members can quickly find businesses to buy from or professionals to hire and collaborate with." align="center"/>
+            <div class="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-5">
+                @foreach ([['image'=>asset('assets/images/school/aerialview.jpeg'),'chip'=>'Welfare & Events','icon'=>'fa-calendar-days','title'=>'Welfare & Events','desc'=>'Reunions, sports, social gatherings, welfare conversations, and practical member support.','route'=>'site.community.events'],['image'=>asset('assets/images/school/Equatorial-College-School5.jpeg'),'chip'=>'Projects','icon'=>'fa-diagram-project','title'=>'Shared Projects','desc'=>'SACCOs, circles, insurance groups, school support activities, and shared opportunities.','route'=>'site.community.projects'],['image'=>asset('assets/images/school/aerialview.jpeg'),'chip'=>'Business','icon'=>'fa-briefcase','title'=>'Business Network','desc'=>'Alumni-owned businesses, services, products, and referral opportunities.','route'=>'site.community','fragment'=>'business-network'],['image'=>asset('assets/images/school/Equatorial-College-School5.jpeg'),'chip'=>'Professional','icon'=>'fa-user-tie','title'=>'Professional Network','desc'=>'Profiles for hiring, collaboration, mentorship, and career connections.','route'=>'site.community','fragment'=>'professional-network'],['image'=>asset('assets/images/school/aerialview.jpeg'),'chip'=>'Chapters','icon'=>'fa-map-location-dot','title'=>'Chapters','desc'=>'Regional, diaspora, professional, business, and class-year groups.','route'=>'site.chapters']] as $item)
+                    @php $communityHref = route($item['route']) . (filled($item['fragment'] ?? null) ? '#' . $item['fragment'] : ''); @endphp
                     <article class="group flex flex-col overflow-hidden rounded-[24px] border border-zinc-100 bg-white shadow-sm transition hover:shadow-md">
                         <div class="relative overflow-hidden">
                             <img src="{{ $item['image'] }}" alt="{{ $item['title'] }}" class="h-48 w-full object-cover transition duration-500 group-hover:scale-105">
@@ -250,7 +214,7 @@
                             <span class="site-chip self-start">{{ $item['chip'] }}</span>
                             <h3 class="mt-4 font-display text-xl font-bold text-ecosa-blue-deep">{{ $item['title'] }}</h3>
                             <p class="mt-3 flex-grow text-sm leading-7 text-zinc-600">{{ $item['desc'] }}</p>
-                            <a href="{{ route($item['route']) }}" class="mt-5 inline-flex items-center gap-2 text-sm font-bold text-ecosa-green transition hover:text-ecosa-green-deep">Explore Page <i class="fas fa-arrow-right text-xs"></i></a>
+                            <a href="{{ $communityHref }}" class="mt-5 inline-flex items-center gap-2 text-sm font-bold text-ecosa-green transition hover:text-ecosa-green-deep">Explore Page <i class="fas fa-arrow-right text-xs"></i></a>
                         </div>
                     </article>
                 @endforeach

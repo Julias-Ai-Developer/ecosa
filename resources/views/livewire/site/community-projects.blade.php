@@ -13,9 +13,31 @@
                 <x-site.section-heading
                     eyebrow="ECOSA Projects"
                     title="Community projects that create lasting impact."
-                    text="From campus improvements to mentorship networks, ECOSA projects connect alumni effort with real school and community outcomes."
+                    text="From SACCOs and savings circles to insurance support, campus improvements, and mentorship networks, ECOSA projects connect alumni effort with real school and community outcomes."
                     align="center"
                 />
+            </div>
+
+            <div id="saccos" class="mb-12 scroll-mt-32 grid gap-5 md:grid-cols-2">
+                <a href="{{ route('site.community.projects') }}#saccos" class="group flex items-start gap-4 rounded-[20px] border border-ecosa-green/15 bg-ecosa-green/[0.04] p-6 transition hover:border-ecosa-green/35 hover:bg-ecosa-green/[0.07]">
+                    <span class="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-ecosa-green text-white">
+                        <i class="fas fa-piggy-bank"></i>
+                    </span>
+                    <span>
+                        <span class="block font-display text-xl font-bold text-ecosa-blue-deep">SACCOs & Circles</span>
+                        <span class="mt-2 block text-sm leading-7 text-zinc-600">Savings groups, investment circles, and shared alumni opportunities for members who want to build together.</span>
+                    </span>
+                </a>
+
+                <a href="{{ route('site.community.insurance') }}" class="group flex items-start gap-4 rounded-[20px] border border-ecosa-blue/15 bg-ecosa-blue/[0.04] p-6 transition hover:border-ecosa-blue/35 hover:bg-ecosa-blue/[0.07]">
+                    <span class="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-ecosa-blue text-white">
+                        <i class="fas fa-shield-heart"></i>
+                    </span>
+                    <span>
+                        <span class="block font-display text-xl font-bold text-ecosa-blue-deep">Insurance</span>
+                        <span class="mt-2 block text-sm leading-7 text-zinc-600">Open the dedicated Insurance Group page for welfare support, member protection conversations, and related updates.</span>
+                    </span>
+                </a>
             </div>
 
             @if (count($projects) > 0)

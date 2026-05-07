@@ -11,19 +11,19 @@
             <x-site.section-heading
                 eyebrow="Community Overview"
                 title="Events, projects, business, professional networks, and chapters."
-                text="ECOSA community work is organized around visible opportunities that help alumni reconnect, collaborate, support one another, and build shared value."
+                text="This page summarizes the main community areas. Insurance, SACCOs, and circles sit under Projects, while Business Network and Professional Network remain separate so members can find the right kind of connection quickly."
                 align="center"
             />
 
-            <div class="mt-10 grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+            <div class="mt-10 grid gap-5 md:grid-cols-2 xl:grid-cols-5">
                 @foreach ([
-                    ['chip' => 'Events', 'icon' => 'fa-calendar-days', 'title' => 'Events & Welfare', 'text' => 'Reunions, sports, social gatherings, welfare conversations, and member support.', 'route' => 'site.community.events'],
-                    ['chip' => 'Projects', 'icon' => 'fa-diagram-project', 'title' => 'Projects', 'text' => 'SACCOs, investment groups, alumni initiatives, insurance groups, and school support activities.', 'route' => 'site.community.projects'],
-                    ['chip' => 'Business', 'icon' => 'fa-briefcase', 'title' => 'Business Network', 'text' => 'List alumni-owned businesses, services, products, and referral opportunities.', 'route' => 'site.membership.register'],
-                    ['chip' => 'Professional', 'icon' => 'fa-user-tie', 'title' => 'Professional Network', 'text' => 'Member profiles for hiring, collaboration, mentorship, and career connections.', 'route' => 'site.membership.register'],
+                    ['chip' => 'Events', 'icon' => 'fa-calendar-days', 'title' => 'Welfare & Events', 'text' => 'Reunions, sports, social gatherings, welfare conversations, and member support.', 'route' => 'site.community.events'],
+                    ['chip' => 'Projects', 'icon' => 'fa-diagram-project', 'title' => 'Shared Projects', 'text' => 'SACCOs, circles, investment groups, insurance groups, and school support activities.', 'route' => 'site.community.projects'],
+                    ['chip' => 'Business', 'icon' => 'fa-briefcase', 'title' => 'Business Network', 'text' => 'Alumni-owned businesses, services, products, and referral opportunities.', 'route' => 'site.community', 'fragment' => 'business-network'],
+                    ['chip' => 'Professional', 'icon' => 'fa-user-tie', 'title' => 'Professional Network', 'text' => 'Profiles for hiring, collaboration, mentorship, and career connections.', 'route' => 'site.community', 'fragment' => 'professional-network'],
                     ['chip' => 'Chapters', 'icon' => 'fa-map-location-dot', 'title' => 'Chapters', 'text' => 'Regional, diaspora, professional, business, and class-year groups for closer coordination.', 'route' => 'site.chapters'],
-                    ['chip' => 'Resources', 'icon' => 'fa-folder-open', 'title' => 'Public Resources', 'text' => 'Constitution, guidelines, project documents, and public member resources.', 'route' => 'site.resources'],
                 ] as $item)
+                    @php $itemHref = route($item['route']) . (filled($item['fragment'] ?? null) ? '#' . $item['fragment'] : ''); @endphp
                     <article class="site-card flex h-full flex-col p-7">
                         <div class="flex items-center justify-between gap-4">
                             <span class="site-chip">{{ $item['chip'] }}</span>
@@ -33,7 +33,7 @@
                         </div>
                         <h3 class="mt-6 font-display text-2xl font-semibold text-ecosa-blue-deep">{{ $item['title'] }}</h3>
                         <p class="mt-3 flex-1 text-sm leading-7 text-zinc-600">{{ $item['text'] }}</p>
-                        <a href="{{ route($item['route']) }}" class="mt-6 inline-flex items-center gap-2 text-sm font-bold text-ecosa-green">
+                        <a href="{{ $itemHref }}" class="mt-6 inline-flex items-center gap-2 text-sm font-bold text-ecosa-green">
                             Open <i class="fas fa-arrow-right text-xs"></i>
                         </a>
                     </article>
@@ -111,7 +111,7 @@
                 </article>
 
                 <article class="site-card p-7">
-                    <span class="site-chip">Events & Welfare</span>
+                    <span class="site-chip">Welfare & Events</span>
                     <div class="mt-5 grid gap-4">
                         @foreach ($events as $event)
                             <div class="rounded-[20px] border border-ecosa-blue/8 bg-ecosa-blue/[0.03] p-5">

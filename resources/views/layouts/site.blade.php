@@ -38,13 +38,19 @@
             'label' => 'Community',
             'route' => 'site.community',
             'children' => [
-                ['label' => 'Community Overview', 'route' => 'site.community'],
-                ['label' => 'Events & Welfare', 'route' => 'site.community.events'],
-                ['label' => 'Projects', 'route' => 'site.community.projects'],
+                ['label' => 'Overview', 'route' => 'site.community'],
+                ['label' => 'Events', 'route' => 'site.community.events'],
+                [
+                    'label' => 'Projects',
+                    'route' => 'site.community.projects',
+                    'children' => [
+                        ['label' => 'Insurance', 'route' => 'site.community.insurance'],
+                        ['label' => 'SACCOs & Circles', 'route' => 'site.community.projects', 'fragment' => 'saccos'],
+                    ],
+                ],
                 ['label' => 'Business Network', 'route' => 'site.community', 'fragment' => 'business-network'],
                 ['label' => 'Professional Network', 'route' => 'site.community', 'fragment' => 'professional-network'],
                 ['label' => 'Chapters', 'route' => 'site.chapters'],
-                ['label' => 'Welfare / Insurance', 'route' => 'site.community.insurance'],
             ],
             'active' => request()->routeIs('site.community', 'site.community.events', 'site.community.projects', 'site.chapters', 'site.community.insurance'),
         ],
@@ -177,10 +183,23 @@
                                         class="absolute left-1/2 top-full mt-4 w-72 -translate-x-1/2 rounded-[24px] border border-ecosa-blue/8 bg-white p-3 shadow-[var(--shadow-soft)]"
                                     >
                                         @foreach ($item['children'] as $child)
-                                            <a href="{{ $navHref($child) }}" class="flex items-center justify-between rounded-2xl px-4 py-3 text-sm font-semibold text-ecosa-blue-deep transition hover:bg-ecosa-blue/5">
-                                                <span>{{ $child['label'] }}</span>
-                                                <i class="fas fa-arrow-right text-xs text-zinc-400"></i>
-                                            </a>
+                                            <div>
+                                                <a href="{{ $navHref($child) }}" class="flex items-center justify-between rounded-2xl px-4 py-3 text-sm font-semibold text-ecosa-blue-deep transition hover:bg-ecosa-blue/5">
+                                                    <span>{{ $child['label'] }}</span>
+                                                    <i class="fas fa-arrow-right text-xs text-zinc-400"></i>
+                                                </a>
+
+                                                @if (!empty($child['children']))
+                                                    <div class="ml-3 border-l border-ecosa-blue/10 pl-3">
+                                                        @foreach ($child['children'] as $grandchild)
+                                                            <a href="{{ $navHref($grandchild) }}" class="flex items-center justify-between rounded-2xl px-4 py-2.5 text-sm font-semibold text-zinc-600 transition hover:bg-ecosa-blue/5 hover:text-ecosa-blue-deep">
+                                                                <span>{{ $grandchild['label'] }}</span>
+                                                                <i class="fas fa-angle-right text-xs text-zinc-300"></i>
+                                                            </a>
+                                                        @endforeach
+                                                    </div>
+                                                @endif
+                                            </div>
                                         @endforeach
                                     </div>
                                 </div>
@@ -211,9 +230,21 @@
                                 </summary>
                                 <div class="mt-3 grid gap-2">
                                     @foreach ($item['children'] as $child)
-                                        <a href="{{ $navHref($child) }}" class="rounded-[10px] border-l-2 px-4 py-3 text-sm font-semibold {{ request()->routeIs($child['route']) ? 'border-ecosa-green bg-white text-ecosa-green-deep' : 'border-transparent text-zinc-700 hover:border-ecosa-green/35 hover:bg-white' }}">
-                                            {{ $child['label'] }}
-                                        </a>
+                                        <div>
+                                            <a href="{{ $navHref($child) }}" class="block rounded-[10px] border-l-2 px-4 py-3 text-sm font-semibold {{ request()->routeIs($child['route']) ? 'border-ecosa-green bg-white text-ecosa-green-deep' : 'border-transparent text-zinc-700 hover:border-ecosa-green/35 hover:bg-white' }}">
+                                                {{ $child['label'] }}
+                                            </a>
+
+                                            @if (!empty($child['children']))
+                                                <div class="ml-4 mt-2 grid gap-2 border-l border-ecosa-blue/10 pl-3">
+                                                    @foreach ($child['children'] as $grandchild)
+                                                        <a href="{{ $navHref($grandchild) }}" class="block rounded-[10px] border-l-2 px-4 py-2.5 text-sm font-semibold {{ request()->routeIs($grandchild['route']) ? 'border-ecosa-green bg-white text-ecosa-green-deep' : 'border-transparent text-zinc-600 hover:border-ecosa-green/35 hover:bg-white' }}">
+                                                            {{ $grandchild['label'] }}
+                                                        </a>
+                                                    @endforeach
+                                                </div>
+                                            @endif
+                                        </div>
                                     @endforeach
                                 </div>
                             </details>

@@ -204,24 +204,32 @@ class EcosaSite
                 'summary' => 'A visible platform for alumni businesses, services, products, and referrals.',
                 'image' => asset('assets/images/school/aerialview.jpeg'),
                 'route' => 'site.community',
+                'fragment' => 'business-network',
             ],
             [
-                'title' => 'Professional Network',
+                'title' => 'Alumni Professional Network',
                 'summary' => 'Profiles for careers, experience, skills, hiring, collaboration, and connections.',
                 'image' => asset('assets/images/school/Equatorial-College-School5.jpeg'),
                 'route' => 'site.community',
+                'fragment' => 'professional-network',
             ],
             [
-                'title' => 'Events & Reunions',
-                'summary' => 'Route-based event pages for flagship gatherings, forums, and annual engagement.',
+                'title' => 'Welfare & Events',
+                'summary' => 'Reunions, sports, social gatherings, welfare conversations, and member support.',
                 'image' => asset('assets/images/school/aerialview.jpeg'),
                 'route' => 'site.community.events',
             ],
             [
-                'title' => 'Welfare & Insurance',
-                'summary' => 'A dedicated page for reassurance, welfare coordination, and practical support.',
+                'title' => 'Shared Projects',
+                'summary' => 'SACCOs, circles, insurance groups, school-support work, and shared alumni opportunities.',
                 'image' => asset('assets/images/school/Equatorial-College-School5.jpeg'),
-                'route' => 'site.community.insurance',
+                'route' => 'site.community.projects',
+            ],
+            [
+                'title' => 'Chapters',
+                'summary' => 'Regional, diaspora, professional, business, and class-year groups for closer coordination.',
+                'image' => asset('assets/images/school/aerialview.jpeg'),
+                'route' => 'site.chapters',
             ],
         ];
     }
