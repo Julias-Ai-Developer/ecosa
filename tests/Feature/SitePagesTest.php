@@ -26,7 +26,7 @@ test('public site pages render', function (string $uri, string $text) {
         ->assertSuccessful()
         ->assertSee($text, false);
 })->with([
-    ['/', 'Alumni & Student Empowerment Programs'],
+    ['/', 'Alumni &amp; Student Empowerment Programs'],
     ['/about-us', 'About ECOSA'],
     ['/leadership', 'Leadership'],
     ['/governance', 'Governance'],
@@ -37,7 +37,7 @@ test('public site pages render', function (string $uri, string $text) {
     ['/community/events', 'Community Events'],
     ['/community/projects', 'Projects'],
     ['/community/insurance-group', 'Insurance Group'],
-    ['/community/saccos-and-circles', 'SACCOs & Circles'],
+    ['/community/saccos-and-circles', 'SACCOs &amp; Circles'],
     ['/community/business-network', 'Business Network'],
     ['/community/professional-network', 'Professional Network'],
     ['/community/chapters', 'Chapters'],
@@ -103,7 +103,7 @@ test('membership registration form can be prefilled from quick registration quer
         ->assertSet('occupationType', 'employment');
 });
 
-test('membership registration can capture business details and mastercard reference', function () {
+test('membership registration can capture business details and payment reference', function () {
     Mail::fake();
 
     Livewire::test(Membership::class)
@@ -118,8 +118,9 @@ test('membership registration can capture business details and mastercard refere
         ->set('businessNature', 'Retail and logistics')
         ->set('maritalStatus', 'married')
         ->call('openPaymentModal')
-        ->set('paymentMethod', 'mastercard')
-        ->set('paymentReference', 'CARD-12345')
+        ->set('paymentMethod', 'airtel_money')
+        ->set('paymentPhone', '+256711111111')
+        ->set('paymentReference', 'AIRTEL-12345')
         ->call('completeRegistration')
         ->assertSet('submittedPaymentStatus', 'Pending Verification');
 
@@ -127,8 +128,9 @@ test('membership registration can capture business details and mastercard refere
         'email' => 'paid@example.com',
         'membership_number' => 'EC-0001',
         'payment_status' => 'pending_verification',
-        'payment_method' => 'mastercard',
-        'payment_reference' => 'CARD-12345',
+        'payment_method' => 'airtel_money',
+        'payment_phone' => '+256711111111',
+        'payment_reference' => 'AIRTEL-12345',
         'occupation_type' => 'business',
         'business_name' => 'Paid Alumni Ventures',
         'business_nature' => 'Retail and logistics',
@@ -269,7 +271,7 @@ test('admin can search filter and verify registered members', function () {
         'payment_status' => 'paid',
         'registration_fee' => MembershipProfile::REGISTRATION_FEE,
         'amount_paid' => MembershipProfile::REGISTRATION_FEE,
-        'payment_method' => 'mastercard',
+        'payment_method' => 'airtel_money',
         'payment_reference' => 'CARD-0300',
         'paid_at' => now(),
     ]);
@@ -311,7 +313,7 @@ test('admin can search filter and verify registered members', function () {
     $this->actingAs($user);
 
     Livewire::test(MembersIndex::class)
-        ->assertSee('Search, verify, and review member registrations')
+        ->assertSee('Member Registry')
         ->assertSee('EC-0300')
         ->assertSee('EC-0301')
         ->set('search', 'Paid Ventures')
@@ -320,7 +322,16 @@ test('admin can search filter and verify registered members', function () {
         ->set('search', '')
         ->set('paymentStatus', 'pending_verification')
         ->assertSee('Pending Alumni')
-        ->assertDontSee('Paid Alumni')
+        ->assertDontSee('Paid Alumni');
+
+    $confirmingAdmin = User::factory()->admin()->create();
+    $pending->update([
+        'payment_status' => 'confirmed',
+        'payment_confirmed_by' => $confirmingAdmin->id,
+        'payment_confirmed_at' => now(),
+    ]);
+
+    Livewire::test(MembersIndex::class)
         ->call('verifyPayment', $pending->id);
 
     $this->assertDatabaseHas('membership_profiles', [
@@ -388,7 +399,7 @@ test('admin can review and mark website messages as read', function () {
     $this->actingAs($admin);
 
     Livewire::test(MessagesIndex::class)
-        ->assertSee('Review inquiries from the public website')
+        ->assertSee('Contact Messages')
         ->assertSee('Website Visitor')
         ->call('markRead', $message->id);
 
