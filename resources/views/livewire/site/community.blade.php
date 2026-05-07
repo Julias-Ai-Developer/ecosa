@@ -19,8 +19,8 @@
                 @foreach ([
                     ['chip' => 'Events', 'icon' => 'fa-calendar-days', 'title' => 'Welfare & Events', 'text' => 'Reunions, sports, social gatherings, welfare conversations, and member support.', 'route' => 'site.community.events'],
                     ['chip' => 'Projects', 'icon' => 'fa-diagram-project', 'title' => 'Shared Projects', 'text' => 'SACCOs, circles, investment groups, insurance groups, and school support activities.', 'route' => 'site.community.projects'],
-                    ['chip' => 'Business', 'icon' => 'fa-briefcase', 'title' => 'Business Network', 'text' => 'Alumni-owned businesses, services, products, and referral opportunities.', 'route' => 'site.community', 'fragment' => 'business-network'],
-                    ['chip' => 'Professional', 'icon' => 'fa-user-tie', 'title' => 'Professional Network', 'text' => 'Profiles for hiring, collaboration, mentorship, and career connections.', 'route' => 'site.community', 'fragment' => 'professional-network'],
+                    ['chip' => 'Business', 'icon' => 'fa-briefcase', 'title' => 'Business Network', 'text' => 'Alumni-owned businesses, services, products, and referral opportunities.', 'route' => 'site.community.business'],
+                    ['chip' => 'Professional', 'icon' => 'fa-user-tie', 'title' => 'Professional Network', 'text' => 'Profiles for hiring, collaboration, mentorship, and career connections.', 'route' => 'site.community.professional'],
                     ['chip' => 'Chapters', 'icon' => 'fa-map-location-dot', 'title' => 'Chapters', 'text' => 'Regional, diaspora, professional, business, and class-year groups for closer coordination.', 'route' => 'site.chapters'],
                 ] as $item)
                     @php $itemHref = route($item['route']) . (filled($item['fragment'] ?? null) ? '#' . $item['fragment'] : ''); @endphp
@@ -59,7 +59,7 @@
                                 </div>
                             @endforeach
                         </div>
-                        <a href="{{ route('site.membership.register', ['occupation_type' => 'business']) }}" class="site-btn-primary mt-6 w-full">Add Your Business</a>
+                        <a href="{{ route('site.community.business') }}" class="site-btn-primary mt-6 w-full">Open Business Network</a>
                     </div>
                 </article>
 
@@ -80,7 +80,7 @@
                                 </div>
                             @endforeach
                         </div>
-                        <a href="{{ route('site.membership.register', ['occupation_type' => 'professional']) }}" class="site-btn-secondary mt-6 w-full">Create Professional Profile</a>
+                        <a href="{{ route('site.community.professional') }}" class="site-btn-secondary mt-6 w-full">Open Professional Network</a>
                     </div>
                 </article>
             </div>

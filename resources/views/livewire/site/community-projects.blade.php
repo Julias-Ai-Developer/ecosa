@@ -19,7 +19,7 @@
             </div>
 
             <div id="saccos" class="mb-12 scroll-mt-32 grid gap-5 md:grid-cols-2">
-                <a href="{{ route('site.community.projects') }}#saccos" class="group flex items-start gap-4 rounded-[20px] border border-ecosa-green/15 bg-ecosa-green/[0.04] p-6 transition hover:border-ecosa-green/35 hover:bg-ecosa-green/[0.07]">
+                <a href="{{ route('site.community.saccos') }}" class="group flex items-start gap-4 rounded-[20px] border border-ecosa-green/15 bg-ecosa-green/[0.04] p-6 transition hover:border-ecosa-green/35 hover:bg-ecosa-green/[0.07]">
                     <span class="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-ecosa-green text-white">
                         <i class="fas fa-piggy-bank"></i>
                     </span>

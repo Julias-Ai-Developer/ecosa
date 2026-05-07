@@ -203,15 +203,13 @@ class EcosaSite
                 'title' => 'Alumni Business Network',
                 'summary' => 'A visible platform for alumni businesses, services, products, and referrals.',
                 'image' => asset('assets/images/school/aerialview.jpeg'),
-                'route' => 'site.community',
-                'fragment' => 'business-network',
+                'route' => 'site.community.business',
             ],
             [
                 'title' => 'Alumni Professional Network',
                 'summary' => 'Profiles for careers, experience, skills, hiring, collaboration, and connections.',
                 'image' => asset('assets/images/school/Equatorial-College-School5.jpeg'),
-                'route' => 'site.community',
-                'fragment' => 'professional-network',
+                'route' => 'site.community.professional',
             ],
             [
                 'title' => 'Welfare & Events',

@@ -28,11 +28,11 @@
             'route' => 'site.membership',
             'children' => [
                 ['label' => 'Membership Hub', 'route' => 'site.membership'],
-                ['label' => 'Who Qualifies', 'route' => 'site.membership', 'fragment' => 'who-qualifies'],
+                ['label' => 'Who Qualifies', 'route' => 'site.membership.qualifies'],
                 ['label' => 'Registration Form', 'route' => 'site.membership.register'],
                 ['label' => 'Login / Register', 'route' => 'login'],
             ],
-            'active' => request()->routeIs('site.membership', 'site.membership.register'),
+            'active' => request()->routeIs('site.membership', 'site.membership.qualifies', 'site.membership.register'),
         ],
         [
             'label' => 'Community',
@@ -45,14 +45,14 @@
                     'route' => 'site.community.projects',
                     'children' => [
                         ['label' => 'Insurance', 'route' => 'site.community.insurance'],
-                        ['label' => 'SACCOs & Circles', 'route' => 'site.community.projects', 'fragment' => 'saccos'],
+                        ['label' => 'SACCOs & Circles', 'route' => 'site.community.saccos'],
                     ],
                 ],
-                ['label' => 'Business Network', 'route' => 'site.community', 'fragment' => 'business-network'],
-                ['label' => 'Professional Network', 'route' => 'site.community', 'fragment' => 'professional-network'],
+                ['label' => 'Business Network', 'route' => 'site.community.business'],
+                ['label' => 'Professional Network', 'route' => 'site.community.professional'],
                 ['label' => 'Chapters', 'route' => 'site.chapters'],
             ],
-            'active' => request()->routeIs('site.community', 'site.community.events', 'site.community.projects', 'site.chapters', 'site.community.insurance'),
+            'active' => request()->routeIs('site.community', 'site.community.events', 'site.community.projects', 'site.community.saccos', 'site.community.business', 'site.community.professional', 'site.chapters', 'site.community.insurance'),
         ],
         [
             'label' => 'Resources',
